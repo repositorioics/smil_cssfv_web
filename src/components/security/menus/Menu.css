@@ -1,0 +1,157 @@
+.custom-container {
+    box-shadow: none;
+    width: 500px;
+    margin: 0 auto;
+}
+.mTop {
+    margin-top: 100px;
+}
+
+.messageError {
+    font-size: 10px;
+    font-weight: bold;
+    font-style: italic;
+    color: red;
+    margin-left: 5px;
+}
+
+.c-border-radius {
+  border-radius : 4px;
+}
+
+.mleft-20 {
+  margin-left: 20px;
+}
+
+.custom-btn-register:hover,
+.custom-btn-register {
+  background-color: #88c724;
+  border-color: #88c724;
+  color: #fff;
+  font-size: 20px;
+  height: 40px;
+  width: 25%;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.custom-btn-register-back:hover,
+.custom-btn-register-back {
+  background-color: #0c0244;
+  border-color: #0c0244;
+  color: #fff;
+  font-size: 20px;
+  height: 40px;
+  width: 25%;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.custom-btn-register-clear:hover,
+.custom-btn-register-clear {
+  background-color: #474749;
+  border-color: #474749;
+  color: #fff;
+  font-size: 20px;
+  height: 40px;
+  width: 25%;
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.custom-form-block {
+    background: #f9f9f9 none repeat scroll 0 0;
+    border-radius: 1px;
+    box-shadow: 2px 3px 8px #a7a7a7;
+    color: gray;
+    display: block;
+    min-height: 250px;
+    overflow: hidden;
+    padding: 30px;
+    margin-bottom: 20px;
+}
+
+.c-multiselect {
+  position: relative;
+  text-align: left;
+  background: white;
+  font-weight: 400;
+}
+
+/*********************/
+
+@media (max-width: 480px) {
+  .custom-container {
+    width: 370px;
+  }
+
+  .custom-checkbox {
+    margin-top: 15px;
+  }
+
+  .mleft-20 {
+    margin-left: 20px;
+  }
+
+  .custom-btn-register:hover,
+  .custom-btn-register {
+    font-size: 15px;
+    height: 32px;
+    width: 30%;
+  }
+
+  .custom-btn-register-back:hover,
+  .custom-btn-register-back {
+    font-size: 15px;
+    height: 32px;
+    width: 30%;
+  }
+
+  .custom-btn-register-clear:hover,
+  .custom-btn-register-clear {
+    font-size: 15px;
+    height: 32px;
+    width: 30%;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-container {
+    width: 370px;
+  }
+
+  .custom-checkbox {
+    margin-top: 15px;
+  }
+
+  .mleft-20 {
+    margin-left: 0;
+  }
+
+  .custom-btn-register:hover,
+  .custom-btn-register {
+    font-size: 15px;
+    height: 32px;
+    width: 30%;
+  }
+
+  .custom-btn-register-back:hover,
+  .custom-btn-register-back {
+    font-size: 15px;
+    height: 32px;
+    width: 30%;
+  }
+
+  .custom-btn-register-clear:hover,
+  .custom-btn-register-clear {
+    font-size: 15px;
+    height: 32px;
+    width: 30%;
+  }
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 1024px) {
+}

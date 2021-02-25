@@ -1,0 +1,47 @@
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.m-top {
+    margin-top: 10px;
+}
+
+.hover {
+    cursor: pointer;
+}
+
+.customContainer {
+    box-shadow: none !important;
+}
+
+/* .table td, .table th {
+    padding: 0.30rem !important;
+} */
+
+/* label {
+    display: block;
+    margin-bottom: .5rem;
+} */
+
+/*********************/
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 600px;
+        margin-top: 10%;
+    }
+}
+
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 850px;
+        margin-top: 10%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1140px;  
+        margin-top: 5%;
+    }
+}
