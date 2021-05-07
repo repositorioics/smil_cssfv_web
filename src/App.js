@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route, Redirect, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import IdleTimer from "./IdleTimer";
 //import { AuthContext } from "./context/Auth";
 import Login from './containers/login/LoginContainer';
-import Home from './components/home/Home';
 import Header from './components/header/Header';
-
+import Home from './components/home/Home';
 import Categoria from './containers/catalogos/Categoria/CategoriaContainer';
 import CambioCategoria from './containers/catalogos/CambioCategoria/CambioCategoriaContainer';
 import Clasificacion from './containers/catalogos/Clasificacion/ClasificacionContainer';
@@ -17,6 +16,8 @@ import CatMuestras from './containers/catalogos/Muestras/MuestrasContainer';
 import TipoMuestras from './containers/catalogos/TipoMuestras/TipoMuestrasContainer';
 import TipoPruebas from './containers/catalogos/TipoPruebas/TipoPruebasContainer';
 import Tubos from './containers/catalogos/Tubos/TubosContainer';
+import MismoEpFebrilContainer from './containers/catalogos/MismoEpFebril/MismoEpFebrilContainer';
+import ResultadosMuestrasContainer from './containers/catalogos/ResultadosMuestras/ResultadosMuestrasContainer';
 
 import AddUser from './containers/security/users/RegisterContainer';
 import Users from './containers/security/users/UserListContainer';
@@ -34,10 +35,13 @@ import MenuContainer from './containers/security/menus/MenuContainer';
 import MenuOptionsListContainer from './containers/security/menus/MenuOptionsListContainer';
 import MenuOptionContainer from './containers/security/menus/MenuOptionContainer';
 
-function App() {
+import MxInfluenzaListContainer from './containers/mxInfluenza/MxInfluenzaListContainer';
+import MxInfluenzaContainer from './containers/mxInfluenza/MxInfluenzaContainer';
+
+const App = () => {
   const [isTimeout, setIsTimeout] = useState(false);
 
-  let location = useLocation();
+  //let location = useLocation();
 
   useEffect(() => {
     const timer = new IdleTimer({
@@ -53,7 +57,7 @@ function App() {
     return () => {
       timer.cleanUp();
     };
-  }, [location]);
+  }, []);
 
   const LogoutTimeExpired = () => {
     if (isTimeout) {
@@ -87,48 +91,308 @@ function App() {
     setAuthToken(localStorage.getItem('token'));
   } */
 
-
   return (
-    <Router>
-      <div className="App">
-        {LogoutTimeExpired()}
-        <Switch>
-          {/* <Route exact path='/' component={Login} /> */}
-          <Redirect exact from="/" to="/login" />
-          <Route path="/login" component={Login}/>
-          <>
-            <Header />
-            <Route path="/home" component={Home} />
-            <Route path="/catalogo/categoria" component={Categoria} />
-            <Route path="/catalogo/cambio-categoria" component={CambioCategoria} />
-            <Route path="/catalogo/clasificacion" component={Clasificacion} />
-            <Route path="/catalogo/consultas" component={Consultas} />
-            <Route path="/catalogo/motivo-anulacion" component={MotivoAnulacion} />
-            <Route path="/catalogo/cat-muestras" component={CatMuestras} />
-            <Route path="/catalogo/tipo-muestras" component={TipoMuestras} />
-            <Route path="/catalogo/tipo-pruebas" component={TipoPruebas} />
-            <Route path="/catalogo/tubos" component={Tubos} />
-            <Route path="/seguridad/usuarios" component={Users} />
-            <Route path="/seguridad/registrar-usuarios" component={AddUser} />
-            <Route path="/seguridad/editar-usuario/:id" component={AddUser} />
-            <Route path="/seguridad/cambiar-clave/:id" component={ChangePassword} />
-            <Route path="/seguridad/perfiles" component={ProfileListContainer}></Route>
-            <Route path="/seguridad/agregar-perfil" component={ProfileContainer}></Route>
-            <Route path="/seguridad/editar-perfil/:id" component={ProfileContainer}></Route>
-            <Route path="/seguridad/perfil-usuario" component={UserProfileListContainer}></Route>
-            <Route path="/seguridad/asignar-perfil-usuario" component={UserProfileContainer}></Route>
-            <Route path="/seguridad/editar-perfil-usuario/:id" component={UserProfileContainer}></Route>
-            <Route path="/seguridad/menu" component={MenuListContainer}></Route>
-            <Route path="/seguridad/agregar-menu" component={MenuContainer}></Route>
-            <Route path="/seguridad/editar-menu/:id" component={MenuContainer}></Route>
-            <Route path="/seguridad/opciones-menu" component={MenuOptionsListContainer}></Route>
-            <Route path="/seguridad/agregar-opcion-menu" component={MenuOptionContainer}></Route>
-            <Route path="/seguridad/editar-opcion-menu/:id" component={MenuOptionContainer}></Route>
-            <Route path="/seguridad/perfil-opciones-menu" component={ProfileOptionsMenuContainer}></Route>
-          </>
-        </Switch>
-      </div>
-    </Router>
+    <>
+      <Router>
+        <div className="App">
+          {LogoutTimeExpired()}
+          <Switch>
+            {/* <Route exact path='/' component={Login} /> */}
+            <Redirect exact from="/" to="/login" />
+            <Route path="/login" component={Login} />
+            <>
+              {/* <Header /> */}
+              <Route path="/home"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Home {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/categoria"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Categoria {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/cambio-categoria"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <CambioCategoria {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/clasificacion"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Clasificacion {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/consultas"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Consultas {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/motivo-anulacion"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MotivoAnulacion {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/cat-muestras"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <CatMuestras {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/tipo-muestras"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <TipoMuestras {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/tipo-pruebas"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <TipoPruebas {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/tubos"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Tubos {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/episodios-febriles"
+                exact
+                render={props =>(
+                  <Header {...props}>
+                    <MismoEpFebrilContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/catalogos/resultados-muestras"
+                exact
+                render={props => (
+                  <Header {...props}>
+                    <ResultadosMuestrasContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/usuarios"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Users {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/registrar-usuarios"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <AddUser {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/editar-usuario/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <AddUser {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/cambiar-clave/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <ChangePassword {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/perfiles"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <ProfileListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/agregar-perfil"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <ProfileContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/editar-perfil/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <ProfileContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/perfil-usuario"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <UserProfileListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/asignar-perfil-usuario"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <UserProfileContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/editar-perfil-usuario/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <UserProfileContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/menu"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MenuListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/agregar-menu"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MenuContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/editar-menu/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MenuContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/opciones-menu"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MenuOptionsListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/agregar-opcion-menu"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MenuOptionContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/editar-opcion-menu/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MenuOptionContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/seguridad/perfil-opciones-menu"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <ProfileOptionsMenuContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/influenza"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxInfluenzaListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/agregar-muestra-influenza"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxInfluenzaContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/editar-muestra-influenza/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxInfluenzaContainer {...props}/>
+                  </Header>
+                )}
+              />
+            </>
+          </Switch>
+        </div>
+      </Router>
+    </>
   );
 }
 export default App;

@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Typography from "@material-ui/core/Typography";
-//import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-//import InboxIcon from "@material-ui/icons/MoveToInbox";
-//import MailIcon from "@material-ui/icons/Mail";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import List from '@material-ui/core/List';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+//import InboxIcon from '@material-ui/icons/MoveToInbox';
+//import MailIcon from '@material-ui/icons/Mail';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
 import StarBorder from '@material-ui/icons/StarBorder';
-import Home from "@material-ui/icons/Home";
-import ListAlt from "@material-ui/icons/ListAlt";
-import Security from "@material-ui/icons/Security";
+import Home from '@material-ui/icons/Home';
+import ListAlt from '@material-ui/icons/ListAlt';
+import Security from '@material-ui/icons/Security';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
-import Category from "@material-ui/icons/Category";
-import Assignment from "@material-ui/icons/Assignment";
-import PersonAdd from "@material-ui/icons/PersonAdd";
-import AssignmentInd from "@material-ui/icons/AssignmentInd";
-import RecentActors from "@material-ui/icons/RecentActors";
-import Description from "@material-ui/icons/Description";
-import Image from "react-bootstrap/Image";
-import Logo from "../../images/logo.png";
+import Category from '@material-ui/icons/Category';
+import Assignment from '@material-ui/icons/Assignment';
+import PersonAdd from '@material-ui/icons/PersonAdd';
+import AssignmentInd from '@material-ui/icons/AssignmentInd';
+import RecentActors from '@material-ui/icons/RecentActors';
+import Description from '@material-ui/icons/Description';
+import Image from 'react-bootstrap/Image';
+import Logo from '../../images/logo.png';
 
 const drawerWidth = 250;
-let styles = theme => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex"
     },
@@ -101,7 +101,7 @@ let styles = theme => ({
     toolbar: {
         display: "flex",
         alignItems: "center",
-        marginTop: theme.spacing(),
+        marginTop: theme.spacing(-2),
         justifyContent: "flex-end",
         padding: "0 8px",
         ...theme.mixins.toolbar
@@ -113,9 +113,9 @@ let styles = theme => ({
     grow: {
         flexGrow: 1
     }
-});
+}));
 
-const Header = props => {
+const Header = ({children}) => {
 
     const history = useHistory();
     //const marginLeft = "189.600px";
@@ -126,21 +126,17 @@ const Header = props => {
     const [openSecurity, setOpenSecurity] = useState(false);
     const [anchorEl, setAnchorEl] = useState(null);
 
-    useEffect(() => {
-
-    }, [props])
-
     const handleDrawerOpen = () => {
         setOpen(!open);
         setOpenCatalogs(false);
         setOpenMx(false);
         setOpenSecurity(false);
-/*         const categoriaStyle = document.getElementById("categoria");
-        if (open === false) {
-            categoriaStyle.style.marginLeft="260px";
-        } else {
-            categoriaStyle.style.marginLeft=marginLeft;
-        } */
+        /*         const categoriaStyle = document.getElementById("categoria");
+                if (open === false) {
+                    categoriaStyle.style.marginLeft="260px";
+                } else {
+                    categoriaStyle.style.marginLeft=marginLeft;
+                } */
     };
 
     const handleMenu = event => {
@@ -159,117 +155,150 @@ const Header = props => {
 
     const handleClickCat = () => {
         setOpenCatalogs(!openCatalogs);
-        setOpen(false);
     }
 
     const handleClickMx = () => {
         setOpenMx(!openMx);
-        setOpen(false)
     }
 
     const handleClickSecurity = () => {
         setOpenSecurity(!openSecurity);
-        setOpen(false)
     }
 
     const gotoHome = () => {
+        closeMenu();
         history.push('/home');
     }
     const gotoCategoria = () => {
+        closeMenu();
         history.push('/catalogo/categoria');
     }
     const gotoCamCategoria = () => {
+        closeMenu();
         history.push('/catalogo/cambio-categoria');
     }
     const gotoClasificacion = () => {
+        closeMenu();
         history.push('/catalogo/clasificacion');
     }
     const gotoConsultas = () => {
+        closeMenu();
         history.push('/catalogo/consultas');
     }
     const gotoMotivoAnulacion = () => {
+        closeMenu();
         history.push('/catalogo/motivo-anulacion');
     }
     const gotoMuestras = () => {
+        closeMenu();
         history.push('/catalogo/cat-muestras');
     }
     const gotoTipoMuestras = () => {
+        closeMenu();
         history.push('/catalogo/tipo-muestras');
     }
     const gotoTipoPruebas = () => {
+        closeMenu();
         history.push('/catalogo/tipo-pruebas');
     }
     const gotoTubos = () => {
+        closeMenu();
         history.push('/catalogo/tubos');
     }
 
+    const gotoEpFefril = () => {
+        closeMenu();
+        history.push('/catalogo/episodios-febriles');
+    }
+
+    const gotoResultadoMuestra = () => {
+        closeMenu();
+        history.push('/catalogos/resultados-muestras');
+    }
+
     const gotoUsers = () => {
+        closeMenu();
         history.push('/seguridad/usuarios');
     }
 
     const gotoProfile = () => {
+        closeMenu();
         history.push('/seguridad/perfiles');
     }
 
     const gotoUserProfile = () => {
+        closeMenu();
         history.push('/seguridad/perfil-usuario');
     }
 
     const gotoMenu = () => {
+        closeMenu();
         history.push('/seguridad/menu');
     }
 
     const gotoOptionsMenu = () => {
+        closeMenu();
         history.push('/seguridad/opciones-menu');
     }
 
     const gotoProfileOptionsMenu = () => {
+        closeMenu();
         history.push('/seguridad/perfil-opciones-menu');
     }
 
-    const { classes } = props;
+    const gotoMxInfluenza = () => {
+        closeMenu();
+        history.push('/muestras/influenza');
+    }
+
+    const closeMenu = () => {
+        if (open) {
+            setOpen(!open);
+            setOpenCatalogs(false);
+            setOpenMx(false);
+            setOpenSecurity(false);
+        }
+    }
+
+    //const { classes } = props;
+    const classes = useStyles();
     const openEl = Boolean(anchorEl);
     return (
         <div className={classes.root}>
             <CssBaseline />
-            <AppBar
+            <AppBar style={{minHeight: 0}}
                 position="fixed"
                 className={classes.appBar}
                 foojon={classNames(classes.appBar, {
                     [classes.appBarShift]: open
-                })}
-            >
+                })}>
                 <Toolbar disableGutters={true}>
                     <IconButton
                         color="inherit"
                         aria-label="Open drawer"
                         onClick={handleDrawerOpen}
-                        className={classes.menuButton}
-                    >
+                        className={classes.menuButton}>
                         <MenuIcon
                             classes={{
                                 root: open
                                     ? classes.menuButtonIconOpen
                                     : classes.menuButtonIconClosed
-                            }}
-                        />
+                            }} />
                     </IconButton>
                     <Typography
                         variant="h6"
                         color="inherit"
                         className={classes.grow}
-                        noWrap
-                    >
-                    <Image src={Logo} style={{width: 30, marginRight: 5}} roundedCircle />
-                        Laboratorio
+                        noWrap>
+                        <Image src={Logo} style={{ width: 30, marginRight: 5 }} roundedCircle />
+                        Sistema de manejo de infomación de laboratorio
                     </Typography>
                     <Typography
                         variant="h6"
                         color="inherit"
                         className={classes.grow}
-                        style={{textAlign: "end"}}
-                        noWrap
-                    >
+                        style={{ textAlign: "end" }}
+                        noWrap>
                         usuario
                     </Typography>
                     <div>
@@ -277,8 +306,7 @@ const Header = props => {
                             aria-owns={openEl ? "menu-appbar" : undefined}
                             aria-haspopup="true"
                             onClick={handleMenu}
-                            color="inherit"
-                        >
+                            color="inherit">
                             <AccountCircle />
                         </IconButton>
                         <Menu
@@ -293,8 +321,7 @@ const Header = props => {
                                 horizontal: "right"
                             }}
                             open={openEl}
-                            onClose={handleClose}
-                        >
+                            onClose={handleClose}>
                             <MenuItem onClick={handleCloseSession}>Cerrar Sessión</MenuItem>
                         </Menu>
                     </div>
@@ -312,8 +339,7 @@ const Header = props => {
                         [classes.drawerClose]: !open
                     })
                 }}
-                open={open}
-            >
+                open={open}>
                 <div className={classes.toolbar} />
                 <List>
                     {/* {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
@@ -395,6 +421,19 @@ const Header = props => {
                                 </ListItemIcon>
                                 <ListItemText primary="Tubos" />
                             </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => gotoEpFefril()}>
+                                <ListItemIcon>
+                                    <Assignment />
+                                </ListItemIcon>
+                                <ListItemText primary="Mismo Ep. Febril" />
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => gotoResultadoMuestra()}>
+                                <ListItemIcon>
+                                    <Assignment />
+                                </ListItemIcon>
+                                <ListItemText primary="Resultados Muestras" />
+                            </ListItem>
+                            <Divider />
                         </List>
                     </Collapse>
                 </List>
@@ -408,12 +447,13 @@ const Header = props => {
                     </ListItem>
                     <Collapse in={openMx} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            <ListItem button className={classes.nested}>
+                            <ListItem button className={classes.nested} onClick={() => gotoMxInfluenza()}>
                                 <ListItemIcon>
                                     <StarBorder />
                                 </ListItemIcon>
-                                <ListItemText primary="En desarrollo" />
+                                <ListItemText primary="Influenza" />
                             </ListItem>
+                            <Divider />
                         </List>
                     </Collapse>
                 </List>
@@ -463,6 +503,7 @@ const Header = props => {
                                 </ListItemIcon>
                                 <ListItemText primary="Perfiles Opciones Menú" />
                             </ListItem>
+                            <Divider />
                         </List>
                     </Collapse>
                 </List>
@@ -478,18 +519,15 @@ const Header = props => {
                     ))}
                 </List> */}
             </Drawer>
-            {/* <main className={classes.content}>
+            <main className={classes.content}>
                 <div className={classes.toolbar} />
-
-                
-                <Typography paragraph>foo</Typography>
-            </main> */}
+                {children}
+            </main>
         </div>
     );
 }
 
 Header.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired
+    children: PropTypes.node.isRequired,
 };
-export default withStyles(styles, { withTheme: true })(Header);
+export default (Header);

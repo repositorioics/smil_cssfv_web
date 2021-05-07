@@ -14,6 +14,12 @@ const TipoPruebasContainer = props => {
     const [description, setDescription] = useState('');
     const [isNew, setIsNew] = useState(true);
     const [id, setId] = useState(0);
+    const [executeLoading, setExecuteLoading] = useState(false);
+    const [dataMx, setDataMx] = useState([]);
+    const [selectedMx, setSelectedMx] = useState('');
+    const [mounted, setMounted] = useState(true);
+    const [idMxSelected, setIdMxSelected] = useState(0);
+    const [level, setLevel] = useState('');
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
@@ -22,6 +28,8 @@ const TipoPruebasContainer = props => {
     let [isChecked, setIsChecked] = useState(false);
 
     const [errorMessageName, setErrorMessageName] = useState('');
+    const [errorMessageMx, setErrorMessageMx] = useState('');
+    const [errorMessageLevel, setErrorMessageLevel] = useState('');
 
     const [show, setShow] = useState(false);
 
@@ -34,6 +42,7 @@ const TipoPruebasContainer = props => {
         setIsNew(true);
         setTitle('Agregar tipo de prueba');
         setErrorMessageName('');
+        setErrorMessageMx('');
         setName('');
         setDescription('');
         setIsChecked(false);
@@ -41,19 +50,25 @@ const TipoPruebasContainer = props => {
 
     const columns = [
         { dataField: 'id', text: 'Id', hidden: true },
+        { dataField: 'idMuestra', text: 'IdMuestra', hidden: true },
+        { dataField: 'nivel', text: 'Nivel', hidden: true },
         { dataField: 'nombre', text: 'Nombre', sort: true, filter: textFilter({ placeholder: 'Ingrese el nombre' }) },
         { dataField: 'descripcion', text: 'Descripción', sort: true, filter: textFilter({ placeholder: 'Ingrese la descripción' }) },
+        { dataField: 'muestra', text: 'Muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese la muestra' }) },
         { dataField: 'estado', text: 'Estado', sort: true, filter: textFilter({ placeholder: 'Ingrese el estado' }) }
     ];
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getAll()
+            if (mounted) {}
+            getAll();
+            getAllMx();
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted, props])
 
     const initialStateToast = () => {
         setType(null);
@@ -62,15 +77,20 @@ const TipoPruebasContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getAll = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllTipoPruebas();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
                         "id": response.data[i].id,
+                        "idMuestra": response.data[i].idCatMuestra.id,
+                        "nivel": response.data[i].nivel,
                         "nombre": response.data[i].nombre,
                         "descripcion": response.data[i].descripcion,
+                        "muestra": response.data[i].idCatMuestra.nombre,
                         "estado": response.data[i].activo === true ? "Activo" : "Inactivo"
                     });
                 }
@@ -79,6 +99,21 @@ const TipoPruebasContainer = props => {
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error)
+        }
+    }
+
+    const getAllMx = async () => {
+        setExecuteLoading(true);
+        try {
+            const response = await DataServices.getAllCatMuetra();
+            if (response.status === 200) {
+                setExecuteLoading(false);
+                setDataMx(response.data);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -111,9 +146,20 @@ const TipoPruebasContainer = props => {
         setDescription(e.target.value);
     }
 
+    const handleChangeLevel = (e) => {
+        setLevel(e.target.value);
+    }
+
     const onChangeCheckbox = (e) => {
         isChecked = e.target.checked;
         setIsChecked(isChecked);
+    }
+
+    const handleChangeMx = (e) => {
+        console.log(e.target.value);
+        setSelectedMx(e.target.value);
+        setIdMxSelected(e.target.value);
+        setErrorMessageMx('');
     }
 
     const tableRowEvents = {
@@ -122,6 +168,9 @@ const TipoPruebasContainer = props => {
             setName(row.nombre);
             setDescription(row.descripcion);
             setId(row.id)
+            setSelectedMx(row.idMuestra);
+            setIdMxSelected(row.idMuestra);
+            setLevel(row.nivel);
             if (row.estado === "Activo") {
                 setIsChecked(true);
             }
@@ -151,15 +200,21 @@ const TipoPruebasContainer = props => {
 
     /**Metodo para enviar a guardar */
     const saveTipoPrueba = async () => {
+        setExecuteLoading(true);
         try {
             const catTipoPrueba = {
                 nombre: name,
                 descripcion: description,
+                nivel: level,
+                idCatMuestra: {
+                    id: idMxSelected,
+                },
                 activo: isChecked
             }
 
             const response = await DataServices.postTipoPruebas(catTipoPrueba);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 setTimeout(function () {
@@ -167,6 +222,7 @@ const TipoPruebasContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -174,16 +230,21 @@ const TipoPruebasContainer = props => {
 
     /**Metodo para Editar un registro */
     const editTipoPrueba = async () => {
+        setExecuteLoading(true);
         try {
             const catTipoPrueba = {
                 id: id,
                 nombre: name,
                 descripcion: description,
+                nivel: level,
+                idCatMuestra: {
+                    id: idMxSelected,
+                },
                 activo: isChecked
             }
-
             const response = await DataServices.putTipoPruebas(catTipoPrueba);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 setTimeout(function () {
@@ -191,6 +252,7 @@ const TipoPruebasContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -199,6 +261,14 @@ const TipoPruebasContainer = props => {
     const validateData = () => {
         if (name === '' || name === null || name === undefined) {
             setErrorMessageName('El nombre es requerido');
+            return false;
+        }
+        if (idMxSelected <= 0) {
+            setErrorMessageMx('Debe seleccionar la muestra');
+            return false;
+        }
+        if (level === '' || level === null || level === undefined) {
+            setErrorMessageLevel('Debe indicar el nivel');
             return false;
         }
         return true;
@@ -216,6 +286,7 @@ const TipoPruebasContainer = props => {
                 errorMessageName={errorMessageName}
                 handleChangeName={handleChangeName}
                 handleDescription={handleDescription}
+                handleChangeLevel={handleChangeLevel}
                 onChangeCheckbox={onChangeCheckbox}
                 saveData={saveData}
                 name={name}
@@ -230,6 +301,13 @@ const TipoPruebasContainer = props => {
                 pagination={pagination}
                 tableRowEvents={tableRowEvents}
                 refreshPage={refreshPage}
+                executeLoading={executeLoading}
+                dataMx={dataMx}
+                handleChangeMx={handleChangeMx}
+                selectedMx={selectedMx}
+                errorMessageMx={errorMessageMx}
+                errorMessageLevel={errorMessageLevel}
+                level={level}
             />
             <ToastContainer
                 type={type}

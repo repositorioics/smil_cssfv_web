@@ -14,9 +14,10 @@ const MenuOptionContainer = props => {
     let [isActive, setIsActive] = useState(false);
     let [visible, setVisible] = useState(false);
     const [disableBtnSave,setDisableBtnSave] = useState(false);
+    const [executeLoading, setExecuteLoading] = useState(false);
 
     const [menuList, setMenuList] = useState([]);
-    const [menuSelected, setMenuSelected] = useState([]);
+    const [menuSelected, setMenuSelected] = useState('');
     const [menuId, setMenuId] = useState(0);
     
     const [isNew, setNew] = useState(true);
@@ -51,31 +52,36 @@ const MenuOptionContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getMenuList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllMenu();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setMenuList(response.data);
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
 
     /**Metodo para obtener todos los registros */
     const getById = async (id) => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getMenuOptionById(id);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setId(response.data.id);
                 setMenuId(response.data.menuId.id);
-                let dataSelected = [];
+                /* let dataSelected = [];
                 const newObjectMenu = {}
 
                 newObjectMenu.id = response.data.menuId.id;
                 newObjectMenu.name = response.data.menuId.nombre
-                dataSelected.push(newObjectMenu)
-                setMenuSelected(dataSelected);
+                dataSelected.push(newObjectMenu) */
+                setMenuSelected(response.data.menuId.id);
                 
                 setName(response.data.nombre);
                 setDescription(response.data.descripcion !== null ? response.data.descripcion : "");
@@ -85,6 +91,7 @@ const MenuOptionContainer = props => {
                 setVisible(response.data.visible);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -135,6 +142,7 @@ const MenuOptionContainer = props => {
     }
 
     const saveMenuOption = async () => {
+        setExecuteLoading(true);
         try {
             const opcionMenu = {
                 activo: isActive,
@@ -150,6 +158,7 @@ const MenuOptionContainer = props => {
 
             const response = await DataServices.postMenuOption(opcionMenu);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -157,6 +166,7 @@ const MenuOptionContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             setDisableBtnSave(false);
             console.log('error', error);
         }
@@ -164,6 +174,7 @@ const MenuOptionContainer = props => {
     }
 
     const editMenuOption = async () => {
+        setExecuteLoading(true);
         try {
             const opcionMenu = {
                 id: id,
@@ -180,6 +191,7 @@ const MenuOptionContainer = props => {
 
             const response = await DataServices.putMenuOption(opcionMenu);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 /* setTimeout(function () {
@@ -187,14 +199,15 @@ const MenuOptionContainer = props => {
                 }, 6000);*/
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error);
         }
         initialStateToast();
     }
 
-    const onSelectMenu = (selectedList, selectedItem) => {
-        setMenuId(selectedItem.id)
-        setMenuSelected(selectedList);
+    const onSelectMenu = (e) => {
+        setMenuId(e.target.value)
+        setMenuSelected(e.target.value);
         setErrorMessageMenu('');
     }
 
@@ -207,7 +220,7 @@ const MenuOptionContainer = props => {
         setIsActive(false);
         setVisible(false);
         setDisableBtnSave(false);
-        setMenuSelected([]);
+        setMenuSelected('');
         setErrorMessageMenu('');
         setErrorMessageName('');
         setErrorMessageUrl('');
@@ -257,7 +270,7 @@ const MenuOptionContainer = props => {
                 menuList={menuList}
                 onSelectMenu={onSelectMenu}
                 menuSelected={menuSelected}
-                
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

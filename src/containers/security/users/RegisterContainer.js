@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../../../components/header/Header';
+//import Header from '../../../components/header/Header';
 import Register from '../../../components/security/users/Register';
 import DataServices from '../../../service/Api';
 import ToastContainer from '../../../components/toast/Toast';
@@ -20,6 +20,7 @@ const RegisterContainer = props => {
     const [disabledPwd, setDisabledPwd] = useState(false);
     const [creationDate, setCreationDate] = useState('');
     const [id, setId] = useState('');
+    const [executeLoading, setExecuteLoading] = useState(false);
 
     const [errorMessageName, setErrorMessageName] = useState('');
     const [errorMessageLastName, setErrorMessageLastName] = useState('');
@@ -54,9 +55,11 @@ const RegisterContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getById = async (id) => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getUserById(id);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setName(response.data.nombres);
                 setLastName(response.data.apellidos);
                 setUserName(response.data.usuario);
@@ -66,6 +69,7 @@ const RegisterContainer = props => {
                 setCreationDate(response.data.fechaCreacion);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -166,6 +170,7 @@ const RegisterContainer = props => {
     }
 
     const saveUSer = async () => {
+        setExecuteLoading(true);
         try {
             const usuario = {
                 nombres: name,
@@ -181,6 +186,7 @@ const RegisterContainer = props => {
             }
             const response = await DataServices.postUser(usuario);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -188,6 +194,7 @@ const RegisterContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             setDisableBtnSave(false);
             console.log('error', error);
         }
@@ -195,6 +202,7 @@ const RegisterContainer = props => {
     }
 
     const editUser = async () => {
+        setExecuteLoading(true);
         try {
             const usuario = {
                 id: id,
@@ -209,6 +217,7 @@ const RegisterContainer = props => {
 
             const response = await DataServices.putUser(usuario);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 /* setTimeout(function () {
@@ -216,6 +225,7 @@ const RegisterContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error);
         }
         initialStateToast();
@@ -285,7 +295,7 @@ const RegisterContainer = props => {
     
     return (
         <>
-            <Header/>
+            {/* <Header/> */}
             <Register 
                 name={name}
                 lastName={lastName}
@@ -315,6 +325,7 @@ const RegisterContainer = props => {
                 title={title}
                 disabledPwd={disabledPwd}
                 goBack={goBack}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

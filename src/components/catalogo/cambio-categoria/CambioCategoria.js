@@ -1,16 +1,21 @@
 import React from "react";
 import Catalogo from '../Catagolo';
+import Loading from '../../loading/Loading';
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory from 'react-bootstrap-table2-filter';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Paper from '@material-ui/core/Paper';
 import { blue } from '@material-ui/core/colors';
 
 const CambioCategoria = props => {
-    
+
     return (
         <>
-            <>
+            <Loading 
+                executeLoading={props.executeLoading}
+            />
+            <Paper className="container" elevation={3} >
             <Catalogo
                 handleShow={props.handleShow}
                 handleClose={props.handleClose}
@@ -26,7 +31,7 @@ const CambioCategoria = props => {
                 isChecked={props.isChecked}
                 refreshPage={props.refreshPage}
             />
-            <div className="container" style={{ boxShadow: "none", marginTop:"5%"}}>
+            <div style={{ boxShadow: "none" }}>
                 <div className="hdr, row, m-top">
                     <div className="title">
                         {props.titleForm}
@@ -39,7 +44,7 @@ const CambioCategoria = props => {
                         </span>
                     </OverlayTrigger>
                 </div>
-                <div className="container" style={{ marginTop: 50, boxShadow: "none"}}>
+                <div style={{ marginTop: 50, boxShadow: "none" }}>
                     <BootstrapTable
                         striped
                         hover
@@ -54,7 +59,7 @@ const CambioCategoria = props => {
                         wrapperClasses="table-responsive" />
                 </div>
             </div>
-        </>
+            </Paper>
         </>
 
     );

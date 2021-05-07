@@ -11,6 +11,8 @@ const UserProfileListContainer = props => {
 
     const [titleForm] = useState('Lista perfiles usuarios');
     const [data, setData] = useState([]);
+    const [executeLoading, setExecuteLoading] = useState(false);
+    const [mounted, setMounted] = useState(true);
 
     const rankFormatter = (cell, row, rowIndex, formatExtraData) => {
         return (
@@ -65,17 +67,22 @@ const UserProfileListContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getUserProfileList();
+            if (mounted) {
+                getUserProfileList();
+            }
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted, props])
 
     /**Metodo para obtener todos los registros */
     const getUserProfileList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllUserProfile();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
@@ -89,6 +96,7 @@ const UserProfileListContainer = props => {
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -105,6 +113,7 @@ const UserProfileListContainer = props => {
                 data={data}
                 columns={columns}
                 pagination={pagination}
+                executeLoading={executeLoading}
                 //tableRowEvents={tableRowEvents}
             />
         </>

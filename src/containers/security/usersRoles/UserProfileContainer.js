@@ -9,7 +9,7 @@ const UserProfileContainer = props => {
     const [title, setTitle] = useState('');
     const [userData, setUserData] = useState([]);
     const [profileData, setProfileData] = useState([]);
-    const [id, setId] = useState('');
+    const [id, setId] = useState(0);
     //const [userId, setUserId] = useState(0);
     const [profileSelected, setProfileSelected] = useState([]);
     const [userSelected, setUserSelected] = useState([]);
@@ -20,6 +20,7 @@ const UserProfileContainer = props => {
     const [disableBtnSave, setDisableBtnSave] = useState(false);
     //const [valueUser, setValueUser] = useState(0);
     const [disabledUser, setDisabledUser] = useState(false);
+    const [executeLoading, setExecuteLoading] = useState(false);
 
 
     /**Variables de los mensajes de alerta */
@@ -49,9 +50,11 @@ const UserProfileContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getUserList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllUsers();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 let newData = [];
                 newData = response.data;
                 const newObject = {
@@ -63,26 +66,32 @@ const UserProfileContainer = props => {
                 setUserData(response.data);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
 
     /**Metodo para obtener todos los registros */
     const getProfileList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllProfiles();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setProfileData(response.data);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
 
     const getUserProfileById = async (id) => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getUserProfileById(id);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setIsActive(response.data.activo);
                 //setUserId(response.data.usuarioId.id);
                 //setValueUser(response.data.usuarioId.id);
@@ -115,6 +124,7 @@ const UserProfileContainer = props => {
                 //setValueProfile(response.data.perfilId.id);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -137,18 +147,24 @@ const UserProfileContainer = props => {
     }
 
     const saveUserProfile = async () => {
+        setExecuteLoading(true);
         try {
-            const perfilUsuario = {
-                activo: isActive,
-                perfilId: {
-                    id: profileSelected[0].id
-                },
-                usuarioId: {
-                    id: userSelected[0].id
-                }
+            const perfilUsuario = [];
+            for (let i = 0; i < profileSelected.length; i++) {
+                const newObject = {
+                    activo: false,
+                    perfilId: {},
+                    usuarioId: {}
+                };
+                newObject.activo = isActive;
+                newObject.perfilId.id = profileSelected[i].id;
+                newObject.usuarioId.id = userSelected[0].id;
+                perfilUsuario.push(newObject);
+
             }
             const response = await DataServices.postUserProfile(perfilUsuario);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -156,6 +172,7 @@ const UserProfileContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             setDisableBtnSave(false);
             console.log('error', error);
         }
@@ -163,9 +180,11 @@ const UserProfileContainer = props => {
     }
 
     const editUserProfile = async () => {
+        setExecuteLoading(true);
         try {
+            //const i = parseInt(id); 
             const perfilUsuario = {
-                id: id,
+                id:  id,
                 activo: isActive,
                 perfilId: {
                     id: profileSelected[0].id
@@ -176,6 +195,7 @@ const UserProfileContainer = props => {
             }
             const response = await DataServices.putUserProfile(perfilUsuario);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -183,6 +203,7 @@ const UserProfileContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             setDisableBtnSave(false);
             console.log('error', error);
         }
@@ -271,6 +292,7 @@ const UserProfileContainer = props => {
                 profileSelected={profileSelected}
                 onSelectUser={onSelectUser}
                 userSelected={userSelected}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

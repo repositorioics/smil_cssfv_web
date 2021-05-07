@@ -5,6 +5,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import Categoria from '../../../components/catalogo/categoria/Categoria';
 import DataServices from '../../../service/Api';
 import ToastContainer from '../../../components/toast/Toast';
+//import { useHistory } from 'react-router-dom';
 //import { useAuth } from '../../../context/Auth';
 
 const CategoriaContainer = props => {
@@ -15,6 +16,7 @@ const CategoriaContainer = props => {
     const [description, setDescription] = useState ('');
     const [isNew, setIsNew] = useState(true);
     const [id, setId] = useState(0);
+    const [executeLoading, setExecuteLoading] = useState(false);
 
     let [isChecked, setIsChecked] = useState(false);
 
@@ -27,6 +29,8 @@ const CategoriaContainer = props => {
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
     const [messageAlert, setMessageAlert] = useState(null);
+
+    const [mounted, setMounted] = useState(true);
 
     //const { authToken } = useAuth();
 
@@ -50,17 +54,40 @@ const CategoriaContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getAllCat()
+            if (mounted) {
+                getAllCat();
+            }
+            //getAllCat()
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted, props])
+
+/*     useEffect(() => {
+        let mounted = true;
+        if (pets.selectedPet) {
+          dispatch({ type: "FETCH_PET" });
+          getPet(pets.selectedPet).then(data => {
+            if(mounted){
+              dispatch({ type: "FETCH_PET_SUCCESS", payload: data });
+            }
+          });
+        } else {
+          dispatch({ type: "RESET" });
+        }
+    
+        return () => mounted = false;
+    
+      }, [pets.selectedPet]); */
 
     /**Metodo para obtener todos los registros */
     const getAllCat = async () => {
         try {
+            setExecuteLoading(true);
             const response = await DataServices.getAllCategorias();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
@@ -75,6 +102,7 @@ const CategoriaContainer = props => {
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -151,6 +179,7 @@ const CategoriaContainer = props => {
 
     /**Metodo para enviar a guardar la categoria */
     const saveCat = async () => {
+        setExecuteLoading(true);
         try {
             const catCategoria = {
                 nombre: name,
@@ -160,6 +189,7 @@ const CategoriaContainer = props => {
             
             const response = await DataServices.postCategoria(catCategoria);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 setTimeout(function () {
@@ -168,12 +198,14 @@ const CategoriaContainer = props => {
             }
         } catch (error) {
             console.log('error', error)
+            setExecuteLoading(false);
         }
         initialStateToast();
     }
 
     /**Metodo para Editar un registro */
     const editCat = async () => {
+        setExecuteLoading(true);
         try {
             const catCategoria = {
                 id: id,
@@ -184,6 +216,7 @@ const CategoriaContainer = props => {
             
             const response = await DataServices.putCategoria(catCategoria);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 setTimeout(function () {
@@ -191,6 +224,7 @@ const CategoriaContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -230,6 +264,7 @@ const CategoriaContainer = props => {
                 pagination={pagination}
                 tableRowEvents={tableRowEvents}
                 refreshPage={refreshPage}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

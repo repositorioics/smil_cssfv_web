@@ -10,6 +10,7 @@ const ChangePasswordContainer = props => {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPwd, setConfirmPwd] = useState('');
+    const [executeLoading, setExecuteLoading] = useState(false);
 
     const [errorMessagePassword, setErrorMessagePassword] = useState('');
     const [errorMessageConfirmPwd, setErrorMessageConfirmPwd] = useState('');
@@ -99,6 +100,7 @@ const ChangePasswordContainer = props => {
     }
 
     const ChangeUserPassword = async () => {
+        setExecuteLoading(true);
         try {
             const usuario = {
                 id: id,
@@ -107,6 +109,7 @@ const ChangePasswordContainer = props => {
 
             const response = await DataServices.putUserPassword(usuario);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 /* setTimeout(function () {
@@ -114,6 +117,7 @@ const ChangePasswordContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error);
         }
         initialStateToast();
@@ -132,6 +136,7 @@ const ChangePasswordContainer = props => {
                 errorMessagePassword={errorMessagePassword}
                 errorMessageConfirmPwd={errorMessageConfirmPwd}
                 saveData={saveData}
+                executeLoading={executeLoading}
             //clearData={clearData}
             />
             <ToastContainer

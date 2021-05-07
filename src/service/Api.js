@@ -134,6 +134,24 @@ const putTipoPruebas = catTipoPrueba => {
 const getAllTipoPruebas = () => {
     return instance.get("catalogos/tipos-pruebas");
 }
+
+const getAllTiposPruebasByMuestraId = id => {
+    return instance.get("catalogos/tipos-pruebas/muestra-id/"+id);
+}
+
+const getAllTipoPruebasByMuestraIdAndNivel = (id, nivel) => {
+    return instance.get(`catalogos/tipos-pruebas/muestra-id/nivel`, { params: {
+        id: id,
+        nivel: nivel
+    }});
+}
+/**
+ * return instance.get(`muestras/influenza/participantes/codigo/fechas`, { params: {
+        codigoParticipante: code,
+        strFecha1: startDate,
+        strFecha2: endDate
+    }})
+ */
 /**----------------------------------- */
 /**Api para el catalogo de tubos */
 const postTubo = catTubo => {
@@ -147,6 +165,38 @@ const putTubo = catTubo => {
 const getAllTubos = () => {
     return instance.get("catalogos/tubos");
 }
+/**----------------------------------- */
+/**Api para el catalogo de mismo episodio febril */
+const postMismoEpFebril = catMismoEpfebril => {
+    return instance.post("catalogos/catMismoEpfebril", catMismoEpfebril);
+}
+
+const putMismoEpFebril = catMismoEpfebril => {
+    return instance.put("catalogos/catMismoEpfebril", catMismoEpfebril);
+}
+
+const getAllEpFebriles = () => {
+    return instance.get("catalogos/catMismoEpfebril");
+}
+
+/**----------------------------------- */
+/**Api para el catalogo resultados muestras */
+const postResulMx = catResultadosMuestras => {
+    return instance.post("catalogos/catResultadosMuestras", catResultadosMuestras);
+}
+
+const putResultMx = catResultadosMuestras => {
+     return instance.put("catalogos/catResultadosMuestras", catResultadosMuestras);
+}
+
+const getAllResultMx = () => {
+    return instance.get("catalogos/catResultadosMuestras");
+}
+
+const getAllResultMxByTipoPrueba = id => {
+    return instance.get("catalogos/catResultadosMuestras/ByIdTipoPrueba/"+id);
+}
+
 /**----------------------------------- */
 /**Api para la seguridad usuarios*/
 const postUser = usuario => {
@@ -200,7 +250,7 @@ const getUserProfileById = id => {
 }
 
 const putUserProfile = (perfilUsuario) => {
-    return instance.post("seguridad/perfilesusuario", perfilUsuario);
+    return instance.put("seguridad/perfilesusuario", perfilUsuario);
 }
 
 const postProfileOptionsMenu = (perfilOpcionMenu) => {
@@ -209,6 +259,10 @@ const postProfileOptionsMenu = (perfilOpcionMenu) => {
 
 const getAllProfileOptionsMenuByProfileId = id => {
     return instance.get("seguridad/perfilesopcionmenu/byperfil/"+id);
+}
+
+const getAllUserProfileByNombre = nombre => {
+    return instance.get("seguridad/perfilesusuario/perfil/"+nombre);
 }
 /**----------------------------------- */
 /**Api para la seguridad menu*/
@@ -242,9 +296,68 @@ const postMenuOption = (opcionMenu) => {
 }
 
 const putMenuOption = (opcionMenu) => {
-    return instance.post("seguridad/opcionesmenu", opcionMenu);
+    return instance.put("seguridad/opcionesmenu", opcionMenu);
 }
 /**----------------------------------- */
+
+const getParticipanteByCode = codigo => {
+    return instance.get("participantes/"+codigo);
+}
+
+/**----------------------------------- */
+/**Api para las muestras*/
+const getCountMuestrasByCodigoParticipanteYCatMuestraId = (codigoParticipante, id) => {
+    return instance.get(`muestras/byCodigoParticipante_Y_catMuestraId`, { params: {
+        codigoParticipante: codigoParticipante,
+        id: id
+    }})
+}
+
+const postMuestraInfluenza = (muestra) => {
+    return instance.post("muestras/influenza", muestra);
+}
+
+const putMuestraInfluenza = (muestra) => {
+    return instance.put("muestras/influenza", muestra);
+}
+
+const getMuestrasInfluenza = () => {
+    return instance.get("muestras/influenza/fechaDelDia");
+}
+
+const filtroMxInfluenza = (code, startDate, endDate) => {
+    return instance.get(`muestras/influenza/participantes/codigo/fechas`, { params: {
+        codigoParticipante: code,
+        strFecha1: startDate,
+        strFecha2: endDate
+    }})
+}
+
+const getMuestraInfluenzaById = id => {
+    return instance.get("muestras/influenza/"+id);
+}
+
+/* const getMuestraInfluenzaUltimoRegistro = (code) => {
+    return instance.get(`muestras/influenza/ultimoRegistro`, { params: {
+        codigoParticipante: code
+    }});
+} */
+
+const getUltimoRegistroMuestraInfluenza = (code) => {
+    return instance.get(`muestras/influenza/ultimoRegistro`, { params: {
+        codigoParticipante: code
+    }});
+}
+/**Metodo para anular las muestras (Influenza, Dengue, BHC, etc) */
+const anularMuestra = (muestra) => {
+    return instance.put("muestras/anular", muestra);
+}
+
+/**----------------------------------- */
+/**Api para el catalogo motivos de anulacion*/
+const getMotivosAnulaciones = () => {
+    return instance.get("catalogos/motivos-anulaciones");
+}
 
 const api = {
     login,
@@ -297,7 +410,27 @@ const api = {
     postMenuOption,
     putMenuOption,
     postProfileOptionsMenu,
-    getAllProfileOptionsMenuByProfileId
+    getAllProfileOptionsMenuByProfileId,
+    getParticipanteByCode,
+    getAllUserProfileByNombre,
+    getCountMuestrasByCodigoParticipanteYCatMuestraId,
+    postMuestraInfluenza,
+    putMuestraInfluenza,
+    getMuestrasInfluenza,
+    getMotivosAnulaciones,
+    anularMuestra,
+    filtroMxInfluenza,
+    getMuestraInfluenzaById,
+    postMismoEpFebril,
+    putMismoEpFebril,
+    getAllEpFebriles,
+    postResulMx,
+    putResultMx,
+    getAllResultMx,
+    getAllResultMxByTipoPrueba,
+    getAllTiposPruebasByMuestraId,
+    getUltimoRegistroMuestraInfluenza,
+    getAllTipoPruebasByMuestraIdAndNivel
 };
 
 export default api;

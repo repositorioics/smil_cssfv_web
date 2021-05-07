@@ -12,6 +12,7 @@ const MenuContainer = props => {
     const [order, setOrder] = useState('');
     let [isActive, setIsActive] = useState(false);
     const [disableBtnSave,setDisableBtnSave] = useState(false);
+    const [executeLoading, setExecuteLoading] = useState(false);
     
     const [isNew, setNew] = useState(true);
     const [id, setId] = useState('');
@@ -42,9 +43,11 @@ const MenuContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getById = async (id) => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getMenuById(id);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setId(response.data.id);
                 setName(response.data.nombre);
                 setDescription(response.data.descripcion !== null ? response.data.descripcion : "");
@@ -52,6 +55,7 @@ const MenuContainer = props => {
                 setIsActive(response.data.activo);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -96,6 +100,7 @@ const MenuContainer = props => {
     }
 
     const saveMenu = async () => {
+        setExecuteLoading(true);
         try {
             const menu = {
                 nombre: name,
@@ -105,6 +110,7 @@ const MenuContainer = props => {
             }
             const response = await DataServices.postMenu(menu);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -112,6 +118,7 @@ const MenuContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             setDisableBtnSave(false);
             console.log('error', error);
         }
@@ -119,6 +126,7 @@ const MenuContainer = props => {
     }
 
     const editMenu = async () => {
+        setExecuteLoading(true);
         try {
             const menu = {
                 id: id,
@@ -130,6 +138,7 @@ const MenuContainer = props => {
 
             const response = await DataServices.putMenu(menu);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 /* setTimeout(function () {
@@ -137,6 +146,7 @@ const MenuContainer = props => {
                 }, 6000);*/
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error);
         }
         initialStateToast();
@@ -177,6 +187,7 @@ const MenuContainer = props => {
                 clearData={clearData}
                 disableBtnSave={disableBtnSave}
                 title={title}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

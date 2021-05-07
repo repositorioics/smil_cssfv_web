@@ -14,6 +14,8 @@ const CambioCategoriaContainer = props => {
     const [description, setDescription] = useState('');
     const [isNew, setIsNew] = useState(true);
     const [id, setId] = useState(0);
+    const [executeLoading, setExecuteLoading] = useState(false);
+    const [mounted, setMounted] = useState(true);
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
@@ -50,11 +52,14 @@ const CambioCategoriaContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getAllCambioCat()
+            if (mounted) {
+                getAllCambioCat();
+            }
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted, props])
 
     const initialStateToast = () => {
         setType(null);
@@ -63,9 +68,11 @@ const CambioCategoriaContainer = props => {
 
     /**Metodo para obtener todas las categorias */
     const getAllCambioCat = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllCambiosCategorias();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
@@ -80,6 +87,7 @@ const CambioCategoriaContainer = props => {
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -152,6 +160,7 @@ const CambioCategoriaContainer = props => {
 
     /**Metodo para enviar a guardar la categoria */
     const saveCat = async () => {
+        setExecuteLoading(true);
         try {
             const catCambioCategoria = {
                 cambioCat: name,
@@ -161,6 +170,7 @@ const CambioCategoriaContainer = props => {
 
             const response = await DataServices.postCambioCategoria(catCambioCategoria);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 setTimeout(function () {
@@ -168,6 +178,7 @@ const CambioCategoriaContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -175,6 +186,7 @@ const CambioCategoriaContainer = props => {
 
     /**Metodo para Editar un registro */
     const editCat = async () => {
+        setExecuteLoading(true);
         try {
             const catCambioCategoria = {
                 id: id,
@@ -185,6 +197,7 @@ const CambioCategoriaContainer = props => {
 
             const response = await DataServices.putCambioCategoria(catCambioCategoria);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 setTimeout(function () {
@@ -192,6 +205,7 @@ const CambioCategoriaContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -231,6 +245,7 @@ const CambioCategoriaContainer = props => {
                 pagination={pagination}
                 tableRowEvents={tableRowEvents}
                 refreshPage={refreshPage}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

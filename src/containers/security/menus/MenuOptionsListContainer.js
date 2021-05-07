@@ -12,6 +12,8 @@ const MenuOptionsListContainer = props => {
 
     const [titleForm] = useState('Lista opciones de menú');
     const [data, setData] = useState([]);
+    const [executeLoading, setExecuteLoading] = useState(false);
+    const [mounted, setMounted] = useState(true);
 
     const rankFormatter = (cell, row, rowIndex, formatExtraData) => {
         return (
@@ -67,17 +69,22 @@ const MenuOptionsListContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getMenuOptionList();
+            if (mounted) {
+                getMenuOptionList();
+            }
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted ,props])
 
     /**Metodo para obtener todos los registros */
     const getMenuOptionList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllMenuOption();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
@@ -92,6 +99,7 @@ const MenuOptionsListContainer = props => {
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -108,6 +116,7 @@ const MenuOptionsListContainer = props => {
                 data={data}
                 columns={columns}
                 pagination={pagination}
+                executeLoading={executeLoading}
                 //tableRowEvents={tableRowEvents}
             />
         </>

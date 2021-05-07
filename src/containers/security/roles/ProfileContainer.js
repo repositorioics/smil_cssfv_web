@@ -12,6 +12,7 @@ const ProfileContainer = props => {
     const [disableBtnSave,setDisableBtnSave] = useState(false);
     const [isNew, setNew] = useState(true);
     const [id, setId] = useState('');
+    const [executeLoading, setExecuteLoading] = useState(false);
 
     const [errorMessageName, setErrorMessageName] = useState('');
 
@@ -39,14 +40,17 @@ const ProfileContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getById = async (id) => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getProfileById(id);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setId(response.data.id);
                 setName(response.data.nombre);
                 setDescription(response.data.descripcion !== null ? response.data.descripcion : "");
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -79,6 +83,7 @@ const ProfileContainer = props => {
     }
 
     const saveProfile = async () => {
+        setExecuteLoading(true);
         try {
             const perfil = {
                 nombre: name,
@@ -86,6 +91,7 @@ const ProfileContainer = props => {
             }
             const response = await DataServices.postProfile(perfil);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -93,6 +99,7 @@ const ProfileContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             setDisableBtnSave(false);
             console.log('error', error);
         }
@@ -100,6 +107,7 @@ const ProfileContainer = props => {
     }
 
     const editProfile = async () => {
+        setExecuteLoading(true);
         try {
             const perfil = {
                 id: id,
@@ -109,6 +117,7 @@ const ProfileContainer = props => {
 
             const response = await DataServices.putProfile(perfil);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 /* setTimeout(function () {
@@ -116,6 +125,7 @@ const ProfileContainer = props => {
                 }, 6000); */
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error);
         }
         initialStateToast();
@@ -150,6 +160,7 @@ const ProfileContainer = props => {
                 clearData={clearData}
                 disableBtnSave={disableBtnSave}
                 title={title}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

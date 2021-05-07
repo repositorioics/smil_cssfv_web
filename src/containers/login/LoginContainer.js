@@ -11,6 +11,8 @@ const LoginContainer = props => {
     const [userName, setUserName] = useState(null);
     const [password, setPassword] = useState(null);
 
+    const [executeLoading, setExecuteLoading] = useState(false);
+
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
     const [messageAlert, setMessageAlert] = useState(null);
@@ -60,8 +62,10 @@ const LoginContainer = props => {
                     password: password
                 }
                 if (mountedRef) {
+                    setExecuteLoading(true);
                     const response = await DataServices.login(data);
                     if (response.status === 200) {
+                        setExecuteLoading(false);
                         localStorage.setItem('token', response.data.token);
                         //setAuthToken(response.data.token);
                         setUserName('');
@@ -71,6 +75,7 @@ const LoginContainer = props => {
                 }
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log(error.response)
             if (error.response !== undefined && error.response !== null && error.response !== '') {
                 switch (error.response.data.message) {
@@ -117,6 +122,7 @@ const LoginContainer = props => {
                 errorMessageName={errorMessageName}
                 errorMessagePwd={errorMessagePwd}
                 onKeyPressPwd={onKeyPressPwd}
+                executeLoading={executeLoading}
             />
             <ToastContainer 
                 type={type}

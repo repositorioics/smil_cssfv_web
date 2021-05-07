@@ -14,6 +14,8 @@ const ConsultasContainer = props => {
     const [description, setDescription] = useState('');
     const [isNew, setIsNew] = useState(true);
     const [id, setId] = useState(0);
+    const [executeLoading, setExecuteLoading] = useState(false);
+    const [mounted, setMounted] = useState(true);
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
@@ -49,11 +51,14 @@ const ConsultasContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getAll()
+            if (mounted) {
+                getAll();
+            }
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted, props])
 
     const initialStateToast = () => {
         setType(null);
@@ -62,9 +67,11 @@ const ConsultasContainer = props => {
 
     /**Metodo para obtener todos los registros */
     const getAll = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllConsultas();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
@@ -79,6 +86,7 @@ const ConsultasContainer = props => {
                 //history.push('/home');
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -151,6 +159,7 @@ const ConsultasContainer = props => {
 
     /**Metodo para enviar a guardar */
     const saveConsulta = async () => {
+        setExecuteLoading(true);
         try {
             const catConsulta = {
                 consulta: name,
@@ -160,6 +169,7 @@ const ConsultasContainer = props => {
 
             const response = await DataServices.postConsulta(catConsulta);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 setTimeout(function () {
@@ -167,6 +177,7 @@ const ConsultasContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -174,6 +185,7 @@ const ConsultasContainer = props => {
 
     /**Metodo para Editar un registro */
     const editConsulta = async () => {
+        setExecuteLoading(true);
         try {
             const catConsulta = {
                 id: id,
@@ -184,6 +196,7 @@ const ConsultasContainer = props => {
 
             const response = await DataServices.putConsulta(catConsulta);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se modificaron correctamente");
                 setTimeout(function () {
@@ -191,6 +204,7 @@ const ConsultasContainer = props => {
                 }, 6000);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
         initialStateToast();
@@ -230,6 +244,7 @@ const ConsultasContainer = props => {
                 pagination={pagination}
                 tableRowEvents={tableRowEvents}
                 refreshPage={refreshPage}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}

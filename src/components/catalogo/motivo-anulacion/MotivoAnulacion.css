@@ -28,20 +28,17 @@
 @media (min-width: 768px) {
     .container, .container-md, .container-sm {
         max-width: 600px;
-        margin-top: 10%;
     }
 }
 
 @media (min-width: 992px) {
     .container, .container-lg, .container-md, .container-sm {
         max-width: 850px;
-        margin-top: 10%;
     }
 }
 
 @media (min-width: 1200px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl {
         max-width: 1140px;  
-        margin-top: 5%;
     }
 }

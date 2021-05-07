@@ -1,5 +1,6 @@
 import React from "react";
 import Modal from 'react-bootstrap/Modal';
+import TextField from '@material-ui/core/TextField';
 import '../catalogo/Catalogo.css';
 
 const Catalogo = props => {
@@ -15,25 +16,27 @@ const Catalogo = props => {
                             <form>
                                 <div className="form-group">
                                     {/* <input type="text" className="form-control" placeholder="Enter First Name" name="first-name" required /> */}
-                                    <input
+                                    <TextField
                                         type="text"
                                         maxLength={64}
                                         pattern="[A-Za-z\s-]+"
                                         value={props.name}
                                         onChange={props.handleChangeName}
                                         className="form-control"
-                                        placeholder="Nombre" />
+                                        label="Nombre" />
                                     <label className="messageError">{props.errorMessageName}</label>
                                 </div>
                                 <div className="form-group">
                                     {/* <input type="text" className="form-control" placeholder="Enter Last Name" name="last-name" required /> */}
-                                    <input
+                                    <TextField
                                         type="text"
                                         maxLength={256}
+                                        style={{height: 'auto'}}
                                         value={props.description}
+                                        multiline={true}
                                         onChange={props.handleDescription}
                                         className="form-control"
-                                        placeholder="Descripción" />
+                                        label="Descripción" />
                                 </div>
                                 <div className="form-group">
                                     <input

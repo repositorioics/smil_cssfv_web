@@ -1,0 +1,67 @@
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.m-top {
+    margin-top: 10px;
+}
+
+.hover {
+    cursor: pointer;
+}
+
+.customContainer {
+    box-shadow: none !important;
+}
+
+/*Checkbox*/
+
+input[type=checkbox].css-checkbox {
+    position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+  }
+
+  input[type=checkbox].css-checkbox + label.css-label {
+    padding-left:29px;
+    height:24px; 
+    display:inline-block;
+    line-height:24px;
+    background-repeat:no-repeat;
+    background-position: 0 0;
+    font-size:16px;
+    vertical-align:middle;
+    cursor:pointer;
+
+  }
+
+  input[type=checkbox].css-checkbox:checked + label.css-label {
+    background-position: 0 -24px;
+  }
+  label.css-label {
+    /*background-image:url('../../images/checkbox.png');*/
+    background-image:url('../../../images/checkbox.png');
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+/*********************/
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 850px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1140px;  
+    }
+}

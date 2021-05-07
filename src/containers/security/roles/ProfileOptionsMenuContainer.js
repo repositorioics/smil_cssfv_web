@@ -11,10 +11,12 @@ const ProfileOptionsMenuContainer = props => {
     const [titleForm] = useState('Perfil Opciones de Menú');
     const [data, setData] = useState([]);
     const [profileData, setProfileData] = useState([]);
-    const [profileSelected, setProfileSelected] = useState([]);
+    const [profileSelected, setProfileSelected] = useState('');
     const [profileId, setProfileId] = useState(0);
     const [profileMenuOptions, setProfileMenuOptions] = useState([]);
     const [hideContent, setHideContent] = useState(true);
+    const [executeLoading, setExecuteLoading] = useState(false);
+    const [mounted, setMounted] = useState(true);
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
@@ -59,17 +61,22 @@ const ProfileOptionsMenuContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getMenuOptionList();
-            getProfileList();
+            if (mounted) {
+                getMenuOptionList();
+                getProfileList();
+            }
         } else {
             props.history.push('/');
         }
-    }, [props])
+        return () => setMounted(false);
+    }, [mounted, props])
 
     const getProfileMenuOptionsByProfileId = async (id) => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllProfileOptionsMenuByProfileId(id);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 for (let i = 0; i < response.data.length; i++) {
                     for(let j = 0; j < data.length; j++) {
                         if (response.data[i].opcionMenuId.id === data[j].id && response.data[i].activo === true) {
@@ -80,15 +87,18 @@ const ProfileOptionsMenuContainer = props => {
                 setProfileMenuOptions(response.data);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
 
     /**Metodo para obtener todas las opciones de menu */
     const getMenuOptionList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllMenuOption();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 const newData = [];
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
@@ -102,18 +112,22 @@ const ProfileOptionsMenuContainer = props => {
                 setData(newData);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
 
     /**Metodo para obtener todas las opciones de menu */
     const getProfileList = async () => {
+        setExecuteLoading(true);
         try {
             const response = await DataServices.getAllProfiles();
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setProfileData(response.data);
             }
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error)
         }
     }
@@ -123,11 +137,11 @@ const ProfileOptionsMenuContainer = props => {
         setMessageAlert(null);
     }
 
-    const onSelect = (selectedList, selectedItem) => {
+    const onSelect = (e) => {
         cleanDataState();
-        setProfileSelected(selectedList);
-        const id = selectedItem.id;
-        getProfileMenuOptionsByProfileId(selectedItem.id);
+        setProfileSelected(e.target.value);
+        const id = e.target.value;
+        getProfileMenuOptionsByProfileId(id);
         setProfileId(id);
         setHideContent(false);
         initialStateToast();
@@ -150,7 +164,7 @@ const ProfileOptionsMenuContainer = props => {
     }
 
     const saveProfileOptionsMenu = async () => {
-        
+        setExecuteLoading(true);
         try {
              let perfilOpcionMenu = [];
             
@@ -167,18 +181,20 @@ const ProfileOptionsMenuContainer = props => {
             }
             
             /**Validando que se seleccione al menos una opcion de menu */
-           const foundOptionMenu = perfilOpcionMenu.find(a => a.activo === true);
+           /* const foundOptionMenu = perfilOpcionMenu.find(a => a.activo === true);
             if (foundOptionMenu === undefined || foundOptionMenu === null || foundOptionMenu === '') {
+                setExecuteLoading(false);
                 setType('warning');
                 setMessageAlert('Debe seleccionar una opcion de menú');
                 setTimeout(function () {
                     initialStateToast();
                 }, 6000);
                 return
-            }
+            } */
 
             const response = await DataServices.postProfileOptionsMenu(perfilOpcionMenu);
             if (response.status === 200) {
+                setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Los datos se guardaron correctamente");
                 /* setTimeout(function () {
@@ -186,13 +202,14 @@ const ProfileOptionsMenuContainer = props => {
                 }, 6000);*/
             }   
         } catch (error) {
+            setExecuteLoading(false);
             console.log('error', error);
         }
         initialStateToast();
     }
 
     const validateData = () => {
-        if (profileSelected.length <= 0 || profileSelected === null) {
+        if (profileSelected === '' || profileSelected === null || profileSelected === undefined) {
             setType('warning');
             setMessageAlert('Debe seleccionar el perfil');
             setTimeout(function () {
@@ -219,6 +236,7 @@ const ProfileOptionsMenuContainer = props => {
                 saveData={saveData}
                 profileMenuOptions={profileMenuOptions}
                 hideContent={hideContent}
+                executeLoading={executeLoading}
             />
             <ToastContainer
                 type={type}
