@@ -1232,10 +1232,10 @@ const MxInfluenzaContainer = props => {
                 muestra.muestraId.fechaToma = fechaToma;
             }
             /**Actualizando la muestra de influenza*/ 
-            //putMxInfluenza(muestra, activeStep);
+            putMxInfluenza(muestra, activeStep);
         } else {
             /**Nueva muestra de influenza*/
-            //postMxInfluenza(muestra, activeStep);
+            postMxInfluenza(muestra, activeStep);
         }
     }
 
