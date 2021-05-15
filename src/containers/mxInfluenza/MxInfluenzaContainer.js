@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import MxInfluenza from '../../components/mxInfluenza/MxInfluenza';
 import DataServices from '../../service/Api';
+import DataServicePrintCode from '../../service/ApiPrintCode';
 import Utils from '../../utils/Utils';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
@@ -718,7 +719,7 @@ const MxInfluenzaContainer = props => {
     const getTypeOfMx = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTipoMuestras();
+            const response = await DataServices.getAllTipoMuestrasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -994,11 +995,15 @@ const MxInfluenzaContainer = props => {
         return true;
     }
 
-    /** */
+    /**Metodo para imprimir el código */
     const printCode = () => {
         if (validateCreateBarCode()) {
             const barCode = createBarCodeInfluenza();
             console.log(barCode);
+            DataServicePrintCode.printCodeMxInfluenza(barCode);
+            //const url = 'http://localhost:13001/print?barcodes='+barCode;
+            //console.log(url);
+            //window.open(url);
         }
     }
     /** */
@@ -1033,7 +1038,7 @@ const MxInfluenzaContainer = props => {
             }, 500);
             return false;
         }
-        if (code === '' || code === undefined || code === null) {
+        if (codeLab === '' || codeLab === undefined || codeLab === null) {
             setType("info");
             setMessageAlert("No existe código lab");
             setTimeout(function () {

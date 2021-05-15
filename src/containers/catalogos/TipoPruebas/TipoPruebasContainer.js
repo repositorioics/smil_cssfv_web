@@ -156,7 +156,6 @@ const TipoPruebasContainer = props => {
     }
 
     const handleChangeMx = (e) => {
-        console.log(e.target.value);
         setSelectedMx(e.target.value);
         setIdMxSelected(e.target.value);
         setErrorMessageMx('');

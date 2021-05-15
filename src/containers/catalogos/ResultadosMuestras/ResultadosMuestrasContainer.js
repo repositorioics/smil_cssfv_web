@@ -83,7 +83,6 @@ const ResultadosMuestrasContainer = props => {
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
-                console.log(response.data);
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
                         "id": response.data[i].id,

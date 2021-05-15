@@ -76,7 +76,7 @@ const LoginContainer = props => {
             }
         } catch (error) {
             setExecuteLoading(false);
-            console.log(error.response)
+            //console.log(error.response)
             if (error.response !== undefined && error.response !== null && error.response !== '') {
                 switch (error.response.data.message) {
                     case "INVALID_CREDENTIALS": //Unauthorized

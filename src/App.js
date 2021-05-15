@@ -38,6 +38,8 @@ import MenuOptionContainer from './containers/security/menus/MenuOptionContainer
 import MxInfluenzaListContainer from './containers/mxInfluenza/MxInfluenzaListContainer';
 import MxInfluenzaContainer from './containers/mxInfluenza/MxInfluenzaContainer';
 
+import MxU01Container from './containers/mxU01/MxU01Container';
+
 const App = () => {
   const [isTimeout, setIsTimeout] = useState(false);
 
@@ -387,6 +389,15 @@ const App = () => {
                     <MxInfluenzaContainer {...props}/>
                   </Header>
                 )}
+              />
+              <Route path="/muestras/agregar-muestra-u01"
+                exact
+                render={props => 
+                  (
+                    <Header {...props}  >
+                        <MxU01Container {...props}/>
+                    </Header>
+                  )}
               />
             </>
           </Switch>

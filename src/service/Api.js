@@ -40,7 +40,7 @@ const putCategoria = catCategoria => {
 
 
 const getAllCategorias = () => {
-    return instance.get("catalogos/categorias",);
+    return instance.get("catalogos/categorias");
 }
 /**----------------------------------- */
 /**Api para el catalogo de cambio de categorias */
@@ -68,6 +68,10 @@ const putClasificacion = catClasificacion => {
 const getAllClasificaciones = () => {
     return instance.get("catalogos/clasificaciones");
 }
+
+const getAllClasificacionesActivas = () => {
+    return instance.get("catalogos/clasificaciones/activas");
+}
 /**----------------------------------- */
 /**Api para el catalogo de consultas */
 const postConsulta = catConsulta => {
@@ -80,6 +84,10 @@ const putConsulta = catConsulta => {
 
 const getAllConsultas = () => {
     return instance.get("catalogos/consultas");
+}
+
+const getAllConsultasActivas = () => {
+    return instance.get("catalogos/consultas/activas");
 }
 /**----------------------------------- */
 /**Api para el catalogo de motivos de anulacion */
@@ -119,6 +127,10 @@ const putTipoMuestras = catTipoMuestra => {
 
 const getAllTipoMuestras = () => {
     return instance.get("catalogos/tipos-muestras");
+}
+
+const getAllTipoMuestrasActivas = () => {
+    return instance.get("catalogos/tipos-muestras/activas");
 }
 /**----------------------------------- */
 /**----------------------------------- */
@@ -165,6 +177,10 @@ const putTubo = catTubo => {
 const getAllTubos = () => {
     return instance.get("catalogos/tubos");
 }
+
+const getAllTubosActivos = () => {
+    return instance.get("catalogos/tubos/activos");
+}
 /**----------------------------------- */
 /**Api para el catalogo de mismo episodio febril */
 const postMismoEpFebril = catMismoEpfebril => {
@@ -194,7 +210,9 @@ const getAllResultMx = () => {
 }
 
 const getAllResultMxByTipoPrueba = id => {
-    return instance.get("catalogos/catResultadosMuestras/ByIdTipoPrueba/"+id);
+    return instance.get(`catalogos/catResultadosMuestras/ByIdTipoPrueba`, {params : {
+        id: id
+    }});
 }
 
 /**----------------------------------- */
@@ -261,8 +279,10 @@ const getAllProfileOptionsMenuByProfileId = id => {
     return instance.get("seguridad/perfilesopcionmenu/byperfil/"+id);
 }
 
-const getAllUserProfileByNombre = nombre => {
-    return instance.get("seguridad/perfilesusuario/perfil/"+nombre);
+const getAllUserProfileByNombre = (nombre) => {
+    return instance.get(`seguridad/perfilesusuario/perfil`, {params : {
+        nombre: nombre
+    }});
 }
 /**----------------------------------- */
 /**Api para la seguridad menu*/
@@ -382,6 +402,7 @@ const api = {
     postTipoMuestras,
     putTipoMuestras,
     getAllTipoMuestras,
+    getAllTipoMuestrasActivas,
     postTipoPruebas,
     putTipoPruebas,
     getAllTipoPruebas,
@@ -430,7 +451,10 @@ const api = {
     getAllResultMxByTipoPrueba,
     getAllTiposPruebasByMuestraId,
     getUltimoRegistroMuestraInfluenza,
-    getAllTipoPruebasByMuestraIdAndNivel
+    getAllTipoPruebasByMuestraIdAndNivel,
+    getAllTubosActivos,
+    getAllConsultasActivas,
+    getAllClasificacionesActivas
 };
 
 export default api;

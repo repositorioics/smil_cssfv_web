@@ -251,6 +251,11 @@ const Header = ({children}) => {
         history.push('/muestras/influenza');
     }
 
+    const gotoMxU01 = () => {
+        closeMenu();
+        history.push('/muestras/agregar-muestra-u01');
+    }
+
     const closeMenu = () => {
         if (open) {
             setOpen(!open);
@@ -452,6 +457,12 @@ const Header = ({children}) => {
                                     <StarBorder />
                                 </ListItemIcon>
                                 <ListItemText primary="Influenza" />
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => gotoMxU01()}>
+                                <ListItemIcon>
+                                    <StarBorder />
+                                </ListItemIcon>
+                                <ListItemText primary="U01" />
                             </ListItem>
                             <Divider />
                         </List>
