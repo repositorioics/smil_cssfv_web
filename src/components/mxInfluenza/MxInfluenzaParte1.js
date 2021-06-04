@@ -88,7 +88,7 @@ const MxInfluenzaParte1 = props => {
                 <div className="col col-lg-2">
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Imprimir código</Tooltip>}>
                         <span className="d-inline-block">
-                            <PrintIcon style={{ color: blue[500], cursor: 'pointer' }} size={20} onClick={props.printCode} />
+                            <PrintIcon style={{ color: blue[500], cursor: 'pointer' }} size={20} onClick={props.abrirImpresion} />
                         </span>
                     </OverlayTrigger>
                 </div>

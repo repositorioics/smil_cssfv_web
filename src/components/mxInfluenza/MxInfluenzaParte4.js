@@ -9,7 +9,7 @@ import '../mxInfluenza/MxInfluenza.css';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
-        minWidth: 475,
+        minWidth: 565,
     },
     selectEmpty: {
         marginTop: theme.spacing(0),
@@ -20,7 +20,7 @@ const MxInfluenzaParte4 = (props) => {
     const classes = useStyles();
     return (
         <>
-            <div className="input-group row" style={{ marginTop: 20 }}>
+            <div className="input-group row">
                 <div className="checkbox mleft-20" style={{ marginTop: 20 }}>
                     <label>
                         <input
@@ -44,6 +44,7 @@ const MxInfluenzaParte4 = (props) => {
                         type="number"
                         maxLength={50}
                         className="form-control"
+                        style={{ width: '475px' }}
                         name="testNumberVsr"
                         value={props.testNumberVsr}
                         onChange={props.handleChangeTestNumberVsr}

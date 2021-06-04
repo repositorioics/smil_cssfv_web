@@ -318,6 +318,10 @@ const postMenuOption = (opcionMenu) => {
 const putMenuOption = (opcionMenu) => {
     return instance.put("seguridad/opcionesmenu", opcionMenu);
 }
+
+const getOpcionesMenuUsuario = (usuario) => {
+    return instance.get("/seguridad/opcionesmenuusuario/"+usuario);
+}
 /**----------------------------------- */
 
 const getParticipanteByCode = codigo => {
@@ -454,7 +458,8 @@ const api = {
     getAllTipoPruebasByMuestraIdAndNivel,
     getAllTubosActivos,
     getAllConsultasActivas,
-    getAllClasificacionesActivas
+    getAllClasificacionesActivas,
+    getOpcionesMenuUsuario
 };
 
 export default api;

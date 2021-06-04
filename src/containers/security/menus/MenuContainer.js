@@ -10,6 +10,7 @@ const MenuContainer = props => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [order, setOrder] = useState('');
+    const [menuIcon, setMenuIcon] = useState('');
     let [isActive, setIsActive] = useState(false);
     const [disableBtnSave,setDisableBtnSave] = useState(false);
     const [executeLoading, setExecuteLoading] = useState(false);
@@ -52,6 +53,7 @@ const MenuContainer = props => {
                 setName(response.data.nombre);
                 setDescription(response.data.descripcion !== null ? response.data.descripcion : "");
                 setOrder(response.data.orden !== null ? response.data.orden : "");
+                setMenuIcon(response.data.icono !== null ? response.data.icono : "");
                 setIsActive(response.data.activo);
             }
         } catch (error) {
@@ -74,6 +76,10 @@ const MenuContainer = props => {
 
     const handleChangeDescription = (e) => {
         setDescription(e.target.value);
+    }
+
+    const handleChangeMenuIcon = (e) => {
+        setMenuIcon(e.target.value);
     }
 
     const handleChangeOrder = (e) => {
@@ -106,6 +112,7 @@ const MenuContainer = props => {
                 nombre: name,
                 descripcion: description,
                 orden: order,
+                icono: menuIcon,
                 activo: isActive
             }
             const response = await DataServices.postMenu(menu);
@@ -133,6 +140,7 @@ const MenuContainer = props => {
                 nombre: name,
                 descripcion: description,
                 orden: order,
+                icono: menuIcon,
                 activo: isActive
             }
 
@@ -178,10 +186,12 @@ const MenuContainer = props => {
                 description={description}
                 order={order}
                 isActive={isActive}
+                menuIcon={menuIcon}
                 handleChangeName={handleChangeName}
                 handleChangeDescription={handleChangeDescription}
                 handleChangeOrder={handleChangeOrder}
                 handleChangeIsActive={handleChangeIsActive}
+                handleChangeMenuIcon={handleChangeMenuIcon}
                 errorMessageName={errorMessageName}
                 saveData={saveData}
                 clearData={clearData}

@@ -33,7 +33,7 @@ const AlertDialogMismoEF = (props) => {
     }
     return (
         <div>
-            <Dialog
+            <Dialog disableBackdropClick
                 open={props.openAlertDialogMismoEF}
                 onClose={props.cancelAlertDialogMismoEF}
                 aria-labelledby="alert-dialog-title"
@@ -55,7 +55,7 @@ const AlertDialogMismoEF = (props) => {
                                 name="fifUltMxTomada"
                                 value={props.fifUltMxTomada}
                                 disabled={true}
-                                label="FIF de la ultima mx tomada" 
+                                label="FIF de la última mx tomada" 
                                 inputProps={{
                                     style: { color: 'black', fontWeight: 'bold' }
                                 }}/>

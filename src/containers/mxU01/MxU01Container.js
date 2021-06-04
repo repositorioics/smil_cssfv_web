@@ -282,13 +282,13 @@ const MxU01Container = props => {
         return true;
     }
 
-    const initialStateToast = () => {
+    /*const initialStateToast = () => {
         setType(null);
         setMessageAlert(null);
-    }
+    }*/
 
     /**Funcion para guardar los datos */
-    const postMxInfluenza = async (muestra, activeStep) => {
+    /*const postMxInfluenza = async (muestra, activeStep) => {
         setExecuteLoading(true);
         try {
             const response = await DataServices.postMuestraInfluenza(muestra);
@@ -303,16 +303,16 @@ const MxU01Container = props => {
                         break;
                     default:
                         break;
-                } */
+                }
             }
         } catch (error) {
             setExecuteLoading(false);
         }
         initialStateToast();
-    }
+    }*/
 
     /**Funcion para editar los datos */
-    const putMxInfluenza = async (muestra) => {
+    /*const putMxInfluenza = async (muestra) => {
         setExecuteLoading(true);
         try {
             const response = await DataServices.putMuestraInfluenza(muestra);
@@ -344,7 +344,7 @@ const MxU01Container = props => {
             console.log('error', error);
         }
         initialStateToast();
-    }
+    }*/
 
     const saveData = (activeStep) => {
     }

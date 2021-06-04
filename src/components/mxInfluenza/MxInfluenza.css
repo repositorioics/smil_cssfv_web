@@ -9,3 +9,8 @@
 .mleft-20 {
     margin-left: 20px;
 }
+
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+}

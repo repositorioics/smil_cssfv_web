@@ -52,24 +52,6 @@ const AnularMx = props => {
                                             </Select>
                                             <label className="messageError">{props.errorMessageOtroMotivoSelected}</label>
                                         </FormControl>
-                                        {/* <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">
-                                            Motivo de anulación
-                                    </Form.Label>
-                                        <div className="c-multiselect">
-                                            <Multiselect
-                                                className="c-multiselect"
-                                                showArrow={true}
-                                                singleSelect={true}
-                                                placeholder="Seleccione..."
-                                                disable={props.disabledOtroMotivoSelected}
-                                                options={props.motivosAnulacion} // Options to display in the dropdown
-                                                selectedValues={props.selectedMotivo} // Preselected value to persist in dropdown
-                                                onSelect={props.onSelectMotivo} // Function will trigger on select event
-                                                onRemove={props.onRemoveMotivo} // Function will trigger on remove event
-                                                displayValue="name" // Property name to display in the dropdown options
-                                            />
-                                        </div>
-                                        <label style={{marginTop: 3}} className="messageError">{props.errorMessageOtroMotivoSelected}</label> */}
                                     </Col>
                                 </div>
                                 <div>

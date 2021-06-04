@@ -55,6 +55,7 @@ const LoginContainer = props => {
 
     const authenticate = async (event) => {
         event.preventDefault();
+        setExecuteLoading(true);
         try {
             if (validateData()) {
                 const data = {
@@ -62,15 +63,15 @@ const LoginContainer = props => {
                     password: password
                 }
                 if (mountedRef) {
-                    setExecuteLoading(true);
                     const response = await DataServices.login(data);
                     if (response.status === 200) {
-                        setExecuteLoading(false);
+                        //setExecuteLoading(false);
                         localStorage.setItem('token', response.data.token);
+                        getOpcienesMenu();
                         //setAuthToken(response.data.token);
-                        setUserName('');
-                        setPassword('');
-                        props.history.push('/home');
+                        //setUserName('');
+                        //setPassword('');
+                        //props.history.push('/home');
                     }
                 }
             }
@@ -98,6 +99,19 @@ const LoginContainer = props => {
         initialStateToast();
     }
 
+    /**Obteniendo el menu y las opciones de menu cuando el usuario se autentico */
+    const getOpcienesMenu = async () => {
+        try {
+            const response = await DataServices.getOpcionesMenuUsuario(userName);
+            if (response.status === 200) {
+                setExecuteLoading(false);
+                localStorage.setItem('accountData', JSON.stringify(response.data));
+                props.history.push('/home');
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+        }
+    }
 
     /**Validando los datos requeridos */
     const validateData = () => {

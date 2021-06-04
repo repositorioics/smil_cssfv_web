@@ -9,7 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 const AlertDialog = (props) => {
     return (
         <div>
-            <Dialog
+            <Dialog disableBackdropClick
                 open={props.openAlertDialog}
                 onClose={props.handleCloseAlertDialog}
                 aria-labelledby="alert-dialog-title"

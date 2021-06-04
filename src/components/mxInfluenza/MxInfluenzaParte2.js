@@ -15,6 +15,10 @@ import {
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
+        minWidth: 565,
+        marginTop: 15
+    },
+    formControl2: {
         minWidth: 475,
         marginTop: 15
     },
@@ -69,7 +73,7 @@ const MxInfluenzaParte2 = (props) => {
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-sm">
-                    <FormControl className={classes.formControl}>
+                    <FormControl className={classes.formControl2}>
                         <InputLabel id="tomada-por-input-label">Tomada por</InputLabel>
                         <Select
                             labelId="tomada-por-label"
@@ -159,7 +163,7 @@ const MxInfluenzaParte2 = (props) => {
                         id="volMedioMl"
                         autoComplete="off"
                         type="text"
-                        style={{ marginTop: 10 }}
+                        style={{ marginTop: 10, width: '100%' }}
                         maxLength={50}
                         className="form-control"
                         name="volMedioMl"
@@ -175,7 +179,7 @@ const MxInfluenzaParte2 = (props) => {
                         id="motivoNoFif"
                         autoComplete="off"
                         type="text"
-                        style={{ marginTop: 15 }}
+                        style={{ marginTop: 15, width: '475px' }}
                         className="form-control"
                         name="motivoNoFif"
                         value={props.motivoNoFif}

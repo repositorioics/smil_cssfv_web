@@ -63,7 +63,9 @@ const App = () => {
 
   const LogoutTimeExpired = () => {
     if (isTimeout) {
+      localStorage.removeItem("_expiredTime");
       localStorage.removeItem('token');
+      localStorage.removeItem('accountData');
       //setAuthToken();
       return <Redirect to='/login' />
       //history.push('/');

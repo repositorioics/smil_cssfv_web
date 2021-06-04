@@ -47,6 +47,20 @@ const Menu = props => {
 										onChange={props.handleChangeDescription}
 										label="Descripción" />
 								</div>
+								<div style={{ marginTop: 5 }} className="input-group">
+									<TextField
+										id="menuIcon"
+										autoComplete="off"
+										type="text"
+										maxLength={64}
+										multiline={true}
+										style={{ height: 'auto' }}
+										className="form-control"
+										name="menuIcon"
+										value={props.menuIcon}
+										onChange={props.handleChangeMenuIcon}
+										label="Icono menu" />
+								</div>
 								<div style={{ marginTop: 20 }} className="input-group">
 									<div>
 										<TextField
