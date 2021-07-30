@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import '../mxInfluenza/MxInfluenza.css';
+import '../mxTransmisionLn/MxTransmisionLn.css';
 //import { es } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MxU01Parte2 = props => {
+const MxTransmisionLnParte2 = props => {
     const classes = useStyles();
     return (
         <>
@@ -111,24 +111,8 @@ const MxU01Parte2 = props => {
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
-                <div className="col-sm">
-                    <div>
-                        <label>Hora refrigeración</label>
-                    </div>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
-                            id="horaRefriMxUO1"
-                            value={props.selectedHoraRefrigeracion}
-                            onChange={date => props.handleChangeHoraRefrigeracion(date)}
-                        />
-                    </MuiPickersUtilsProvider>
-                    <div>
-                        <label className="messageError">{props.errorHoraRefrigeracion}</label>
-                    </div>
-                </div>
-
-                <div className="col-sm">
-                <FormControl className={classes.formControl2}>
+            <div className="col-sm">
+                    <FormControl className={classes.formControl2}>
                         <InputLabel id="tomada-por-input-label">Tomada por</InputLabel>
                         <Select
                             labelId="tomada-por-label"
@@ -140,6 +124,28 @@ const MxU01Parte2 = props => {
                                 <em>None</em>
                             </MenuItem>
                             {props.bioanalistas.map((e, keyIndex) => {
+                                return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                            })
+                            }
+                        </Select>
+                        <label className="messageError">{props.errorBioanlista}</label>
+                    </FormControl>
+                </div>
+
+                <div className="col-sm">
+                    <FormControl className={classes.formControl2}>
+                        <InputLabel id="tipo-muestra-input-label">Tipo muestra</InputLabel>
+                        <Select
+                            labelId="tipo-muestra-label"
+                            id="tipo-muestra-select"
+                            value={props.selectedTipoMuestra}
+                            onChange={props.handleChangeTipoMuestra}
+                            disabled={true}
+                        >
+                            <MenuItem value="0">
+                                <em>None</em>
+                            </MenuItem>
+                            {props.tipoMuestra.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                             })
                             }
@@ -209,4 +215,4 @@ const MxU01Parte2 = props => {
         </>
     );
 }
-export default MxU01Parte2;
+export default MxTransmisionLnParte2;

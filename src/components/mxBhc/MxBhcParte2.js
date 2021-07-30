@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import '../mxInfluenza/MxInfluenza.css';
+import '../mxBhc/MxBhc.css';
 //import { es } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 15
     },
     formControl2: {
-        minWidth: 475,
+        minWidth: 400,
         marginTop: 15
     },
     selectEmpty: {
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MxU01Parte2 = props => {
+const MxBhcParte2 = props => {
     const classes = useStyles();
     return (
         <>
@@ -58,8 +58,8 @@ const MxU01Parte2 = props => {
                             name="mxTomada"
                             checked={props.mxTomada}
                             onChange={props.handleChangeMxTomada}
-                        /> Se tomada la muestra?
-                            </label>
+                        /> Muestra tomada
+                    </label>
                 </div>
                 <div className="checkbox mleft-20">
                     <label>
@@ -72,7 +72,7 @@ const MxU01Parte2 = props => {
                             onChange={props.handleChangeMxNoTomada}
                             disabled={props.disableMxNoTomada}
                         /> Muestra no tomada
-                                        </label>
+                    </label>
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
@@ -91,44 +91,8 @@ const MxU01Parte2 = props => {
                         <label className="messageError">{props.errorHoraToma}</label>
                     </div>
                 </div>
-
                 <div className="col-sm">
-                    {/* <label>Vol. del medio(ml)</label> */}
-                    <TextField
-                        id="volSangreMl"
-                        autoComplete="off"
-                        type="text"
-                        style={{ marginTop: 13, width: '100%' }}
-                        maxLength={50}
-                        //className="form-control"
-                        name="volSangreMl"
-                        value={props.volSangre}
-                        onChange={props.handleChangeVolSangre}
-                        label="Volumen sangre(ml)" 
-                        className={classes.textField}
-                        helperText={props.errorVolSangre}/>
-                    {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorVolSangre}</label> */}
-                </div>
-            </div>
-            <div className="input-group row" style={{ marginTop: 20 }}>
-                <div className="col-sm">
-                    <div>
-                        <label>Hora refrigeración</label>
-                    </div>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
-                            id="horaRefriMxUO1"
-                            value={props.selectedHoraRefrigeracion}
-                            onChange={date => props.handleChangeHoraRefrigeracion(date)}
-                        />
-                    </MuiPickersUtilsProvider>
-                    <div>
-                        <label className="messageError">{props.errorHoraRefrigeracion}</label>
-                    </div>
-                </div>
-
-                <div className="col-sm">
-                <FormControl className={classes.formControl2}>
+                    <FormControl className={classes.formControl2}>
                         <InputLabel id="tomada-por-input-label">Tomada por</InputLabel>
                         <Select
                             labelId="tomada-por-label"
@@ -147,6 +111,24 @@ const MxU01Parte2 = props => {
                         <label className="messageError">{props.errorBioanlista}</label>
                     </FormControl>
                 </div>
+
+                <div className="col-sm">
+                    {/* <label>Vol. del medio(ml)</label> */}
+                    <TextField
+                        id="volSangreRecolectada"
+                        autoComplete="off"
+                        type="text"
+                        style={{ marginTop: 13, width: '100%' }}
+                        maxLength={50}
+                        //className="form-control"
+                        name="volSangreMl"
+                        value={props.volSangre}
+                        onChange={props.handleChangeVolSangre}
+                        label="Volumen sangre"
+                        className={classes.textField}
+                        helperText={props.errorVolSangre} />
+                    {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorVolSangre}</label> */}
+                </div>
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-lg">
@@ -162,11 +144,11 @@ const MxU01Parte2 = props => {
                         name="motivoNoMx"
                         value={props.motivoNoMx}
                         onChange={props.handleChangeMotivoNoMx}
-                        label="Motivo no MX" 
+                        label="Motivo no MX"
                         disabled={props.disabledMotivoNoMx}
                         className={classes.textField}
                         helperText={props.errorMotivoNoMx}
-                        />
+                    />
                     {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorMotivoNoMx}</label> */}
                 </div>
             </div>
@@ -209,4 +191,4 @@ const MxU01Parte2 = props => {
         </>
     );
 }
-export default MxU01Parte2;
+export default MxBhcParte2;

@@ -138,8 +138,9 @@ const MxInfluenzaParte1 = props => {
                         className="form-control"
                         name="codeLabScan"
                         value={props.codeLabScan}
-                        readOnly={true}
-                        /* onChange={props.handleChangeCodeLabScan} */
+                        disabled={props.disabledCodeLabScan}
+                        onChange={props.onChangeBarcode}
+                        onKeyDown={props.onKeyPressBarcode}
                         label="Cod-lab scan" />
                 </div>
             </div>

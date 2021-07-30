@@ -21,7 +21,7 @@ const MxInfluenzaContainer = props => {
     const [idMx, setIdMx] = useState(0);
     const [idMxFlu, setIdMxFlu] = useState(0)
     const [houseCode, setHouseCode] = useState('');
-    const [code, setCode] = useState('');
+    let [code, setCode] = useState('');
     const [data, setData] = useState({});
     const [medicos, setMedicos] = useState([]);
     const [codeLab, setCodLab] = useState('');
@@ -96,6 +96,7 @@ const MxInfluenzaContainer = props => {
     const [disabledMotivoNoMx, setDisabledMotivoNoMx] = useState(true);
     const [disableMxNoTomada, setDisableMxNoTomada] = useState(false);
     const [disabledEsRetoma, setDisabledEsRetoma] = useState(false);
+    const [disabledCodeLabScan, setDisabledCodeLabScan] = useState(false);
 
     const [expanded1, setExpanded1] = useState(false);
     const [expanded2, setExpanded2] = useState(false);
@@ -126,7 +127,7 @@ const MxInfluenzaContainer = props => {
 
     /**Imprimir codigos QR, CodaBar, Etc */
     const [openFormatoCodigos, setOpenFormatoCodigos] = useState(false);
-    const [formatoCodigo, setFormatoCodigo] = useState('');
+    const [formatoCodigo, setFormatoCodigo] = useState(1);
     const [cantidadCopiasCod, setCantidadCopiasCod] = useState('');
     const [errorFormatoCodigo, setErrorFormatoCodigo] = useState('');
     const [errorCantidadCopiasCod, setErrorCantidadCopiasCod] = useState('');
@@ -151,7 +152,7 @@ const MxInfluenzaContainer = props => {
                         const response = await DataServices.getMuestraInfluenzaById(props.match.params.id);
                         if (response.status === 200) {
                             setIdMx(response.data.muestraId.id);
-                            setIdMxFlu(props.match.params.id);
+                            setIdMxFlu(response.data.id);
                             setCode(response.data.muestraId.codigoParticipante);
                             setMxCv(response.data.mxCovid);
                             if (response.data.mxCovid) {
@@ -190,6 +191,7 @@ const MxInfluenzaContainer = props => {
                             medicoById(response.data.muestraId.quienOrdena);
                             setMxTomada(response.data.muestraId.mxTomada);
                             setLoggedInUser(response.data.muestraId.usuarioId.id);
+                            setMotivoNoMx(response.data.muestraId.motivoNoMx);
                             if (response.data.muestraId.bioanalistaId !== null) {
                                 setSelectedBioanalista(response.data.muestraId.bioanalistaId.id);
                                 setDisableMxNoTomada(true);
@@ -254,6 +256,7 @@ const MxInfluenzaContainer = props => {
                             setDisableCode(true);
                             setExistenDatosGenerales(true);
                             setExecuteLoading(false);
+                            setDisabledCodeLabScan(true);
                         }
                     } catch (error) {
                         setExecuteLoading(false);
@@ -310,6 +313,7 @@ const MxInfluenzaContainer = props => {
                 setName('');
                 setStudy('');
                 setAge('');
+                setCodeLabScan('');
             }
         }
     }
@@ -340,6 +344,7 @@ const MxInfluenzaContainer = props => {
 
     const handleChangeFif = (selectedDate) => {
         const result = Utils.validateDate(selectedDate);
+        //const fifIngresada = moment(selectedDate).format('DD/MM/YYYY');
         let isValidDate = true;
         if (mxCv) {
             const diffDay = diffDayFif(selectedDate);
@@ -418,7 +423,8 @@ const MxInfluenzaContainer = props => {
         }
 
         if (fif !== '' && fif !== null && fif !== undefined) {
-            if (ftoma.isBefore(fif)) {
+            const fFif = moment(fif, 'YYYY-MM-DD');
+            if (ftoma.isBefore(fFif, 'days')) {
                 isValidDate = false;
                 setFechaToma(null);
                 setErrorFechaToma('La fecha de toma no puede ser antes que la fecha de inicio de fiebre');
@@ -439,6 +445,7 @@ const MxInfluenzaContainer = props => {
         setErrorMotivoSinFif('');
         setMotivoNoMx('');
         setErrorMotivoNoMx('');
+        setDisabledMotivoNoMx(true);
         if (!mxTomada) {
             clearAllMxTomada();
         }
@@ -506,11 +513,11 @@ const MxInfluenzaContainer = props => {
         prFlu = e.target.checked;
         setPrFlu(prFlu);
         if (!prFlu) {
-           setTestNumberFlu('');
-           setErrorTestNumberFlu('');
-           setSelectedResult('');
-           setErrorMessageResult('');
-           setObservationsPr('');
+            setTestNumberFlu('');
+            setErrorTestNumberFlu('');
+            setSelectedResult('');
+            setErrorMessageResult('');
+            setObservationsPr('');
         }
     }
 
@@ -607,11 +614,45 @@ const MxInfluenzaContainer = props => {
         setCantidadCopiasCod(e.target.value);
         setErrorCantidadCopiasCod('');
     }
-    /* const handleChangeCodeLabScan = (e) => {
-        setCodeLabScan(e.target.value);
+
+    const onChangeBarcode = (event) => {
+        //regex.test(event.target.value)
+        setCodeLabScan(event.target.value)
+        //console.log(event.target.value);
+        //console.log(codeLabScan);
     }
 
-    const handleChangeCodeLab = (e) => {
+    const onKeyPressBarcode = (event) => {
+        if (event.keyCode === 13) {
+            setCodeLabScan(event.target.value)
+            setDisabledCodeLabScan(true);
+            const result = event.target.value;
+            const partes = result.split('  ');
+            if (partes.length > 0) {
+                const codigo = partes[1].substring(0, partes[1].indexOf("."));
+                code = codigo;
+                const parteFif = partes[0].substring(0, 10);
+                if (parteFif !== '10/10/3000') {
+                    let formatFif = parteFif.replaceAll('/', '-');
+                    let resultFormat = formatFif.split("-").reverse().join("-");
+                    let dateFif = moment(resultFormat, "YYYY-MM-DD");
+                    let newDateFif = dateFif.utc().format();
+                    setFif(newDateFif);
+                }
+                const parteFechaToma = partes[0].substring(10, 20);
+                let formatFechaToma = parteFechaToma.replaceAll('/', '-');
+                let resultFormat = formatFechaToma.split("-").reverse().join("-");
+                let dateFechaToma = moment(resultFormat, "YYYY-MM-DD");
+                let newDateFechaToma = dateFechaToma.utc().format();
+                setFechaToma(newDateFechaToma);
+                setCode(code);
+                getParticipante(code);
+                setCodLab(partes[1]);
+            }
+            //getMuestrasByCodExpedienteAndCatMxId(event);
+        }
+    }
+    /* const handleChangeCodeLab = (e) => {
         setCodLab(e.target.value);
     } */
 
@@ -1056,7 +1097,7 @@ const MxInfluenzaContainer = props => {
                     return false;
                 }
             }
-            
+
         }
         if (mxNoTomada) {
             if (motivoNoMx === '' || motivoNoMx === null || motivoNoMx === undefined) {
@@ -1100,7 +1141,7 @@ const MxInfluenzaContainer = props => {
             if (testResultVsr <= 0) {
                 setErrorMessageResultVsr('Debe seleccionar el resultado');
                 return false;
-            }            
+            }
         } else {
             if ((testNumberVsr !== '' && testNumberVsr !== null && testNumberVsr !== undefined) ||
                 (testResultVsr > 0)) {
@@ -1119,7 +1160,7 @@ const MxInfluenzaContainer = props => {
     const abrirImpresion = () => {
         if (validateOpenPrintRequest()) {
             setOpenFormatoCodigos(true);
-            setFormatoCodigo('');
+            //setFormatoCodigo('');
             setCantidadCopiasCod('');
         }
     }
@@ -1135,14 +1176,14 @@ const MxInfluenzaContainer = props => {
             let especialCharacter = '*';
             let lettersOfTheName = "";
             if (fif === null || fif === undefined || fif === '') {
-                barCodeFif = '10-10-3000'
+                barCodeFif = '10/10/3000'
             } else {
                 const now = new moment(fif);
-                barCodeFif = now.format("DD-MM-YYYY");
+                barCodeFif = now.format("DD/MM/YYYY");
             }
             if (fechaToma !== null || fechaToma !== undefined || fechaToma !== '') {
                 const now = new moment(fechaToma);
-                barCodeFechaToma = now.format("DD-MM-YYYY");
+                barCodeFechaToma = now.format("DD/MM/YYYY");
             }
             let matches = name.match(/\b(\w)/g);
             for (let i = 0; i < matches.length; i++) {
@@ -1161,17 +1202,16 @@ const MxInfluenzaContainer = props => {
                 lettersOfTheName += matches[i];
             }
 
-            barCode = barCodeFif + barCodeFechaToma + barCodeSpace + especialCharacter + codeLab + especialCharacter + cantidadCopiasCod + especialCharacter + formatoCodigo;
-            console.log('barCode', barCode);
-            console.log('matches', matches);
-            console.log('lettersOfTheName', lettersOfTheName);
-
+            barCode = barCodeFif + barCodeFechaToma + barCodeSpace + especialCharacter + codeLab + especialCharacter + lettersOfTheName + especialCharacter + cantidadCopiasCod + especialCharacter + formatoCodigo;
+            //console.log('barCode', barCode);
+            //console.log('matches', matches);
+            //console.log('lettersOfTheName', lettersOfTheName);
             axios.post(Constants.URL_PRINT_CODES + barCode)
                 .then((response) => {
-                    console.log('response', response);
+                    //console.log('response', response);
                     //setOpenFormatoCodigos(false);
                 }, (error) => {
-                    console.log('error', error);
+                    //console.log('error', error);
                     //setOpenFormatoCodigos(false);
                 });
             setOpenFormatoCodigos(false);
@@ -1311,14 +1351,14 @@ const MxInfluenzaContainer = props => {
         if (existenDatosGenerales) {
             setExpanded3(isExpanded ? panel : false);
         }
-        
+
     };
 
     const handleChangePanel4 = (panel) => (event, isExpanded) => {
         if (existenDatosGenerales) {
             setExpanded4(isExpanded ? panel : false);
         }
-        
+
     };
 
     const saveData = () => {
@@ -1326,6 +1366,9 @@ const MxInfluenzaContainer = props => {
         let usuarioId = {};
         let bioanalistaId = {};
         let time = null;
+
+        const accountData = JSON.parse(localStorage.getItem('accountData'));
+        //console.log('accountData', accountData);
 
         if (selectedHoraToma !== null) {
             time = moment(selectedHoraToma).format("hh:mm A");
@@ -1352,7 +1395,7 @@ const MxInfluenzaContainer = props => {
                 /* motivoAnulacionId: {
                   id: null, //Pendiente
                 }, */
-                motivoNoMx: '',
+                motivoNoMx: motivoNoMx,
                 mxCompartida: false, //Pendiente
                 mxEnviada: false, //Pendiente
                 mxId: {
@@ -1398,7 +1441,7 @@ const MxInfluenzaContainer = props => {
             }
         }
 
-        usuarioId.id = loggedInUser <= 0 ? 10 : loggedInUser
+        usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
         muestra.muestraId.usuarioId = usuarioId;
 
         if (selectedTypeOfMx > 0) {
@@ -1433,7 +1476,7 @@ const MxInfluenzaContainer = props => {
             if (fechaToma !== null) {
                 muestra.muestraId.fechaToma = fechaToma;
             }
-            /**Actualizando la muestra de influenza*/ 
+            /**Actualizando la muestra de influenza*/
             putMxInfluenza(muestra);
         } else {
             /**Nueva muestra de influenza*/
@@ -1494,7 +1537,7 @@ const MxInfluenzaContainer = props => {
                 }
             }
         }
-    
+
         /**------------------------------------- */
 
         if (validatedDialogEF) {
@@ -1528,7 +1571,7 @@ const MxInfluenzaContainer = props => {
         setObservations('');
     }
 
-    
+
 
     return (
         <>
@@ -1602,8 +1645,9 @@ const MxInfluenzaContainer = props => {
                 handleChangeObservationsPrVsr={handleChangeObservationsPrVsr}
                 handleChangeMotivoNoFif={handleChangeMotivoNoFif}
                 handleChangeMotivoNoMx={handleChangeMotivoNoMx}
-                /* handleChangeCodeLabScan={handleChangeCodeLabScan}
-                handleChangeCodeLab={handleChangeCodeLab} */
+                onChangeBarcode={onChangeBarcode}
+                onKeyPressBarcode={onKeyPressBarcode}
+                /*handleChangeCodeLab={handleChangeCodeLab} */
                 //handleNext={handleNext}
                 //handleBack={handleBack}
                 errorCode={errorCode}
@@ -1649,6 +1693,7 @@ const MxInfluenzaContainer = props => {
                 handleChangePanel2={handleChangePanel2}
                 handleChangePanel3={handleChangePanel3}
                 handleChangePanel4={handleChangePanel4}
+                disabledCodeLabScan={disabledCodeLabScan}
             />
             <ToastContainer
                 type={type}

@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import '../mxInfluenza/MxInfluenza.css';
+import '../mxBhc/MxBhc.css';
 import { es } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
@@ -45,15 +45,15 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const MxU01Parte1 = props => {
+const MxBhcParte1 = props => {
     const classes = useStyles();
     return (
         <>
             <div className="input-group row" style={{ marginTop: 5 }}>
-                <div className="col">
+                <div className="col-sm">
                     {/* <label>Código</label> */}
                     <TextField
-                        id="codeUO1"
+                        id="codeBhc"
                         autoFocus
                         autoComplete="off"
                         type="number"
@@ -82,85 +82,6 @@ const MxU01Parte1 = props => {
                             <PrintIcon style={{ color: blue[500], cursor: 'pointer' }} size={20} onClick={props.printCode} />
                         </span>
                     </OverlayTrigger>
-                </div>
-            </div>
-            <div className="input-group row" style={{ marginTop: 10 }}>
-                <div className="col-sm">
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-tipo-tubo">Tipo de tubo</InputLabel>
-                        <Select
-                            labelId="request-label"
-                            id="request-select"
-                            value={props.selectedTubo}
-                            onChange={props.handleChangeTipoTubo}
-                        >
-                            <MenuItem value="0">
-                                <em>None</em>
-                            </MenuItem>
-                            {props.tipoTubo.map((e, keyIndex) => {
-                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
-                            })
-                            }
-                        </Select>
-                        <label className="messageError">{props.errorTubo}</label>
-                    </FormControl>
-                </div>
-                <div className="col-sm">
-                    {/* <label>Cod-lab scan</label> */}
-                    <TextField
-                        id="codeLabScan"
-                        autoComplete="off"
-                        type="text"
-                        style={{ height: 'auto', marginTop: 20 }}
-                        maxLength={50}
-                        className="form-control"
-                        name="codeLabScan"
-                        value={props.codeLabScan}
-                        readOnly={true}
-                        /* onChange={props.handleChangeCodeLabScan} */
-                        label="Cod-lab scan" />
-                </div>
-            </div>
-            <div className="input-group row" style={{ marginTop: 10 }}>
-                <div className="col-sm">
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-consultas">Consulta</InputLabel>
-                        <Select
-                            labelId="request-label-consulta"
-                            id="request-select-consulta"
-                            value={props.selectedConsulta}
-                            onChange={props.handleChangeConsulta}
-                        >
-                            <MenuItem value="0">
-                                <em>None</em>
-                            </MenuItem>
-                            {props.consultas.map((e, keyIndex) => {
-                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
-                            })
-                            }
-                        </Select>
-                        <label className="messageError">{props.errorConsulta}</label>
-                    </FormControl>
-                </div>
-                <div className="col-sm">
-                    <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-clasfi">Clasificación</InputLabel>
-                        <Select
-                            labelId="request-label-clasfi"
-                            id="request-select-clasfi"
-                            value={props.selectedClasificacion}
-                            onChange={props.handleChangeClasificacion}
-                        >
-                            <MenuItem value="0">
-                                <em>None</em>
-                            </MenuItem>
-                            {props.clasificacion.map((e, keyIndex) => {
-                                return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
-                            })
-                            }
-                        </Select>
-                        <label className="messageError">{props.errorClasificacion}</label>
-                    </FormControl>
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
@@ -203,10 +124,9 @@ const MxU01Parte1 = props => {
                         label="Código de lab" />
                 </div>
             </div>
-
             <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
-                <Grid container justify="space-between">
-                    <div>
+                <Grid container>
+                    <div className="col-sm">
                         <KeyboardDatePicker
                             margin="normal"
                             id="date-picker-dialog-fif-u01"
@@ -221,22 +141,7 @@ const MxU01Parte1 = props => {
                         />
                         <label className="messageError row">{props.errorFif}</label>
                     </div>
-                    <div>
-                        <KeyboardDatePicker
-                            margin="normal"
-                            id="date-picker-dialog-fis-u01"
-                            label="FIS"
-                            format="dd/MM/yyyy"
-                            autoOk={true}
-                            value={props.fis !== null ? props.fis : null}
-                            onChange={props.handleChangeFis}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                        <label className="messageError row">{props.errorFis}</label>
-                    </div>
-                    <div style={{ marginRight: 36 }}>
+                    <div className="col-sm">
                         <KeyboardDatePicker
                             margin="normal"
                             id="date-picker-dialog-fToma-u01"
@@ -253,8 +158,6 @@ const MxU01Parte1 = props => {
                     </div>
                 </Grid>
             </MuiPickersUtilsProvider>
-
-
 
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-5">
@@ -312,4 +215,4 @@ const MxU01Parte1 = props => {
         </>
     );
 }
-export default MxU01Parte1;
+export default MxBhcParte1;

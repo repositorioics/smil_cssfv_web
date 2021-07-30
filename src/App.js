@@ -16,6 +16,7 @@ import CatMuestras from './containers/catalogos/Muestras/MuestrasContainer';
 import TipoMuestras from './containers/catalogos/TipoMuestras/TipoMuestrasContainer';
 import TipoPruebas from './containers/catalogos/TipoPruebas/TipoPruebasContainer';
 import Tubos from './containers/catalogos/Tubos/TubosContainer';
+import Visitas from './containers/catalogos/Visitas/VisitasContainer';
 import MismoEpFebrilContainer from './containers/catalogos/MismoEpFebril/MismoEpFebrilContainer';
 import ResultadosMuestrasContainer from './containers/catalogos/ResultadosMuestras/ResultadosMuestrasContainer';
 
@@ -38,7 +39,22 @@ import MenuOptionContainer from './containers/security/menus/MenuOptionContainer
 import MxInfluenzaListContainer from './containers/mxInfluenza/MxInfluenzaListContainer';
 import MxInfluenzaContainer from './containers/mxInfluenza/MxInfluenzaContainer';
 
+import MxU01ListContainer from './containers/mxU01/MxU01ListContainer';
 import MxU01Container from './containers/mxU01/MxU01Container';
+
+import MxTransmisionListContainer from './containers/mxTransmision/MxTransmisionListContainer';
+import MxTransmision from './containers/mxTransmision/MxTransmisionContainer';
+
+import MxTransmisionLnListContainer from './containers/mxTransmisionLn/MxTransmisionLnListContainer';
+import MxTransmisionLnContainer from './containers/mxTransmisionLn/MxTransmisionLnContainer';
+
+import MxBhcListContainer from './containers/mxBhc/MxBhcListContainer';
+import MxBhcContainer from './containers/mxBhc/MxBhcContainer';
+
+import RecepcionMxContainer from "./containers/recepcionMx/RecepcionMxContainer";
+
+import MxDengueListContainer from "./containers/mxDengue/MxDengueListContainer";
+import MxDengueContainer from "./containers/mxDengue/MxDengueContainer";
 
 const App = () => {
   const [isTimeout, setIsTimeout] = useState(false);
@@ -111,7 +127,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <Home {...props}/>
+                    <Home {...props} />
                   </Header>
                 )}
               />
@@ -120,7 +136,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <Categoria {...props}/>
+                    <Categoria {...props} />
                   </Header>
                 )}
               />
@@ -129,7 +145,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <CambioCategoria {...props}/>
+                    <CambioCategoria {...props} />
                   </Header>
                 )}
               />
@@ -138,7 +154,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <Clasificacion {...props}/>
+                    <Clasificacion {...props} />
                   </Header>
                 )}
               />
@@ -147,7 +163,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <Consultas {...props}/>
+                    <Consultas {...props} />
                   </Header>
                 )}
               />
@@ -156,7 +172,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MotivoAnulacion {...props}/>
+                    <MotivoAnulacion {...props} />
                   </Header>
                 )}
               />
@@ -165,7 +181,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <CatMuestras {...props}/>
+                    <CatMuestras {...props} />
                   </Header>
                 )}
               />
@@ -174,7 +190,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <TipoMuestras {...props}/>
+                    <TipoMuestras {...props} />
                   </Header>
                 )}
               />
@@ -183,7 +199,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <TipoPruebas {...props}/>
+                    <TipoPruebas {...props} />
                   </Header>
                 )}
               />
@@ -192,13 +208,23 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <Tubos {...props}/>
+                    <Tubos {...props} />
                   </Header>
                 )}
               />
+              <Route path="/catalogo/visitas"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <Visitas {...props} />
+                  </Header>
+                )}>
+
+              </Route>
               <Route path="/catalogo/episodios-febriles"
                 exact
-                render={props =>(
+                render={props => (
                   <Header {...props}>
                     <MismoEpFebrilContainer {...props} />
                   </Header>
@@ -208,7 +234,7 @@ const App = () => {
                 exact
                 render={props => (
                   <Header {...props}>
-                    <ResultadosMuestrasContainer {...props}/>
+                    <ResultadosMuestrasContainer {...props} />
                   </Header>
                 )}
               />
@@ -217,7 +243,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <Users {...props}/>
+                    <Users {...props} />
                   </Header>
                 )}
               />
@@ -226,7 +252,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <AddUser {...props}/>
+                    <AddUser {...props} />
                   </Header>
                 )}
               />
@@ -235,7 +261,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <AddUser {...props}/>
+                    <AddUser {...props} />
                   </Header>
                 )}
               />
@@ -244,7 +270,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <ChangePassword {...props}/>
+                    <ChangePassword {...props} />
                   </Header>
                 )}
               />
@@ -253,7 +279,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <ProfileListContainer {...props}/>
+                    <ProfileListContainer {...props} />
                   </Header>
                 )}
               />
@@ -262,7 +288,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <ProfileContainer {...props}/>
+                    <ProfileContainer {...props} />
                   </Header>
                 )}
               />
@@ -271,7 +297,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <ProfileContainer {...props}/>
+                    <ProfileContainer {...props} />
                   </Header>
                 )}
               />
@@ -280,7 +306,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <UserProfileListContainer {...props}/>
+                    <UserProfileListContainer {...props} />
                   </Header>
                 )}
               />
@@ -289,7 +315,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <UserProfileContainer {...props}/>
+                    <UserProfileContainer {...props} />
                   </Header>
                 )}
               />
@@ -298,7 +324,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <UserProfileContainer {...props}/>
+                    <UserProfileContainer {...props} />
                   </Header>
                 )}
               />
@@ -307,7 +333,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MenuListContainer {...props}/>
+                    <MenuListContainer {...props} />
                   </Header>
                 )}
               />
@@ -316,7 +342,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MenuContainer {...props}/>
+                    <MenuContainer {...props} />
                   </Header>
                 )}
               />
@@ -325,7 +351,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MenuContainer {...props}/>
+                    <MenuContainer {...props} />
                   </Header>
                 )}
               />
@@ -334,7 +360,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MenuOptionsListContainer {...props}/>
+                    <MenuOptionsListContainer {...props} />
                   </Header>
                 )}
               />
@@ -343,7 +369,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MenuOptionContainer {...props}/>
+                    <MenuOptionContainer {...props} />
                   </Header>
                 )}
               />
@@ -352,7 +378,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MenuOptionContainer {...props}/>
+                    <MenuOptionContainer {...props} />
                   </Header>
                 )}
               />
@@ -361,7 +387,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <ProfileOptionsMenuContainer {...props}/>
+                    <ProfileOptionsMenuContainer {...props} />
                   </Header>
                 )}
               />
@@ -370,7 +396,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MxInfluenzaListContainer {...props}/>
+                    <MxInfluenzaListContainer {...props} />
                   </Header>
                 )}
               />
@@ -379,7 +405,7 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MxInfluenzaContainer {...props}/>
+                    <MxInfluenzaContainer {...props} />
                   </Header>
                 )}
               />
@@ -388,18 +414,156 @@ const App = () => {
                 render={props =>
                 (
                   <Header {...props}>
-                    <MxInfluenzaContainer {...props}/>
+                    <MxInfluenzaContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/u01"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxU01ListContainer {...props} />
                   </Header>
                 )}
               />
               <Route path="/muestras/agregar-muestra-u01"
                 exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxU01Container {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/editar-muestra-u01/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxU01Container {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/transmision"
+                exact
+                render={props => 
+                (
+                  <Header {...props}>
+                    <MxTransmisionListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/agregar-muestra-transmision"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxTransmision {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/editar-muestra-transmision/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxTransmision {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/transmision/lavado-nasal"
+                exact
+                render={props => 
+                (
+                  <Header {...props}>
+                    <MxTransmisionLnListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/agregar-muestra-transmision/lavado-nasal"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxTransmisionLnContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/editar-muestra-transmision/lavado-nasal/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxTransmisionLnContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/bhc"
+                exact
+                render={props => 
+                (
+                  <Header {...props}>
+                    <MxBhcListContainer {...props}/>
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/agregar-muestra-bhc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxBhcContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/editar-muestra-bhc/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxBhcContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/recepcion/muestras"
+                exact
                 render={props => 
                   (
-                    <Header {...props}  >
-                        <MxU01Container {...props}/>
+                    <Header {...props}>
+                      <RecepcionMxContainer {...props}/>
                     </Header>
+
                   )}
+              />
+               <Route path="/muestras/dengue"
+                exact
+                render={props => 
+                  (
+                    <Header {...props}>
+                      <MxDengueListContainer {...props}/>
+                    </Header>
+
+                  )}
+              />
+              <Route path="/muestras/agregar-muestra-dengue"
+                exact
+                render={props => 
+                  (
+                    <Header {...props}>
+                      <MxDengueContainer {...props}/>
+                    </Header>
+
+                  )}
+              />
+              <Route path="/muestras/editar-muestra-dengue/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueContainer {...props} />
+                  </Header>
+                )}
               />
             </>
           </Switch>

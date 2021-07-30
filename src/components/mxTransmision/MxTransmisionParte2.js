@@ -16,7 +16,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import '../mxInfluenza/MxInfluenza.css';
+import '../mxTransmision/MxTransmision.css';
 //import { es } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MxU01Parte2 = props => {
+const MxTransmisionParte2 = props => {
     const classes = useStyles();
     return (
         <>
@@ -209,4 +209,4 @@ const MxU01Parte2 = props => {
         </>
     );
 }
-export default MxU01Parte2;
+export default MxTransmisionParte2;

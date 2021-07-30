@@ -4,17 +4,18 @@ import moment from "moment";
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import MxInfluenzaList from '../../components/mxInfluenza/MxInfluenzaList';
+import MxBhcList from '../../components/mxBhc/MxBhcList';
 import AnularMx from '../../components/AnularMx';
 import Edit from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import DataServices from '../../service/Api';
 import ToastContainer from '../../components/toast/Toast';
 import Utils from '../../utils/Utils';
+import * as Constants from '../../Constants';
 
-const MxInfluenzaListContainer = props => {
+const MxBhcListContainer = props => {
     let history = useHistory();
-    const [titleForm] = useState('Muestras de Influenza');
+    const [titleForm] = useState('Muestras BHC');
     const [data, setData] = useState([]);
     const [executeLoading, setExecuteLoading] = useState(false);
     const [mounted, setMounted] = useState(true);
@@ -51,7 +52,7 @@ const MxInfluenzaListContainer = props => {
                 }}>
                 <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Editar</Tooltip>}>
                     <Edit
-                        onClick={() => editMxInfluenza(row)}
+                        onClick={() => editMxBhc(row)}
                         style={{ fontSize: 20, marginLeft: 15, color: "#efac14" }}
                     />
                 </OverlayTrigger>
@@ -93,7 +94,7 @@ const MxInfluenzaListContainer = props => {
         if (token !== null && token !== undefined && token !== "") {
             if (mounted) {
                 //cargar la lista
-                getMxInfluenzaList();
+                getMxBhcList();
                 getMotivosAnulacion();
             }
         } else {
@@ -128,7 +129,7 @@ const MxInfluenzaListContainer = props => {
 
     const handleClose = () => {
         setShow(false);
-        getMxInfluenzaList();
+        getMxBhcList();
     }
 
     const handleChangeCkOtroMotivo = (e) => {
@@ -188,10 +189,10 @@ const MxInfluenzaListContainer = props => {
     }
 
     /**Metodo para obtener todos los registros */
-    const getMxInfluenzaList = async () => {
+    const getMxBhcList = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getMuestrasInfluenza();
+            const response = await DataServices.getMuestrasBhc(Constants.ID_MUESTRA_BHC);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -203,7 +204,7 @@ const MxInfluenzaListContainer = props => {
                         "codigo": response.data[i].muestraId.codigoParticipante,
                         "fechaToma": response.data[i].muestraId.fechaToma,
                         "horaToma": response.data[i].muestraId.horaToma,
-                        "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
+                        "tipoPrueba": response.data[i].tipoPruebaId !== null ? response.data[i].tipoPruebaId.descripcion : '',
                         "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                         //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                         "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
@@ -218,10 +219,10 @@ const MxInfluenzaListContainer = props => {
     }
 
     /**Metodo para obtener todos los registros por el filtro aplicado*/
-    const getMxInfluenzaListByFilter = async (code, startDate, endDate) => {
+    const getMxBhcListByFilter = async (code, startDate, endDate) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.filtroMxInfluenza(code, startDate, endDate);
+            const response = await DataServices.filtroMxBhc(code, startDate, endDate, Constants.ID_MUESTRA_BHC);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -234,7 +235,7 @@ const MxInfluenzaListContainer = props => {
                             "fechaRegistro": response.data[i].muestraId.fechaRegistro,
                             "fechaToma": response.data[i].muestraId.fechaToma,
                             "horaToma": response.data[i].muestraId.horaToma,
-                            "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
+                            "tipoPrueba": response.data[i].tipoPruebaId !== null ? response.data[i].tipoPruebaId.descripcion : null,
                             "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                             //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                             "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
@@ -282,7 +283,7 @@ const MxInfluenzaListContainer = props => {
     }
 
     /**Metodo para anular la muestra */
-    const anularMxInfluenza = async () => {
+    const anularMxBhc = async () => {
         setExecuteLoading(true);
         try {
 
@@ -335,24 +336,20 @@ const MxInfluenzaListContainer = props => {
                 return false;
             }
         }
-
-/*         if (selectedMotivo > 0 && ckOtroMotivo) {
-            return false;
-        } */
         return true
     }
 
 
-    const editMxInfluenza = (row) => {
+    const editMxBhc = (row) => {
         if (row.estado === "Activa") {
-            history.push(`/muestras/editar-muestra-influenza/${row.id}`);
+            history.push(`/muestras/editar-muestra-bhc/${row.id}`);
         }
     }
 
     /**Metodo para guardar una muestra anulada */
     const saveData = () => {
         if (validateData()) {
-            anularMxInfluenza();
+            anularMxBhc();
         }
     }
 
@@ -360,7 +357,7 @@ const MxInfluenzaListContainer = props => {
     const searchData = () => {
         if (validateSearchData()) {
             if (validateDates()) {
-                getMxInfluenzaListByFilter(code === '' ? 0 : code, startDate, endDate);
+                getMxBhcListByFilter(code === '' ? 0 : code, startDate, endDate);
             }
 
         }
@@ -369,7 +366,7 @@ const MxInfluenzaListContainer = props => {
     const onKeyPressCode = (e) => {
         if (code !== '' || code !== null || code !== undefined) {
             if (e.charCode === 13) {
-                getMxInfluenzaListByFilter(code === '' ? 0 : code, startDate, endDate);
+                getMxBhcListByFilter(code === '' ? 0 : code, startDate, endDate);
             }
         }
     }
@@ -430,7 +427,7 @@ const MxInfluenzaListContainer = props => {
         setCode('');
         setErrorStartDate('');
         setErrorEndDate('');
-        getMxInfluenzaList();
+        getMxBhcList();
     }
 
     return (
@@ -451,7 +448,7 @@ const MxInfluenzaListContainer = props => {
                 errorMessageOtroMotivoSelected={errorMessageOtroMotivoSelected}
                 saveData={saveData}
             />
-            <MxInfluenzaList
+            <MxBhcList
                 titleForm={titleForm}
                 data={data}
                 columns={columns}
@@ -478,4 +475,4 @@ const MxInfluenzaListContainer = props => {
     );
 }
 
-export default MxInfluenzaListContainer;
+export default MxBhcListContainer;

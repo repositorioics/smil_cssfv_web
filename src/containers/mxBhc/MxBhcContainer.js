@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import MxU01 from '../../components/mxU01/MxU01';
+import MxBhc from '../../components/mxBhc/MxBhc';
 import DataServices from '../../service/Api';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
@@ -10,29 +10,24 @@ import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
 
-const MxU01Container = props => {
+const MxBhcContainer = props => {
     let history = useHistory();
     const [title, setTitle] = useState('');
     const [loggedInUser, setLoggedInUser] = useState(0);
-    const [mxU01Id] = useState(Constants.ID_MUESTRA_U01); // Id de la muestra de influenza
+    const [mxTransmisionId] = useState(Constants.ID_MUESTRA_BHC); // Id de la muestra de transmision
     const [code, setCode] = useState('');
     const [idMx, setIdMx] = useState(0);
-    const [idMxUO1, setIdMxUO1] = useState(0)
+    const [idMxTransmision, setIdMxTransmision] = useState(0)
     const [codLab, setCodLab] = useState('');
-    //const [codLabScan, setCodLabScan] = useState('');
-    const [selectedTubo, setSelectedTubo] = useState('');
-    const [tipoTubo, setTipoTubo] = useState([]);
-    const [selectedConsulta, setSelectedConsulta] = useState('');
-    const [consultas, setConsultas] = useState([]);
-    const [selectedClasificacion, setSelectedClasificacion] = useState('');
-    const [clasificacion, setClasificacion] = useState([]);
+    //const [selectedConsulta, setSelectedConsulta] = useState('');
+    //const [consultas, setConsultas] = useState([]);
     const [selectedMedico, setSelectedMedico] = useState('');
     const [medicos, setMedicos] = useState([]);
     const [name, setName] = useState('');
     const [study, setStudy] = useState('');
     const [age, setAge] = useState('');
     const [fif, setFif] = useState(null);
-    const [fis, setFis] = useState(null);
+    //const [fis, setFis] = useState(null);
     const [fechaToma, setFechaToma] = useState(new Date());
     const [bioanalistas, setBioanalistas] = useState([]);
     const [selectedBioanalista, setSelectedBioanalista] = useState('');
@@ -44,14 +39,10 @@ const MxU01Container = props => {
     let [mxNoTomada, setMxNoTomada] = useState(false);
     const [disabledMotivoNoMx, setDisabledMotivoNoMx] = useState(true);
     const [selectedHoraToma, setSelectedHoraToma] = useState(null);
-    const [selectedHoraRefrigeracion, setSelectedHoraRefrigeracion] = useState(null);
     const [volSangre, setVolSangre] = useState('');
     const [registerDate, setRegisterDate] = useState(null);
     const [motivoNoFif, setMotivoNoFif] = useState('');
     const [existenDatosGenerales, setExistenDatosGenerales] = useState(false);
-    //const [fechaEnvio, setFechaEnvio] = useState(null);
-    //const [horaEnvio, setHoraEnvio] = useState(null);
-    //const [viaje, setViaje] = useState(0);
     const [disableCode, setDisableCode] = useState(false);
     const [disableMxNoTomada, setDisableMxNoTomada] = useState(false);
 
@@ -62,19 +53,14 @@ const MxU01Container = props => {
     const [expanded2, setExpanded2] = useState(false);
 
     const [errorCode, setErrorCode] = useState('');
-    const [errorTubo, setErrorTubo] = useState('');
-    const [errorConsulta, setErrorConsulta] = useState('');
-    const [errorClasificacion, setErrorClasificacion] = useState('');
     const [errorMedico, setErrorMedico] = useState('');
 
-    const [errorFis, setErrorFis] = useState('');
     const [errorFif, setErrorFif] = useState('');
     const [errorFechaToma, setErrorFechaToma] = useState('');
     const [errorBioanlista, setErrorBioanlista] = useState('');
     const [errorMotivoNoMx, setErrorMotivoNoMx] = useState('');
     const [errorVolSangre, setErrorVolSangre] = useState('');
     const [errorHoraToma, setErrorHoraToma] = useState('');
-    const [errorHoraRefrigeracion, setErrorHoraRefrigeracion] = useState('');
     const [errorMotivoSinFif, setErrorMotivoSinFif] = useState('');
 
     /**Variables de los mensajes de alerta */
@@ -93,36 +79,31 @@ const MxU01Container = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getListTubosActivos();
-            getListConsultasActivos();
-            getListClasificacionesActivas();
             getMedicos();
             getBionalistas();
             if (props.match.params && Object.keys(props.match.params).length > 0) {
                 setExecuteLoading(true);
-                setTitle('Editar muestra U01');
+                setTitle('Editar muestra bhc');
                 const getMxUO1ById = async() => {
                     try {
-                        const response = await DataServices.getMustraU01ById(props.match.params.id);
+                        const response = await DataServices.getMuestrasTransmisionById(props.match.params.id);
                         if (response.status === 200) {
                             //console.log('Data', response.data);
                             setIdMx(response.data.muestraId.id);
-                            setIdMxUO1(response.data.id);
+                            setIdMxTransmision(response.data.id);
                             setCode(response.data.muestraId.codigoParticipante);
                             setCodLab(response.data.codLab);
-                            setSelectedTubo(response.data.tuboId.id);
-                            setSelectedConsulta(response.data.consultaId.id);
-                            setSelectedClasificacion(response.data.clasificacionId.id);
+                            //setSelectedConsulta(response.data.consultaId.id);
                             if (response.data.muestraId.fif !== null) {
                                 let dateVar = moment(response.data.muestraId.fif);
                                 let newDateVar = dateVar.utc().format();
                                 setFif(newDateVar);
                             }
-                            if (response.data.muestraId.fis !== null) {
+                            /*if (response.data.muestraId.fis !== null) {
                                 let dateVar = moment(response.data.muestraId.fis);
                                 let newDateVar = dateVar.utc().format();
                                 setFis(newDateVar);
-                            }
+                            }*/
                             if (response.data.muestraId.fechaToma !== null) {
                                 let dateVar = moment(response.data.muestraId.fechaToma);
                                 let newDateVar = dateVar.utc().format();
@@ -145,14 +126,6 @@ const MxU01Container = props => {
                                 setSelectedHoraToma(dateTime);
                             } else {
                                 setSelectedHoraToma(null);
-                            }
-                            if (response.data.horaRefrigeracion !== null) {
-                                const time = response.data.horaRefrigeracion;
-                                let today = new Date().toISOString().slice(0, 10)
-                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm').format();
-                                setSelectedHoraRefrigeracion(dateTime);
-                            } else {
-                                setSelectedHoraRefrigeracion(null);
                             }
                             if (response.data.muestraId.volumen !== null) {
                                 setVolSangre(response.data.muestraId.volumen);
@@ -177,57 +150,12 @@ const MxU01Container = props => {
                 }
                 getMxUO1ById();
             } else {
-                setTitle('Agregar muestra U01');
+                setTitle('Muestra bhc');
             }
         } else {
             props.history.push('/');
         }
     }, [props.history, props.match.params])
-
-    /**Metodo para obtener todos los tubos activos */
-    const getListTubosActivos = async () => {
-        setExecuteLoading(true);
-        try {
-            const response = await DataServices.getAllTubosActivos();
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                setTipoTubo(response.data);
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error);
-        }
-    }
-
-    /**Metodo para obtener todas las consultas activas */
-    const getListConsultasActivos = async () => {
-        setExecuteLoading(true);
-        try {
-            const response = await DataServices.getAllConsultasActivas();
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                setConsultas(response.data);
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error);
-        }
-    }
-
-    /**Metodo para obtener todas las clasificaciones activas */
-    const getListClasificacionesActivas = async () => {
-        setExecuteLoading(true);
-        try {
-            const response = await DataServices.getAllClasificacionesActivas();
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                setClasificacion(response.data);
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error);
-        }
-    }
 
     /**Funcion para obtener los medicos */
     const getMedicos = async () => {
@@ -325,7 +253,7 @@ const MxU01Container = props => {
         event.preventDefault();
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxU01Id);
+            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxTransmisionId);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 let count = response.data + 1;
@@ -357,43 +285,6 @@ const MxU01Container = props => {
         }
     }
 
-    /**Funcion para obtener los bioanalistas */
-    /* const getBionalistas = async () => {
-        setExecuteLoading(true);
-        try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                const multiSelectData = [];
-                if (response.data.length > 0) {
-                    for (let i = 0; i < response.data.length; i++) {
-                        const newObject = {}
-                        newObject.id = response.data[i].usuarioId.id;
-                        newObject.nombre = response.data[i].usuarioId.nombres + " " + response.data[i].usuarioId.apellidos;
-
-                        multiSelectData.push(newObject);
-                    }
-                }
-                setBioanalistas(multiSelectData);
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error);
-        }
-    } */
-
-    /* const handleNext = () => {
-        setExecuteLoading(true);
-        if (activeStep === 0 && activeStep < 3) {
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        }
-
-        if (activeStep === 1 && activeStep < 3) {
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        }
-        setExecuteLoading(false);
-    }; */
-
     const handleChangeCode = (e) => {
         setErrorCode('');
         setCode(e.target.value);
@@ -410,21 +301,6 @@ const MxU01Container = props => {
                 setAge('');
             }
         }
-    }
-
-    const handleChangeTipoTubo = (e) => {
-        setErrorTubo('');
-        setSelectedTubo(e.target.value);
-    }
-
-    const handleChangeConsulta = (e) => {
-        setErrorConsulta('');
-        setSelectedConsulta(e.target.value);
-    }
-
-    const handleChangeClasificacion = (e) => {
-        setErrorClasificacion('');
-        setSelectedClasificacion(e.target.value);
     }
 
     const handleChangeMedico = (e) => {
@@ -448,40 +324,6 @@ const MxU01Container = props => {
         if (isValidDate) {
             setFif(selectedDate);
             setErrorFif('');
-        }
-    }
-
-    const handleChangeFis = (selectedDate) => {
-        const result = Utils.validateDate(selectedDate);
-        const diff = Utils.CalculateDifferenceDates(selectedDate, new Date());
-        let isValidDate = true;
-        if (result) {
-            setFis(null);
-            isValidDate = false;
-            setErrorFis('La FIS no puede ser mayor que la fecha de hoy');
-            return false;
-        }
-
-        if (diff > 28) {
-            setFis(null);
-            isValidDate = false;
-            setErrorFis('FIS debe ser menor o igual a 28 dias');
-            return false;
-        }
-
-        if (fif !== '' && fif !== null && fif !== undefined) {
-            const difFis = Utils.validateStartDateEndDate(selectedDate, fif);
-            if (difFis) {
-                setFis(null);
-                isValidDate = false;
-                setErrorFis('La FIS no puede ser mayor que la FIF');
-                return false;
-            }
-        }
-
-        if (isValidDate) {
-            setFis(selectedDate);
-            setErrorFis('');
         }
     }
 
@@ -548,11 +390,6 @@ const MxU01Container = props => {
     const handleChangeHoraToma = (e) => {
         setSelectedHoraToma(e);
         setErrorHoraToma('');
-    }
-
-    const handleChangeHoraRefrigeracion = (e) => {
-        setSelectedHoraRefrigeracion(e);
-        setErrorHoraRefrigeracion('');
     }
 
     const handleChangeVolSangre = (e) => {
@@ -625,14 +462,12 @@ const MxU01Container = props => {
 
     const saveDatosGenerales = () => {
         if (validateGeneralData()) {
-            //console.log('Enviar a guardar');
             saveData();
         }
     }
     
     const saveMxTomada = () => {
         if (validateMxTomada()) {
-            //console.log('Enviar a guardar');
             saveData();
         }
     }
@@ -645,18 +480,7 @@ const MxU01Container = props => {
         if (codLab === '' || codLab === undefined || codLab === null) {
             return false;
         }
-        if (selectedTubo === '' || selectedTubo === null || selectedTubo === undefined || selectedTubo === '0') {
-            setErrorTubo('Debe seleccionar el tipo de tubo');
-            return false;
-        }
-        if (selectedConsulta === '' || selectedConsulta === null || selectedConsulta === undefined || selectedConsulta === '0') {
-            setErrorConsulta('Debe seleccionar la consulta');
-            return false;
-        }
-        if (selectedClasificacion === '' || selectedClasificacion === null || selectedClasificacion === undefined || selectedClasificacion === '0') {
-            setErrorClasificacion('Seleccione si la muestra es de VACUNA o ENFERMO');
-            return false;
-        }
+       
         if (selectedMedico === '' || selectedMedico === null || selectedMedico === undefined || selectedMedico === '0') {
             setErrorMedico('Debe seleccionar el médico');
             return false;
@@ -677,20 +501,6 @@ const MxU01Container = props => {
         return true;
     }
 
-    /*const validateSelectedConsulta = () => {
-        if (selectedConsulta === 'Inicial') {
-            if (selectedTubo === 'LEUCOSEP') {}
-            if (selectedTubo === 'ROJO') {}
-            return false;
-        }
-        if (selectedConsulta === 'Convaleciente') {
-            if (selectedTubo === 'LEUCOSEP') {}
-            if (selectedTubo === 'ROJO') {}
-            return false;
-        }
-        return true;
-    }*/
-
     const validateMxTomada = () => {
         if (mxTomada) {
             if (selectedHoraToma === '' || selectedHoraToma === undefined || selectedHoraToma === null) {
@@ -700,10 +510,6 @@ const MxU01Container = props => {
             if (volSangre === '' || volSangre === undefined || volSangre === null) {
                 setErrorVolSangre('Debe ingrese el volumen');
                 return false
-            }
-            if (selectedHoraRefrigeracion === '' || selectedHoraRefrigeracion === undefined || selectedHoraRefrigeracion === null) {
-                setErrorHoraRefrigeracion('Debe seleccionar la hora');
-                return false;
             }
             if (selectedBioanalista === '' || selectedBioanalista === undefined || selectedBioanalista === null || selectedBioanalista === '0') {
                 setErrorBioanlista('Debe seleccionar quien solicito la muestra');
@@ -729,29 +535,12 @@ const MxU01Container = props => {
     const clearAllMxTomada = () => {
         setSelectedHoraToma(null);
         setVolSangre('');
-        setSelectedHoraRefrigeracion(null);
         setSelectedBioanalista('');
         setObservations('');
     }
 
-    /* const validateSelectedConsulta = (consulta) => {
-        switch (consulta) {
-            case "Inicial":
-                if (selectedTubo === 'LEUCOSEP') { }
-                if (selectedTubo === 'ROJO') { }
-                return true;
-            case "Convaleciente":
-                if (selectedTubo === 'LEUCOSEP') { }
-                if (selectedTubo === 'ROJO') { }
-                return true;
-            default:
-                break;
-        }
-    } */
-
-
-    const goBackListMxUO1 = () => {
-        history.push(`/muestras/u01`);
+    const goBackListMxTransmision = () => {
+        history.push(`/muestras/bhc`);
     }
 
     const initialStateToast = () => {
@@ -760,14 +549,14 @@ const MxU01Container = props => {
     }
 
      /**Funcion para guardar los datos */
-     const postMxUO1 = async(muestra) => {
+     const postMxBhc = async(muestra) => {
         setExecuteLoading(true);
          try {
-             const response = await DataServices.postMuestraU01(muestra);
+             const response = await DataServices.postMuestraBhc(muestra);
              if (response.status === 200) {
                 setExecuteLoading(false);
                 setIdMx(response.data.muestraId.id);
-                setIdMxUO1(response.data.id);
+                setIdMxTransmision(response.data.id);
                 setExistenDatosGenerales(true);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
@@ -782,10 +571,10 @@ const MxU01Container = props => {
      }
 
       /**Funcion para actualizar los datos */
-      const putMxUO1 = async(muestra) => {
+      const putMxBhc = async(muestra) => {
         setExecuteLoading(true);
           try {
-              const response = await DataServices.putMuestraU01(muestra);
+              const response = await DataServices.putMuestraBhc(muestra);
               if (response.status === 200) {
                 setExecuteLoading(false);
                 setType("success");
@@ -803,28 +592,19 @@ const MxU01Container = props => {
     const saveData = () => {
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
-        let clasificacionId = {};
-        let consultaId = {};
+        //let consultaId = {};
         let bioanalistaId = {};
-        let tuboId = {}
         let time = null;
-        let timeRefrigeracion =  null
 
         if (selectedHoraToma !== null) {
             time = moment(selectedHoraToma).format("hh:mm A");
         }
 
-        if (selectedHoraRefrigeracion !== null) {
-            timeRefrigeracion = moment(selectedHoraRefrigeracion).format("hh:mm A");
-        }
 
         const muestra = {
             codLab: codLab,
             codLabM: '',
             codLabScan: '',
-            fechaEnvio: '',
-            horaEnvio: '',
-            horaRefrigeracion: timeRefrigeracion,
             //"id": 0,
             motivoSinFif: motivoNoFif,
             muestraId: {
@@ -835,7 +615,7 @@ const MxU01Container = props => {
                 fechaRegistro: registerDate === null ? new Date() : registerDate, //Fecha del día,
                 fechaToma: fechaToma,
                 fif: fif,
-                fis: fis,
+                fis: null,
                 horaToma: time,
                 //"id": 0,
                 motivoAnulacion: '',
@@ -849,7 +629,7 @@ const MxU01Container = props => {
                 mxCompartida: false, //
                 mxEnviada: false, //
                 mxId: {
-                    id: mxU01Id,
+                    id: mxTransmisionId,
                 },
                 mxTomada: mxTomada,
                 observacion: observations,
@@ -860,70 +640,51 @@ const MxU01Container = props => {
             },
             mxFinalInicial: false,
             mxNoTomada: mxNoTomada,
-            viaje: ''
         }
         
         if (idMx > 0 && idMx !== undefined) {
             muestra.muestraId.id = idMx;
         }
 
-        if (idMxUO1 > 0 && idMxUO1 !== undefined) {
-            muestra.id = idMxUO1;
+        if (idMxTransmision > 0 && idMxTransmision !== undefined) {
+            muestra.id = idMxTransmision;
         }
 
 
         usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
-        clasificacionId.id  = selectedClasificacion;
-        consultaId.id = selectedConsulta;
-        bioanalistaId.id = selectedBioanalista;
-        tuboId.id = selectedTubo;
 
         muestra.muestraId.usuarioId = usuarioId;
-        muestra.clasificacionId = clasificacionId;
-        muestra.consultaId = consultaId;
+        //muestra.consultaId = consultaId;
         if (selectedBioanalista !== '' && selectedBioanalista !== null && selectedBioanalista !== undefined && selectedBioanalista) {
             if (selectedBioanalista > 0) {
                 bioanalistaId.id = selectedBioanalista;
                 muestra.muestraId.bioanalistaId = bioanalistaId;
             }
         }
-        muestra.tuboId = tuboId;
 
         if (idMx > 0) {
             if (fif !== null) {
                 muestra.muestraId.fif = fif;
             }
-            if (fis !== null) {
-                muestra.muestraId.fis = fis;
-            }
             if (fechaToma !== null) {
                 muestra.muestraId.fechaToma = fechaToma;
             }
-            /**Actualizando la muestra de UO1*/
-            putMxUO1(muestra);
+            /**Actualizando la muestra de transmision*/
+            putMxBhc(muestra);
+            //console.log('put', muestra);
         } else {
-            /**Nueva muestra de UO1*/
-            postMxUO1(muestra);
+            /**Nueva muestra de transmision*/
+            postMxBhc(muestra);
+            //console.log('post', muestra);
         }
-        //console.log('muestra', muestra);
     }
 
     return (
         <>
-            <MxU01
+            <MxBhc
                 title={title}
-                //activeStep={activeStep}
-                //handleNext={handleNext}
-                //handleBack={handleBack}
                 code={code}
                 codLab={codLab}
-
-                selectedTubo={selectedTubo}
-                tipoTubo={tipoTubo}
-                selectedConsulta={selectedConsulta}
-                consultas={consultas}
-                selectedClasificacion={selectedClasificacion}
-                clasificacion={clasificacion}
                 selectedMedico={selectedMedico}
                 medicos={medicos}
                 name={name}
@@ -931,7 +692,6 @@ const MxU01Container = props => {
                 age={age}
                 bioanalistas={bioanalistas}
                 fif={fif}
-                fis={fis}
                 fechaToma={fechaToma}
                 selectedBioanalista={selectedBioanalista}
                 motivoNoMx={motivoNoMx}
@@ -939,7 +699,6 @@ const MxU01Container = props => {
                 mxTomada={mxTomada}
                 mxNoTomada={mxNoTomada}
                 selectedHoraToma={selectedHoraToma}
-                selectedHoraRefrigeracion={selectedHoraRefrigeracion}
                 volSangre={volSangre}
                 disabledMotivoNoMx={disabledMotivoNoMx}
                 disableCode={disableCode}
@@ -949,43 +708,36 @@ const MxU01Container = props => {
                 motivoNoFif={motivoNoFif}
                 disableMxNoTomada={disableMxNoTomada}
                 disabledMotivoNoFif={disabledMotivoNoFif}
+                houseCode={houseCode}
                 handleChangeCode={handleChangeCode}
                 onKeyPressCode={onKeyPressCode}
                 handleChangePanel1={handleChangePanel1}
                 handleChangePanel2={handleChangePanel2}
                 handleChangeBionalista={handleChangeBionalista}
-                handleChangeTipoTubo={handleChangeTipoTubo}
-                handleChangeConsulta={handleChangeConsulta}
-                handleChangeClasificacion={handleChangeClasificacion}
                 handleChangeMedico={handleChangeMedico}
                 handleChangeFif={handleChangeFif}
-                handleChangeFis={handleChangeFis}
+                //handleChangeFis={handleChangeFis}
                 handleChangeFtoma={handleChangeFtoma}
                 handleChangeObservations={handleChangeObservations}
                 handleChangeMotivoNoMx={handleChangeMotivoNoMx}
                 handleChangeMxTomada={handleChangeMxTomada}
                 handleChangeMxNoTomada={handleChangeMxNoTomada}
                 handleChangeHoraToma={handleChangeHoraToma}
-                handleChangeHoraRefrigeracion={handleChangeHoraRefrigeracion}
                 handleChangeVolSangre={handleChangeVolSangre}
-                goBackListMxUO1={goBackListMxUO1}
+                goBackListMxTransmision={goBackListMxTransmision}
                 handleChangeMotivoNoFif={handleChangeMotivoNoFif}
                 //saveData={saveData}
                 saveDatosGenerales={saveDatosGenerales}
                 saveMxTomada={saveMxTomada}
                 errorCode={errorCode}
-                errorTubo={errorTubo}
-                errorConsulta={errorConsulta}
-                errorClasificacion={errorClasificacion}
+                //errorConsulta={errorConsulta}
                 errorMedico={errorMedico}
-                errorFis={errorFis}
                 errorFif={errorFif}
                 errorFechaToma={errorFechaToma}
                 errorBioanlista={errorBioanlista}
                 errorMotivoNoMx={errorMotivoNoMx}
                 errorHoraToma={errorHoraToma}
                 errorVolSangre={errorVolSangre}
-                errorHoraRefrigeracion={errorHoraRefrigeracion}
                 errorMotivoSinFif={errorMotivoSinFif}
             />
             <AlertDialog
@@ -1010,4 +762,4 @@ const MxU01Container = props => {
     );
 
 }
-export default MxU01Container;
+export default MxBhcContainer;

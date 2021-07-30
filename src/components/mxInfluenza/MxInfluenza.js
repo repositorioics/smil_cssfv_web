@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 //import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 //import Stepper from '@material-ui/core/Stepper';
 //import Step from '@material-ui/core/Step';
 //import StepLabel from '@material-ui/core/StepLabel';
-import Check from '@material-ui/icons/Check';
-import Description from '@material-ui/icons/Description';
-import Info from '@material-ui/icons/Info';
+//import Check from '@material-ui/icons/Check';
+//import Description from '@material-ui/icons/Description';
+//import Info from '@material-ui/icons/Info';
 //import StepConnector from '@material-ui/core/StepConnector';
 import Button from '@material-ui/core/Button';
 //import Typography from '@material-ui/core/Typography';
@@ -28,7 +28,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+//import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Loading from '../loading/Loading';
 
 import '../mxInfluenza/MxInfluenza.css';
@@ -429,7 +429,8 @@ const MxInfluenza = props => {
                                     handleChangeCode={props.handleChangeCode}
                                     handleChangeMxCv={props.handleChangeMxCv}
                                     handleChangepositivoMi={props.handleChangepositivoMi}
-                                    /* handleChangeCodeLabScan={props.handleChangeCodeLabScan} */
+                                    onChangeBarcode={props.onChangeBarcode}
+                                    onKeyPressBarcode={props.onKeyPressBarcode}
                                     handleChangeFif={props.handleChangeFif}
                                     handleChangeFis={props.handleChangeFis}
                                     handleChangeFtoma={props.handleChangeFtoma}
@@ -446,6 +447,7 @@ const MxInfluenza = props => {
                                     abrirImpresion={props.abrirImpresion}
                                     disableCode={props.disableCode}
                                     disableTypeOfTest={props.disableTypeOfTest}
+                                    disabledCodeLabScan={props.disabledCodeLabScan}
                                 />
                             </div>
                         </AccordionDetails>

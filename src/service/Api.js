@@ -38,9 +38,12 @@ const putCategoria = catCategoria => {
     return instance.put("catalogos/categorias", catCategoria);
 }
 
-
 const getAllCategorias = () => {
     return instance.get("catalogos/categorias");
+}
+
+const getAllCategoriasActivas = () => {
+    return instance.get("/catalogos/categorias/activas");
 }
 /**----------------------------------- */
 /**Api para el catalogo de cambio de categorias */
@@ -54,6 +57,10 @@ const putCambioCategoria = catCambioCategoria => {
 
 const getAllCambiosCategorias = () => {
     return instance.get("catalogos/cambio-categorias");
+}
+
+const getAllCambiosCategoriasActivas = () => {
+    return instance.get("/catalogos/cambio-categorias/activas");
 }
 /**----------------------------------- */
 /**Api para el catalogo de clasificaciones */
@@ -181,6 +188,25 @@ const getAllTubos = () => {
 const getAllTubosActivos = () => {
     return instance.get("catalogos/tubos/activos");
 }
+
+/**----------------------------------- */
+/**Api para el catalogo de visitas */
+const getAllVisitas = () => {
+    return instance.get("catalogos/catVisitas"); ///catalogos/catVisitas
+}
+
+const getAllVisitasActivas = () => {
+    return instance.get("catalogos/catVisitas/activas");
+}
+
+const postVisita = catVisitas => {
+    return instance.post("catalogos/catVisitas", catVisitas);
+}
+
+const putVisita = catVisitas => {
+    return instance.put("catalogos/catVisitas", catVisitas);
+}
+
 /**----------------------------------- */
 /**Api para el catalogo de mismo episodio febril */
 const postMismoEpFebril = catMismoEpfebril => {
@@ -372,11 +398,116 @@ const getUltimoRegistroMuestraInfluenza = (code) => {
         codigoParticipante: code
     }});
 }
+
+/**Muestras BHC */
+const getMuestrasBhc = () => {
+    return instance.get("muestras/bhc/fechaDelDia");
+}
+
+const filtroMxBhc = (code, startDate, endDate) => {
+    return instance.get(`muestras/bhc/participantes/codigo/fechas`, { params: {
+        codigoParticipante: code,
+        strFecha1: startDate,
+        strFecha2: endDate
+    }})
+}
+
+const postMuestraBhc = (muestra) => {
+    return instance.post('muestras/bhc', muestra);
+}
+
+const putMuestraBhc = (muestra) => {
+    return instance.put('muestras/bhc', muestra);
+}
+
+/**Muestras U01 */
+const getMuestrasU01 = () => {
+    return instance.get("muestras/u01/fechaDelDia");
+}
+
+const getMustraU01ById = id => {
+    return instance.get("muestras/u01/"+id);
+}
+
+const filtroMxU01 = (code, startDate, endDate) => {
+    return instance.get(`muestras/u01/participantes/codigo/fechas`, { params: {
+        codigoParticipante: code,
+        strFecha1: startDate,
+        strFecha2: endDate
+    }})
+}
+
+const postMuestraU01 = (muestra) => {
+    return instance.post("muestras/u01", muestra);
+}
+const putMuestraU01 = (muestra) => {
+    return instance.put("muestras/u01", muestra);
+}
+
+/**Muestras Transmisión */
+const getMuestrasTransmision = (idMx) => {
+    return instance.get("muestras/transmision/fechaDelDia", {params: {
+        idMx: idMx
+    }});
+}
+
+/*const getMuestrasTransmision = (id) => {
+    return instance.get("muestras/transmision", {params: {
+        id: id
+    }});
+}*/
+
+const getMuestrasTransmisionById = id => {
+    return instance.get("muestras/transmision/",+id);
+}
+
+const filtroMxTransmision = (code, startDate, endDate, idMx) => {
+    return instance.get(`muestras/transmision/participantes/codigo/fechas`, { params: {
+        codigoParticipante: code,
+        idMx: idMx,
+        strFecha1: startDate,
+        strFecha2: endDate
+    }});
+}
+
+const postMuestraTransmision = (muestra) => {
+    return instance.post("muestras/transmision", muestra);
+}
+
+const putMuestraTransmision = (muestra) => {
+    return instance.put("muestras/transmision", muestra);
+}
+
 /**Metodo para anular las muestras (Influenza, Dengue, BHC, etc) */
 const anularMuestra = (muestra) => {
     return instance.put("muestras/anular", muestra);
 }
 
+/**----------------------------------- */
+/**Muestras Dengue */
+const getMuestrasDengue = () => {
+    return instance.get("muestras/dengue/fechaDelDia");
+}
+
+const filtroMxDengue = (code, startDate, endDate) => {
+    return instance.get(`muestras/dengue/participantes/codigo/fechas`, { params: {
+        codigoParticipante: code,
+        strFecha1: startDate,
+        strFecha2: endDate
+    }})
+}
+
+const postMuestraDengue = (muestra) => {
+    return instance.post("muestras/dengue", muestra);
+}
+
+const putMuestraDengue = (muestra) => {
+    return instance.put("muestras/dengue", muestra);
+}
+
+const getMuestraDengueById = id => {
+    return instance.get("muestras/dengue/"+id);
+}
 /**----------------------------------- */
 /**Api para el catalogo motivos de anulacion*/
 const getMotivosAnulaciones = () => {
@@ -413,6 +544,10 @@ const api = {
     postTubo,
     putTubo,
     getAllTubos,
+    getAllVisitas,
+    getAllVisitasActivas,
+    postVisita,
+    putVisita,
     postUser,
     getAllUsers,
     getUserById,
@@ -459,7 +594,28 @@ const api = {
     getAllTubosActivos,
     getAllConsultasActivas,
     getAllClasificacionesActivas,
-    getOpcionesMenuUsuario
+    getOpcionesMenuUsuario,
+    getMuestrasU01,
+    filtroMxU01,
+    postMuestraU01,
+    putMuestraU01,
+    getMustraU01ById,
+    getMuestrasTransmision,
+    getMuestrasTransmisionById,
+    filtroMxTransmision,
+    postMuestraTransmision,
+    putMuestraTransmision,
+    getMuestrasBhc,
+    filtroMxBhc,
+    postMuestraBhc,
+    putMuestraBhc,
+    getAllCategoriasActivas,
+    getAllCambiosCategoriasActivas,
+    getMuestrasDengue,
+    filtroMxDengue,
+    postMuestraDengue,
+    putMuestraDengue,
+    getMuestraDengueById
 };
 
 export default api;

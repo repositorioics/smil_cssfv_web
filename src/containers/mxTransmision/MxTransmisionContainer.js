@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import { Redirect } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import MxU01 from '../../components/mxU01/MxU01';
+import MxTransmision from '../../components/mxTransmision/MxTransmision';
 import DataServices from '../../service/Api';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
@@ -10,29 +10,30 @@ import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
 
-const MxU01Container = props => {
+const MxTransmisionContainer = props => {
     let history = useHistory();
     const [title, setTitle] = useState('');
     const [loggedInUser, setLoggedInUser] = useState(0);
-    const [mxU01Id] = useState(Constants.ID_MUESTRA_U01); // Id de la muestra de influenza
+    const [mxTransmisionId] = useState(Constants.ID_MUESTRA_TRANSMISION); // Id de la muestra de transmision
     const [code, setCode] = useState('');
     const [idMx, setIdMx] = useState(0);
-    const [idMxUO1, setIdMxUO1] = useState(0)
+    const [idMxTransmision, setIdMxTransmision] = useState(0)
     const [codLab, setCodLab] = useState('');
     //const [codLabScan, setCodLabScan] = useState('');
+    let [plasma, setPlasma] = useState(false);
     const [selectedTubo, setSelectedTubo] = useState('');
     const [tipoTubo, setTipoTubo] = useState([]);
-    const [selectedConsulta, setSelectedConsulta] = useState('');
-    const [consultas, setConsultas] = useState([]);
-    const [selectedClasificacion, setSelectedClasificacion] = useState('');
-    const [clasificacion, setClasificacion] = useState([]);
+    //const [selectedConsulta, setSelectedConsulta] = useState('');
+    //const [consultas, setConsultas] = useState([]);
+    const [selectedVisita, setSelectedVisita] = useState('');
+    const [visitas, setVisitas] = useState([]);
     const [selectedMedico, setSelectedMedico] = useState('');
     const [medicos, setMedicos] = useState([]);
     const [name, setName] = useState('');
     const [study, setStudy] = useState('');
     const [age, setAge] = useState('');
     const [fif, setFif] = useState(null);
-    const [fis, setFis] = useState(null);
+    //const [fis, setFis] = useState(null);
     const [fechaToma, setFechaToma] = useState(new Date());
     const [bioanalistas, setBioanalistas] = useState([]);
     const [selectedBioanalista, setSelectedBioanalista] = useState('');
@@ -63,11 +64,11 @@ const MxU01Container = props => {
 
     const [errorCode, setErrorCode] = useState('');
     const [errorTubo, setErrorTubo] = useState('');
-    const [errorConsulta, setErrorConsulta] = useState('');
-    const [errorClasificacion, setErrorClasificacion] = useState('');
+    //const [errorConsulta, setErrorConsulta] = useState('');
+    const [errorVisita, setErrorVisita] = useState('');
     const [errorMedico, setErrorMedico] = useState('');
 
-    const [errorFis, setErrorFis] = useState('');
+    //const [errorFis, setErrorFis] = useState('');
     const [errorFif, setErrorFif] = useState('');
     const [errorFechaToma, setErrorFechaToma] = useState('');
     const [errorBioanlista, setErrorBioanlista] = useState('');
@@ -94,35 +95,35 @@ const MxU01Container = props => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
             getListTubosActivos();
-            getListConsultasActivos();
-            getListClasificacionesActivas();
+            //getListConsultasActivos();
+            getListVisitasActivas();
             getMedicos();
             getBionalistas();
             if (props.match.params && Object.keys(props.match.params).length > 0) {
                 setExecuteLoading(true);
-                setTitle('Editar muestra U01');
+                setTitle('Editar muestra de serología - Estudio transmisión');
                 const getMxUO1ById = async() => {
                     try {
-                        const response = await DataServices.getMustraU01ById(props.match.params.id);
+                        const response = await DataServices.getMuestrasTransmisionById(props.match.params.id);
                         if (response.status === 200) {
                             //console.log('Data', response.data);
                             setIdMx(response.data.muestraId.id);
-                            setIdMxUO1(response.data.id);
+                            setIdMxTransmision(response.data.id);
                             setCode(response.data.muestraId.codigoParticipante);
                             setCodLab(response.data.codLab);
                             setSelectedTubo(response.data.tuboId.id);
-                            setSelectedConsulta(response.data.consultaId.id);
-                            setSelectedClasificacion(response.data.clasificacionId.id);
+                            //setSelectedConsulta(response.data.consultaId.id);
+                            setSelectedVisita(response.data.visitaId.id);
                             if (response.data.muestraId.fif !== null) {
                                 let dateVar = moment(response.data.muestraId.fif);
                                 let newDateVar = dateVar.utc().format();
                                 setFif(newDateVar);
                             }
-                            if (response.data.muestraId.fis !== null) {
+                            /*if (response.data.muestraId.fis !== null) {
                                 let dateVar = moment(response.data.muestraId.fis);
                                 let newDateVar = dateVar.utc().format();
                                 setFis(newDateVar);
-                            }
+                            }*/
                             if (response.data.muestraId.fechaToma !== null) {
                                 let dateVar = moment(response.data.muestraId.fechaToma);
                                 let newDateVar = dateVar.utc().format();
@@ -136,6 +137,7 @@ const MxU01Container = props => {
                             setMxTomada(response.data.muestraId.mxTomada);
                             setMxNoTomada(response.data.mxNoTomada);
                             setMotivoNoMx(response.data.muestraId.motivoNoMx);
+                            setPlasma(response.data.plasma);
                             if (response.data.mxNoTomada) {}
 
                             if (response.data.muestraId.horaToma !== null) {
@@ -177,7 +179,7 @@ const MxU01Container = props => {
                 }
                 getMxUO1ById();
             } else {
-                setTitle('Agregar muestra U01');
+                setTitle('Muestra de serología - Estudio transmisión');
             }
         } else {
             props.history.push('/');
@@ -200,7 +202,7 @@ const MxU01Container = props => {
     }
 
     /**Metodo para obtener todas las consultas activas */
-    const getListConsultasActivos = async () => {
+    /* const getListConsultasActivos = async () => {
         setExecuteLoading(true);
         try {
             const response = await DataServices.getAllConsultasActivas();
@@ -212,16 +214,16 @@ const MxU01Container = props => {
             setExecuteLoading(false);
             console.log('error', error);
         }
-    }
+    } */
 
     /**Metodo para obtener todas las clasificaciones activas */
-    const getListClasificacionesActivas = async () => {
+    const getListVisitasActivas = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllClasificacionesActivas();
+            const response = await DataServices.getAllVisitasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
-                setClasificacion(response.data);
+                setVisitas(response.data);
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -325,7 +327,7 @@ const MxU01Container = props => {
         event.preventDefault();
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxU01Id);
+            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxTransmisionId);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 let count = response.data + 1;
@@ -417,14 +419,19 @@ const MxU01Container = props => {
         setSelectedTubo(e.target.value);
     }
 
-    const handleChangeConsulta = (e) => {
+    /*const handleChangeConsulta = (e) => {
         setErrorConsulta('');
         setSelectedConsulta(e.target.value);
+    }*/
+
+    const handleChangePlasma = (e) => {
+        plasma = e.target.checked;
+        setPlasma(plasma);
     }
 
-    const handleChangeClasificacion = (e) => {
-        setErrorClasificacion('');
-        setSelectedClasificacion(e.target.value);
+    const handleChangeVisita = (e) => {
+        setErrorVisita('');
+        setSelectedVisita(e.target.value);
     }
 
     const handleChangeMedico = (e) => {
@@ -451,7 +458,7 @@ const MxU01Container = props => {
         }
     }
 
-    const handleChangeFis = (selectedDate) => {
+    /*const handleChangeFis = (selectedDate) => {
         const result = Utils.validateDate(selectedDate);
         const diff = Utils.CalculateDifferenceDates(selectedDate, new Date());
         let isValidDate = true;
@@ -483,7 +490,7 @@ const MxU01Container = props => {
             setFis(selectedDate);
             setErrorFis('');
         }
-    }
+    }*/
 
     const handleChangeFtoma = (selectedDate) => {
         const ftoma = moment(selectedDate, 'YYYY-MM-DD');
@@ -649,12 +656,12 @@ const MxU01Container = props => {
             setErrorTubo('Debe seleccionar el tipo de tubo');
             return false;
         }
-        if (selectedConsulta === '' || selectedConsulta === null || selectedConsulta === undefined || selectedConsulta === '0') {
+        /* if (selectedConsulta === '' || selectedConsulta === null || selectedConsulta === undefined || selectedConsulta === '0') {
             setErrorConsulta('Debe seleccionar la consulta');
             return false;
-        }
-        if (selectedClasificacion === '' || selectedClasificacion === null || selectedClasificacion === undefined || selectedClasificacion === '0') {
-            setErrorClasificacion('Seleccione si la muestra es de VACUNA o ENFERMO');
+        } */
+        if (selectedVisita === '' || selectedVisita === null || selectedVisita === undefined || selectedVisita === '0') {
+            setErrorVisita('Seleccione si la visita es de INICIAL o FINAL');
             return false;
         }
         if (selectedMedico === '' || selectedMedico === null || selectedMedico === undefined || selectedMedico === '0') {
@@ -677,7 +684,7 @@ const MxU01Container = props => {
         return true;
     }
 
-    /*const validateSelectedConsulta = () => {
+   /*  const validateSelectedConsulta = () => {
         if (selectedConsulta === 'Inicial') {
             if (selectedTubo === 'LEUCOSEP') {}
             if (selectedTubo === 'ROJO') {}
@@ -689,7 +696,7 @@ const MxU01Container = props => {
             return false;
         }
         return true;
-    }*/
+    } */
 
     const validateMxTomada = () => {
         if (mxTomada) {
@@ -734,24 +741,8 @@ const MxU01Container = props => {
         setObservations('');
     }
 
-    /* const validateSelectedConsulta = (consulta) => {
-        switch (consulta) {
-            case "Inicial":
-                if (selectedTubo === 'LEUCOSEP') { }
-                if (selectedTubo === 'ROJO') { }
-                return true;
-            case "Convaleciente":
-                if (selectedTubo === 'LEUCOSEP') { }
-                if (selectedTubo === 'ROJO') { }
-                return true;
-            default:
-                break;
-        }
-    } */
-
-
-    const goBackListMxUO1 = () => {
-        history.push(`/muestras/u01`);
+    const goBackListMxTransmision = () => {
+        history.push(`/muestras/transmision`);
     }
 
     const initialStateToast = () => {
@@ -760,14 +751,14 @@ const MxU01Container = props => {
     }
 
      /**Funcion para guardar los datos */
-     const postMxUO1 = async(muestra) => {
+     const postMxTransmision = async(muestra) => {
         setExecuteLoading(true);
          try {
-             const response = await DataServices.postMuestraU01(muestra);
+             const response = await DataServices.postMuestraTransmision(muestra);
              if (response.status === 200) {
                 setExecuteLoading(false);
                 setIdMx(response.data.muestraId.id);
-                setIdMxUO1(response.data.id);
+                setIdMxTransmision(response.data.id);
                 setExistenDatosGenerales(true);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
@@ -782,10 +773,10 @@ const MxU01Container = props => {
      }
 
       /**Funcion para actualizar los datos */
-      const putMxUO1 = async(muestra) => {
+      const putMxTransmision = async(muestra) => {
         setExecuteLoading(true);
           try {
-              const response = await DataServices.putMuestraU01(muestra);
+              const response = await DataServices.putMuestraTransmision(muestra);
               if (response.status === 200) {
                 setExecuteLoading(false);
                 setType("success");
@@ -803,8 +794,8 @@ const MxU01Container = props => {
     const saveData = () => {
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
-        let clasificacionId = {};
-        let consultaId = {};
+        let visitaId = {};
+        //let consultaId = {};
         let bioanalistaId = {};
         let tuboId = {}
         let time = null;
@@ -825,6 +816,7 @@ const MxU01Container = props => {
             fechaEnvio: '',
             horaEnvio: '',
             horaRefrigeracion: timeRefrigeracion,
+            plasma: plasma,
             //"id": 0,
             motivoSinFif: motivoNoFif,
             muestraId: {
@@ -835,7 +827,7 @@ const MxU01Container = props => {
                 fechaRegistro: registerDate === null ? new Date() : registerDate, //Fecha del día,
                 fechaToma: fechaToma,
                 fif: fif,
-                fis: fis,
+                fis: null,
                 horaToma: time,
                 //"id": 0,
                 motivoAnulacion: '',
@@ -849,7 +841,7 @@ const MxU01Container = props => {
                 mxCompartida: false, //
                 mxEnviada: false, //
                 mxId: {
-                    id: mxU01Id,
+                    id: mxTransmisionId,
                 },
                 mxTomada: mxTomada,
                 observacion: observations,
@@ -867,20 +859,20 @@ const MxU01Container = props => {
             muestra.muestraId.id = idMx;
         }
 
-        if (idMxUO1 > 0 && idMxUO1 !== undefined) {
-            muestra.id = idMxUO1;
+        if (idMxTransmision > 0 && idMxTransmision !== undefined) {
+            muestra.id = idMxTransmision;
         }
 
 
         usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
-        clasificacionId.id  = selectedClasificacion;
-        consultaId.id = selectedConsulta;
-        bioanalistaId.id = selectedBioanalista;
+        visitaId.id  = selectedVisita;
+        //consultaId.id = selectedConsulta;
+        //bioanalistaId.id = selectedBioanalista;
         tuboId.id = selectedTubo;
 
         muestra.muestraId.usuarioId = usuarioId;
-        muestra.clasificacionId = clasificacionId;
-        muestra.consultaId = consultaId;
+        muestra.visitaId = visitaId;
+        //muestra.consultaId = consultaId;
         if (selectedBioanalista !== '' && selectedBioanalista !== null && selectedBioanalista !== undefined && selectedBioanalista) {
             if (selectedBioanalista > 0) {
                 bioanalistaId.id = selectedBioanalista;
@@ -893,24 +885,25 @@ const MxU01Container = props => {
             if (fif !== null) {
                 muestra.muestraId.fif = fif;
             }
-            if (fis !== null) {
+            /* if (fis !== null) {
                 muestra.muestraId.fis = fis;
-            }
+            } */
             if (fechaToma !== null) {
                 muestra.muestraId.fechaToma = fechaToma;
             }
-            /**Actualizando la muestra de UO1*/
-            putMxUO1(muestra);
+            /**Actualizando la muestra de transmision*/
+            putMxTransmision(muestra);
+            //console.log('put', muestra);
         } else {
-            /**Nueva muestra de UO1*/
-            postMxUO1(muestra);
+            /**Nueva muestra de transmision*/
+            postMxTransmision(muestra);
+            //console.log('post', muestra);
         }
-        //console.log('muestra', muestra);
     }
 
     return (
         <>
-            <MxU01
+            <MxTransmision
                 title={title}
                 //activeStep={activeStep}
                 //handleNext={handleNext}
@@ -920,10 +913,11 @@ const MxU01Container = props => {
 
                 selectedTubo={selectedTubo}
                 tipoTubo={tipoTubo}
-                selectedConsulta={selectedConsulta}
-                consultas={consultas}
-                selectedClasificacion={selectedClasificacion}
-                clasificacion={clasificacion}
+                //selectedConsulta={selectedConsulta}
+                //consultas={consultas}
+                plasma={plasma}
+                selectedVisita={selectedVisita}
+                visitas={visitas}
                 selectedMedico={selectedMedico}
                 medicos={medicos}
                 name={name}
@@ -931,7 +925,7 @@ const MxU01Container = props => {
                 age={age}
                 bioanalistas={bioanalistas}
                 fif={fif}
-                fis={fis}
+                //fis={fis}
                 fechaToma={fechaToma}
                 selectedBioanalista={selectedBioanalista}
                 motivoNoMx={motivoNoMx}
@@ -949,17 +943,18 @@ const MxU01Container = props => {
                 motivoNoFif={motivoNoFif}
                 disableMxNoTomada={disableMxNoTomada}
                 disabledMotivoNoFif={disabledMotivoNoFif}
+                houseCode={houseCode}
                 handleChangeCode={handleChangeCode}
                 onKeyPressCode={onKeyPressCode}
                 handleChangePanel1={handleChangePanel1}
                 handleChangePanel2={handleChangePanel2}
                 handleChangeBionalista={handleChangeBionalista}
                 handleChangeTipoTubo={handleChangeTipoTubo}
-                handleChangeConsulta={handleChangeConsulta}
-                handleChangeClasificacion={handleChangeClasificacion}
+                //handleChangeConsulta={handleChangeConsulta}
+                handleChangeVisita={handleChangeVisita}
                 handleChangeMedico={handleChangeMedico}
                 handleChangeFif={handleChangeFif}
-                handleChangeFis={handleChangeFis}
+                //handleChangeFis={handleChangeFis}
                 handleChangeFtoma={handleChangeFtoma}
                 handleChangeObservations={handleChangeObservations}
                 handleChangeMotivoNoMx={handleChangeMotivoNoMx}
@@ -968,17 +963,18 @@ const MxU01Container = props => {
                 handleChangeHoraToma={handleChangeHoraToma}
                 handleChangeHoraRefrigeracion={handleChangeHoraRefrigeracion}
                 handleChangeVolSangre={handleChangeVolSangre}
-                goBackListMxUO1={goBackListMxUO1}
+                goBackListMxTransmision={goBackListMxTransmision}
                 handleChangeMotivoNoFif={handleChangeMotivoNoFif}
+                handleChangePlasma={handleChangePlasma}
                 //saveData={saveData}
                 saveDatosGenerales={saveDatosGenerales}
                 saveMxTomada={saveMxTomada}
                 errorCode={errorCode}
                 errorTubo={errorTubo}
-                errorConsulta={errorConsulta}
-                errorClasificacion={errorClasificacion}
+                //errorConsulta={errorConsulta}
+                errorVisita={errorVisita}
                 errorMedico={errorMedico}
-                errorFis={errorFis}
+                //errorFis={errorFis}
                 errorFif={errorFif}
                 errorFechaToma={errorFechaToma}
                 errorBioanlista={errorBioanlista}
@@ -1010,4 +1006,4 @@ const MxU01Container = props => {
     );
 
 }
-export default MxU01Container;
+export default MxTransmisionContainer;

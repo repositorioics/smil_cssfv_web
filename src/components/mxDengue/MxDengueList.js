@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { blue } from '@material-ui/core/colors';
 import Loading from '../loading/Loading';
-import '../mxU01/MxU01.css';
+import '../mxDengue/MxDengue.css';
 
 const useStyles = makeStyles((theme) => ({
     textField: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const MxU01List = props => {
+const MxDengueList = props => {
     const classes = useStyles();
     return (
         <>
@@ -37,7 +37,7 @@ const MxU01List = props => {
                         </div>
                     </div>
                     <div className="m-top hover">
-                        <Link to="/muestras/agregar-muestra-u01"><OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Agregar</Tooltip>}>
+                        <Link to="/muestras/agregar-muestra-dengue"><OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Agregar</Tooltip>}>
                             <span className="d-inline-block">
                                 <AddCircleIcon style={{ color: blue[500] }} size={20} />
                             </span>
@@ -103,22 +103,6 @@ const MxU01List = props => {
                                 </span>
                             </OverlayTrigger>
                         </div>
-                        {/* <div style={{ width: 150 }}>
-                            <label>Código</label>
-                            <input
-                                id="code"
-                                style={{height: 23}}
-                                autoComplete="off"
-                                type="number"
-                                maxLength={10}
-                                className="form-control"
-                                name="code"
-                                value={props.code}
-                                onChange={props.handleChangeCode}
-                                onKeyPress={props.onKeyPressCode}
-                                placeholder="Código" />
-                            
-                        </div> */}
                     </div>
                     <Divider />
                     <div style={{ marginTop: 25, boxShadow: "none" }}>
@@ -141,4 +125,4 @@ const MxU01List = props => {
     );
 }
 
-export default MxU01List;
+export default MxDengueList;

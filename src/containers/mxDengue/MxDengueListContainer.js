@@ -4,7 +4,7 @@ import moment from "moment";
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import MxInfluenzaList from '../../components/mxInfluenza/MxInfluenzaList';
+import MxDengueList from '../../components/mxDengue/MxDengueList';
 import AnularMx from '../../components/AnularMx';
 import Edit from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -12,9 +12,9 @@ import DataServices from '../../service/Api';
 import ToastContainer from '../../components/toast/Toast';
 import Utils from '../../utils/Utils';
 
-const MxInfluenzaListContainer = props => {
+const MxDengueListContainer = props => {
     let history = useHistory();
-    const [titleForm] = useState('Muestras de Influenza');
+    const [titleForm] = useState('Muestras de Dengue');
     const [data, setData] = useState([]);
     const [executeLoading, setExecuteLoading] = useState(false);
     const [mounted, setMounted] = useState(true);
@@ -51,7 +51,7 @@ const MxInfluenzaListContainer = props => {
                 }}>
                 <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Editar</Tooltip>}>
                     <Edit
-                        onClick={() => editMxInfluenza(row)}
+                        onClick={() => editMxDengue(row)}
                         style={{ fontSize: 20, marginLeft: 15, color: "#efac14" }}
                     />
                 </OverlayTrigger>
@@ -74,7 +74,7 @@ const MxInfluenzaListContainer = props => {
         { dataField: 'fechaToma', text: 'Fecha toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'horaToma', text: 'Hora toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'tipoPrueba', text: 'Tipo prueba', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
-        { dataField: 'tipoMuestra', text: 'Tipo muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
+        //{ dataField: 'tipoMuestra', text: 'Tipo muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'estado', text: 'Estado muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         {
             dataField: "", text: "", sort: false, formatter: rankFormatter, headerAttrs: { width: 50 }, attrs: { width: 50, className: "EditRow" }
@@ -93,7 +93,7 @@ const MxInfluenzaListContainer = props => {
         if (token !== null && token !== undefined && token !== "") {
             if (mounted) {
                 //cargar la lista
-                getMxInfluenzaList();
+                getMxDengueList();
                 getMotivosAnulacion();
             }
         } else {
@@ -128,7 +128,7 @@ const MxInfluenzaListContainer = props => {
 
     const handleClose = () => {
         setShow(false);
-        getMxInfluenzaList();
+        getMxDengueList();
     }
 
     const handleChangeCkOtroMotivo = (e) => {
@@ -188,10 +188,10 @@ const MxInfluenzaListContainer = props => {
     }
 
     /**Metodo para obtener todos los registros */
-    const getMxInfluenzaList = async () => {
+    const getMxDengueList = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getMuestrasInfluenza();
+            const response = await DataServices.getMuestrasDengue();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -204,12 +204,12 @@ const MxInfluenzaListContainer = props => {
                         "fechaToma": response.data[i].muestraId.fechaToma,
                         "horaToma": response.data[i].muestraId.horaToma,
                         "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
-                        "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
+                        //"tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                         //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                         "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                     });
                 }
-                setData(newData)
+                setData(newData)          
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -218,10 +218,10 @@ const MxInfluenzaListContainer = props => {
     }
 
     /**Metodo para obtener todos los registros por el filtro aplicado*/
-    const getMxInfluenzaListByFilter = async (code, startDate, endDate) => {
+    const getMxDengueListByFilter = async (code, startDate, endDate) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.filtroMxInfluenza(code, startDate, endDate);
+            const response = await DataServices.filtroMxDengue(code, startDate, endDate);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -235,7 +235,7 @@ const MxInfluenzaListContainer = props => {
                             "fechaToma": response.data[i].muestraId.fechaToma,
                             "horaToma": response.data[i].muestraId.horaToma,
                             "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
-                            "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
+                            //"tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                             //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                             "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                         });
@@ -282,7 +282,7 @@ const MxInfluenzaListContainer = props => {
     }
 
     /**Metodo para anular la muestra */
-    const anularMxInfluenza = async () => {
+    const anularMxDengue = async () => {
         setExecuteLoading(true);
         try {
 
@@ -343,16 +343,16 @@ const MxInfluenzaListContainer = props => {
     }
 
 
-    const editMxInfluenza = (row) => {
+    const editMxDengue = (row) => {
         if (row.estado === "Activa") {
-            history.push(`/muestras/editar-muestra-influenza/${row.id}`);
+            history.push(`/muestras/editar-muestra-dengue/${row.id}`);
         }
     }
 
     /**Metodo para guardar una muestra anulada */
     const saveData = () => {
         if (validateData()) {
-            anularMxInfluenza();
+            anularMxDengue();
         }
     }
 
@@ -360,7 +360,7 @@ const MxInfluenzaListContainer = props => {
     const searchData = () => {
         if (validateSearchData()) {
             if (validateDates()) {
-                getMxInfluenzaListByFilter(code === '' ? 0 : code, startDate, endDate);
+                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate);
             }
 
         }
@@ -369,7 +369,7 @@ const MxInfluenzaListContainer = props => {
     const onKeyPressCode = (e) => {
         if (code !== '' || code !== null || code !== undefined) {
             if (e.charCode === 13) {
-                getMxInfluenzaListByFilter(code === '' ? 0 : code, startDate, endDate);
+                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate);
             }
         }
     }
@@ -386,26 +386,6 @@ const MxInfluenzaListContainer = props => {
             }, 500);
             return false
         }
-
-        /*  if ((startDate !== '' || startDate !== null || startDate !== undefined) &&
-             (endDate === '' || endDate === null || endDate === undefined)) {
-             setType("info");
-             setMessageAlert("Debe ingresar la fecha fin");
-             setTimeout(function () {
-                 initialStateToast();
-             }, 500);
-             return false
-         }
- 
-         if ((startDate === '' || startDate === null || startDate === undefined) &&
-             (endDate !== '' || endDate !== null || endDate !== undefined)) {
-             setType("info");
-             setMessageAlert("Debe ingresar la fecha inicio");
-             setTimeout(function () {
-                 initialStateToast();
-             }, 500);
-             return false
-         } */
         return true
     }
 
@@ -430,7 +410,7 @@ const MxInfluenzaListContainer = props => {
         setCode('');
         setErrorStartDate('');
         setErrorEndDate('');
-        getMxInfluenzaList();
+        getMxDengueList();
     }
 
     return (
@@ -451,7 +431,7 @@ const MxInfluenzaListContainer = props => {
                 errorMessageOtroMotivoSelected={errorMessageOtroMotivoSelected}
                 saveData={saveData}
             />
-            <MxInfluenzaList
+            <MxDengueList
                 titleForm={titleForm}
                 data={data}
                 columns={columns}
@@ -478,4 +458,4 @@ const MxInfluenzaListContainer = props => {
     );
 }
 
-export default MxInfluenzaListContainer;
+export default MxDengueListContainer;

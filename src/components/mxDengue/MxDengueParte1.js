@@ -10,27 +10,24 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
-} from '@material-ui/pickers'; 
+} from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import '../mxInfluenza/MxInfluenza.css';
 import { es } from 'date-fns/locale';
+import '../mxDengue/MxDengue.css';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
         minWidth: 475,
         marginTop: 15
     },
-    formControl2: {
-        minWidth: 475,
-        marginTop: 15
-    },
     selectEmpty: {
         marginTop: theme.spacing(0),
     },
+
     textField: {
         marginLeft: theme.spacing(0),
         marginRight: theme.spacing(1),
@@ -45,21 +42,21 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const MxU01Parte1 = props => {
+const MxDengueParte1 = props => {
     const classes = useStyles();
     return (
         <>
             <div className="input-group row" style={{ marginTop: 5 }}>
-                <div className="col">
+                <div className="col-sm">
                     {/* <label>Código</label> */}
                     <TextField
-                        id="codeUO1"
+                        id="code"
                         autoFocus
                         autoComplete="off"
                         type="number"
                         maxLength={10}
-                        //className="form-control"
                         style={{ width: 150 }}
+                        //className="form-control"
                         name="code"
                         value={props.code}
                         onChange={props.handleChangeCode}
@@ -71,29 +68,47 @@ const MxU01Parte1 = props => {
                                 style: { fontWeight: 'bold' }
                             }
                         }}
-                        label="Código"
+                        label="Código" 
                         className={classes.textField}
                         helperText={props.errorCode}/>
                     {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorCode}</label> */}
                 </div>
-                <div className="col col-lg-2">
+                <div>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Imprimir código</Tooltip>}>
                         <span className="d-inline-block">
-                            <PrintIcon style={{ color: blue[500], cursor: 'pointer' }} size={20} onClick={props.printCode} />
+                            <PrintIcon style={{ color: blue[500], cursor: 'pointer' }} size={20} onClick={props.abrirImpresion} />
                         </span>
                     </OverlayTrigger>
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-sm">
+                    <FormControl className={classes.formControl} disabled={props.disableTypeOfTest}>
+                        <InputLabel id="test-input-label">Tipo de prueba</InputLabel>
+                        <Select
+                            labelId="test-label"
+                            id="test-select"
+                            value={props.selectedTypeOfTest}
+                            onChange={props.handleChangeTypeOfTest}>
+                            <MenuItem value="0">
+                                <em>None</em>
+                            </MenuItem>
+                            {props.dataTypeOfTest.map((e, keyIndex) => {
+                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
+                            })
+                            }
+                        </Select>
+                        <label className="messageError">{props.errorTypeOfTest}</label>
+                    </FormControl>
+                </div>
+                <div className="col-sm">
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-tipo-tubo">Tipo de tubo</InputLabel>
+                        <InputLabel id="test-input-tip o-tubo">Tipo de tubo</InputLabel>
                         <Select
                             labelId="request-label"
                             id="request-select"
                             value={props.selectedTubo}
-                            onChange={props.handleChangeTipoTubo}
-                        >
+                            onChange={props.handleChangeTipoTubo}>
                             <MenuItem value="0">
                                 <em>None</em>
                             </MenuItem>
@@ -105,21 +120,6 @@ const MxU01Parte1 = props => {
                         <label className="messageError">{props.errorTubo}</label>
                     </FormControl>
                 </div>
-                <div className="col-sm">
-                    {/* <label>Cod-lab scan</label> */}
-                    <TextField
-                        id="codeLabScan"
-                        autoComplete="off"
-                        type="text"
-                        style={{ height: 'auto', marginTop: 20 }}
-                        maxLength={50}
-                        className="form-control"
-                        name="codeLabScan"
-                        value={props.codeLabScan}
-                        readOnly={true}
-                        /* onChange={props.handleChangeCodeLabScan} */
-                        label="Cod-lab scan" />
-                </div>
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-sm">
@@ -129,8 +129,7 @@ const MxU01Parte1 = props => {
                             labelId="request-label-consulta"
                             id="request-select-consulta"
                             value={props.selectedConsulta}
-                            onChange={props.handleChangeConsulta}
-                        >
+                            onChange={props.handleChangeConsulta}>
                             <MenuItem value="0">
                                 <em>None</em>
                             </MenuItem>
@@ -144,35 +143,33 @@ const MxU01Parte1 = props => {
                 </div>
                 <div className="col-sm">
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-clasfi">Clasificación</InputLabel>
+                        <InputLabel id="test-input-categoria">Categoría</InputLabel>
                         <Select
-                            labelId="request-label-clasfi"
-                            id="request-select-clasfi"
-                            value={props.selectedClasificacion}
-                            onChange={props.handleChangeClasificacion}
-                        >
+                            labelId="request-label-categoria"
+                            id="request-select-categoria"
+                            value={props.selectedCategoria}
+                            onChange={props.handleChangeCategoria}>
                             <MenuItem value="0">
                                 <em>None</em>
                             </MenuItem>
-                            {props.clasificacion.map((e, keyIndex) => {
+                            {props.categoria.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                             })
                             }
                         </Select>
-                        <label className="messageError">{props.errorClasificacion}</label>
+                        <label className="messageError">{props.errorCategoria}</label>
                     </FormControl>
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-sm">
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-label-request">Solicitada por</InputLabel>
+                        <InputLabel id="test-input-label-request">Solicitado por</InputLabel>
                         <Select
                             labelId="request-label"
                             id="request-select"
                             value={props.selectedMedico}
-                            onChange={props.handleChangeMedico}
-                        >
+                            onChange={props.onSelectRequestBy}>
                             <MenuItem value="0">
                                 <em>None</em>
                             </MenuItem>
@@ -185,36 +182,37 @@ const MxU01Parte1 = props => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    {/* <label>Código de lab</label> */}
-                    <TextField
-                        id="codLab"
-                        autoComplete="off"
-                        type="text"
-                        style={{ height: 'auto', marginTop: 20 }}
-                        maxLength={50}
-                        className="form-control"
-                        name="codLab"
-                        value={props.codLab}
-                        readOnly={true}
-                        inputProps={{
-                            style: { fontWeight: 'bold' }
-                        }}
-                        /* onChange={props.handleChangeCodeLab} */
-                        label="Código de lab" />
+                    <FormControl className={classes.formControl}>
+                        <InputLabel id="test-input-label-request-camb-cat">Hubo cambio de Cat.</InputLabel>
+                        <Select
+                            labelId="request-label-camb-cat"
+                            id="request-select-camb-cat"
+                            value={props.selectedCambCat}
+                            onChange={props.handleChangeCambCategoria}>
+                            <MenuItem value="0">
+                                <em>None</em>
+                            </MenuItem>
+                            {props.cambiosCategorias.map((e, keyIndex) => {
+                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
+                            })
+                            }
+                        </Select>
+                        <label className="messageError">{props.errorCambCategoria}</label>
+                    </FormControl>
                 </div>
             </div>
-
             <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
                 <Grid container justify="space-between">
                     <div>
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog-fif-u01"
+                            id="date-picker-dialog-fif"
                             label="FIF"
                             format="dd/MM/yyyy"
                             autoOk={true}
                             value={props.fif !== null ? props.fif : null}
                             onChange={props.handleChangeFif}
+                            disabled={props.disableFif}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -224,7 +222,7 @@ const MxU01Parte1 = props => {
                     <div>
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog-fis-u01"
+                            id="date-picker-dialog-fis"
                             label="FIS"
                             format="dd/MM/yyyy"
                             autoOk={true}
@@ -239,7 +237,7 @@ const MxU01Parte1 = props => {
                     <div style={{ marginRight: 36 }}>
                         <KeyboardDatePicker
                             margin="normal"
-                            id="date-picker-dialog-fToma-u01"
+                            id="date-picker-dialog-fToma"
                             label="Fecha toma"
                             format="dd/MM/yyyy"
                             autoOk={true}
@@ -253,9 +251,6 @@ const MxU01Parte1 = props => {
                     </div>
                 </Grid>
             </MuiPickersUtilsProvider>
-
-
-
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-5">
                     {/* <label>Nombre del participante</label> */}
@@ -275,7 +270,6 @@ const MxU01Parte1 = props => {
                         label="Nombre del participante" />
                 </div>
                 <div className="col-sm">
-                    {/* <label>Estudio</label> */}
                     <TextField
                         id="study"
                         autoComplete="off"
@@ -292,7 +286,6 @@ const MxU01Parte1 = props => {
                         label="Estudio" />
                 </div>
                 <div className="col-sm">
-                    {/* <label>Edad</label> */}
                     <TextField
                         id="age"
                         autoComplete="off"
@@ -309,7 +302,26 @@ const MxU01Parte1 = props => {
                         label="Edad" />
                 </div>
             </div>
+            <div className="input-group row" style={{ marginTop: 10 }}>
+                <div className="col-sm">
+                    <TextField
+                        id="codeLab"
+                        autoComplete="off"
+                        type="text"
+                        style={{ height: 'auto', marginTop: 20, width: 250 }}
+                        maxLength={50}
+                        className="form-control"
+                        name="codeLab"
+                        value={props.codeLab}
+                        readOnly={true}
+                        inputProps={{
+                            style: { fontWeight: 'bold' }
+                        }}
+                        label="Código de lab" />
+                </div>
+            </div>
         </>
     );
 }
-export default MxU01Parte1;
+
+export default MxDengueParte1;

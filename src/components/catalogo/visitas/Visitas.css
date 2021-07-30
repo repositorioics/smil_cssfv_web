@@ -1,0 +1,35 @@
+.title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.m-top {
+    margin-top: 10px;
+}
+
+.hover {
+    cursor: pointer;
+}
+
+.customContainer {
+    box-shadow: none !important;
+}
+
+/*********************/
+@media (min-width: 768px) {
+    .container, .container-md, .container-sm {
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container, .container-lg, .container-md, .container-sm {
+        max-width: 850px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl {
+        max-width: 1140px;  
+    }
+}
