@@ -306,7 +306,7 @@ const MxU01 = props => {
                                     selectedTubo={props.selectedTubo}
                                     tipoTubo={props.tipoTubo}
                                     codeLabScan={props.codeLabScan}
-                                    selectedConsulta={props.selectedConsulta}
+                                    selectedVisita={props.selectedVisita}
                                     consultas={props.consultas}
                                     selectedClasificacion={props.selectedClasificacion}
                                     clasificacion={props.clasificacion}

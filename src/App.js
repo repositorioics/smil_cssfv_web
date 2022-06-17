@@ -6,7 +6,7 @@ import IdleTimer from "./IdleTimer";
 //import { AuthContext } from "./context/Auth";
 import Login from './containers/login/LoginContainer';
 import Header from './components/header/Header';
-import Home from './components/home/Home';
+import Home from './containers/home/HomeContainer';
 import Categoria from './containers/catalogos/Categoria/CategoriaContainer';
 import CambioCategoria from './containers/catalogos/CambioCategoria/CambioCategoriaContainer';
 import Clasificacion from './containers/catalogos/Clasificacion/ClasificacionContainer';
@@ -19,6 +19,10 @@ import Tubos from './containers/catalogos/Tubos/TubosContainer';
 import Visitas from './containers/catalogos/Visitas/VisitasContainer';
 import MismoEpFebrilContainer from './containers/catalogos/MismoEpFebril/MismoEpFebrilContainer';
 import ResultadosMuestrasContainer from './containers/catalogos/ResultadosMuestras/ResultadosMuestrasContainer';
+import RecepcionListContainer from './containers/catalogos/Recepcion/RecepcionListContainer';
+import RegisterRecepcionContainer from './containers/catalogos/Recepcion/RegisterRecepcionContainer';
+import AnioEstudioContainer from './containers/catalogos/AnioEstudio/AnioEstudioContainer';
+
 
 import AddUser from './containers/security/users/RegisterContainer';
 import Users from './containers/security/users/UserListContainer';
@@ -55,6 +59,14 @@ import RecepcionMxContainer from "./containers/recepcionMx/RecepcionMxContainer"
 
 import MxDengueListContainer from "./containers/mxDengue/MxDengueListContainer";
 import MxDengueContainer from "./containers/mxDengue/MxDengueContainer";
+import MxDengueMetabolomicaContainer from "./containers/mxDengue/MxDengueMetabolomicaListContainer";
+import MxDengueBhcContainer from "./containers/mxDengue/MxDengueBhcListContainer";
+import MxDenguePbmcContainer from "./containers/mxDengue/MxDenguePbmcListContainer";
+import MxDenguePaxGeneContainer from "./containers/mxDengue/MxDenguePaxGeneListContainer";
+
+import EnvioMxContainer from "./containers/envioMx/EnvioMxContainer";
+
+import MxTomadasDengueContainer from "./containers/reportDengue/MxTomadasDengueContainer";
 
 const App = () => {
   const [isTimeout, setIsTimeout] = useState(false);
@@ -227,6 +239,14 @@ const App = () => {
                 render={props => (
                   <Header {...props}>
                     <MismoEpFebrilContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/anio-estudio"
+                exact
+                render={props => (
+                  <Header {...props}>
+                    <AnioEstudioContainer {...props} />
                   </Header>
                 )}
               />
@@ -447,10 +467,10 @@ const App = () => {
               />
               <Route path="/muestras/transmision"
                 exact
-                render={props => 
+                render={props =>
                 (
                   <Header {...props}>
-                    <MxTransmisionListContainer {...props}/>
+                    <MxTransmisionListContainer {...props} />
                   </Header>
                 )}
               />
@@ -474,10 +494,10 @@ const App = () => {
               />
               <Route path="/muestras/transmision/lavado-nasal"
                 exact
-                render={props => 
+                render={props =>
                 (
                   <Header {...props}>
-                    <MxTransmisionLnListContainer {...props}/>
+                    <MxTransmisionLnListContainer {...props} />
                   </Header>
                 )}
               />
@@ -501,10 +521,10 @@ const App = () => {
               />
               <Route path="/muestras/bhc"
                 exact
-                render={props => 
+                render={props =>
                 (
                   <Header {...props}>
-                    <MxBhcListContainer {...props}/>
+                    <MxBhcListContainer {...props} />
                   </Header>
                 )}
               />
@@ -528,40 +548,172 @@ const App = () => {
               />
               <Route path="/recepcion/muestras"
                 exact
-                render={props => 
-                  (
-                    <Header {...props}>
-                      <RecepcionMxContainer {...props}/>
-                    </Header>
+                render={props =>
+                (
+                  <Header {...props}>
+                    <RecepcionMxContainer {...props} />
+                  </Header>
 
-                  )}
+                )}
               />
-               <Route path="/muestras/dengue"
+              <Route path="/muestras/dengue"
                 exact
-                render={props => 
-                  (
-                    <Header {...props}>
-                      <MxDengueListContainer {...props}/>
-                    </Header>
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueListContainer {...props} />
+                  </Header>
 
-                  )}
+                )}
               />
               <Route path="/muestras/agregar-muestra-dengue"
-                exact
-                render={props => 
-                  (
-                    <Header {...props}>
-                      <MxDengueContainer {...props}/>
-                    </Header>
-
-                  )}
-              />
-              <Route path="/muestras/editar-muestra-dengue/:id"
                 exact
                 render={props =>
                 (
                   <Header {...props}>
                     <MxDengueContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
+              <Route path="/muestras/agregar-muestra-metabolomica"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
+              <Route path="/muestras/agregar-muestra-dengue-bhc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
+              <Route path="/muestras/agregar-muestra-dengue-paxgene"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
+              <Route path="/muestras/agregar-muestra-dengue-pbmc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
+
+              <Route path="/muestras/editar-muestra-dengue/:id/:mx"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/dengue/metabolomicas"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueMetabolomicaContainer {...props} />
+                  </Header>
+
+                )}
+              />
+              <Route path="/muestras/dengue/bhc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueBhcContainer {...props} />
+                  </Header>
+
+                )}
+              />
+              <Route path="/muestras/dengue/pbmc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDenguePbmcContainer {...props} />
+                  </Header>
+
+                )}
+              />
+              <Route path="/muestras/dengue/paxgene"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDenguePaxGeneContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
+              <Route path="/envio/muestras"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <EnvioMxContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/reporte/muestras-dengue"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxTomadasDengueContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/recepcion"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <RecepcionListContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/registrar-recepcion"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <RegisterRecepcionContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/editar-recepcion/:id"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <RegisterRecepcionContainer {...props} />
                   </Header>
                 )}
               />

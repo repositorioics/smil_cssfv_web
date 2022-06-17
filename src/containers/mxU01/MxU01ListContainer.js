@@ -73,7 +73,7 @@ const MxU01ListContainer = props => {
         { dataField: 'codigo', text: 'Código', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'fechaToma', text: 'Fecha toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'horaToma', text: 'Hora toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
-        { dataField: 'consulta', text: 'Consulta', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
+        { dataField: 'visita', text: 'Visita', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'tubo', text: 'Tipo tubo', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'estado', text: 'Estado muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         {
@@ -203,8 +203,8 @@ const MxU01ListContainer = props => {
                         "codigo": response.data[i].muestraId.codigoParticipante,
                         "fechaToma": response.data[i].muestraId.fechaToma,
                         "horaToma": response.data[i].muestraId.horaToma,
-                        "consulta": response.data[i].consultaId.descripcion,
-                        "tubo": response.data[i].tuboId.descripcion,
+                        "visita": response.data[i].visitaId != null ? response.data[i].visitaId.nombre : "",
+                        "tubo": response.data[i].tuboId != null ? response.data[i].tuboId.descripcion : "",
                         "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                     });
                 }
@@ -233,8 +233,8 @@ const MxU01ListContainer = props => {
                             "fechaRegistro": response.data[i].muestraId.fechaRegistro,
                             "fechaToma": response.data[i].muestraId.fechaToma,
                             "horaToma": response.data[i].muestraId.horaToma,
-                            "consulta": response.data[i].consultaId.descripcion,
-                            "tubo": response.data[i].tuboId.descripcion,
+                            "visita": response.data[i].visitaId != null ? response.data[i].visitaId.nombre : "",
+                            "tubo": response.data[i].tuboId != null ? response.data[i].tuboId.descripcion : "",
                             //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                             "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                         });

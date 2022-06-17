@@ -9,15 +9,16 @@ import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
+import utils from '../../utils/Utils';
 
 const MxBhcContainer = props => {
     let history = useHistory();
     const [title, setTitle] = useState('');
     const [loggedInUser, setLoggedInUser] = useState(0);
-    const [mxTransmisionId] = useState(Constants.ID_MUESTRA_BHC); // Id de la muestra de transmision
+    const [mxBhcId] = useState(Constants.ID_MUESTRA_BHC); // Id de la muestra de transmision
     const [code, setCode] = useState('');
     const [idMx, setIdMx] = useState(0);
-    const [idMxTransmision, setIdMxTransmision] = useState(0)
+    const [idMxBhc, setIdMxBhc] = useState(0)
     const [codLab, setCodLab] = useState('');
     //const [selectedConsulta, setSelectedConsulta] = useState('');
     //const [consultas, setConsultas] = useState([]);
@@ -48,6 +49,7 @@ const MxBhcContainer = props => {
 
     const [executeLoading, setExecuteLoading] = useState(false);
     const [disabledMotivoNoFif, setDisabledMotivoNoFif] = useState(true);
+    const [disableSaveDatosGenerales, setDisableSaveDatosGenerales] = useState(false);
 
     const [expanded1, setExpanded1] = useState(false);
     const [expanded2, setExpanded2] = useState(false);
@@ -86,11 +88,11 @@ const MxBhcContainer = props => {
                 setTitle('Editar muestra bhc');
                 const getMxUO1ById = async() => {
                     try {
-                        const response = await DataServices.getMuestrasTransmisionById(props.match.params.id);
+                        const response = await DataServices.muestrasBhcById(props.match.params.id);
                         if (response.status === 200) {
                             //console.log('Data', response.data);
                             setIdMx(response.data.muestraId.id);
-                            setIdMxTransmision(response.data.id);
+                            setIdMxBhc(response.data.id);
                             setCode(response.data.muestraId.codigoParticipante);
                             setCodLab(response.data.codLab);
                             //setSelectedConsulta(response.data.consultaId.id);
@@ -217,24 +219,34 @@ const MxBhcContainer = props => {
                 setExecuteLoading(false);
                 if (response.data !== '') {
                     /**Validando que el participante no sea solo del estudio de dengue */
-                    const estudiosP = response.data.estudiosparticipante.includes('UO1');
+                    //const estudiosP = response.data.estudiosparticipante.includes('UO1');
                     //console.log('estudiosP', estudiosP);
-                    if (!estudiosP) {
+                    /* if (!estudiosP) {
                         setCodLab('');
                         setOpenAlertDialog(true);
                         setAlertMessageDialog("El participante no pertenece al estudio UO1, no se puede tomar muestra.");
-                    } else {
+                    } else { */
                         setOpenAlertDialog(false);
                         setName(response.data.nombre1 + " " + response.data.nombre2 + " " + response.data.apellido1 + " " + response.data.apellido2);
                         setStudy(response.data.estudiosparticipante !== '' ? response.data.estudiosparticipante : '');
                         if (response.data.fechanac !== '' && response.data.fechanac !== null) {
                             const edad = Utils.obtenerEdad(response.data.fechanac);
-                            setAge(edad)
+                            //console.log(edad);
+                            if (edad.years <= 2) {
+                                setAge(`${edad.years} Años | ${edad.months} Meses | ${edad.days} Días`);
+                                setDisableSaveDatosGenerales(false);
+                                
+                            } else {
+                                setOpenAlertDialog(true);
+                                setAlertMessageDialog("El participante es mayor de 2 años, no puede tomar la muestra.");
+                                setDisableSaveDatosGenerales(true);
+                            }
+                            
                         }
                         setHouseCode(response.data.codigocasa);
                         setEstudiosParticipante(response.data.estudiosparticipante);
                         //setData(response.data);
-                    }
+                    //}
                 } else {
                     setOpenAlertDialog(true);
                     setAlertMessageDialog("No existe información para el código ingresado");
@@ -253,16 +265,16 @@ const MxBhcContainer = props => {
         event.preventDefault();
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxTransmisionId);
+            const response = await DataServices.codigoLabUltimaMxBHCPorCodigo(code);
             if (response.status === 200) {
                 setExecuteLoading(false);
-                let count = response.data + 1;
-                if (count <= 9) {
-                    count = `${code}.0${count}`
-                    setCodLab(count);
+                if (response.data !== '') {
+                    const resultado = response.data.toString().split('.');
+                    const result = utils.obtenerConsecutivo(resultado[1]);
+                    setCodLab(`${resultado[0]}.${result}${'BHC'}`);
                 } else {
-                    count = `${code}.${count}`
-                    setCodLab(count);
+                    const result = utils.obtenerConsecutivo('');
+                    setCodLab(`${code}.${result}${'BHC'}`);
                 }
             }
         } catch (error) {
@@ -556,7 +568,7 @@ const MxBhcContainer = props => {
              if (response.status === 200) {
                 setExecuteLoading(false);
                 setIdMx(response.data.muestraId.id);
-                setIdMxTransmision(response.data.id);
+                setIdMxBhc(response.data.id);
                 setExistenDatosGenerales(true);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
@@ -629,7 +641,7 @@ const MxBhcContainer = props => {
                 mxCompartida: false, //
                 mxEnviada: false, //
                 mxId: {
-                    id: mxTransmisionId,
+                    id: mxBhcId,
                 },
                 mxTomada: mxTomada,
                 observacion: observations,
@@ -646,8 +658,8 @@ const MxBhcContainer = props => {
             muestra.muestraId.id = idMx;
         }
 
-        if (idMxTransmision > 0 && idMxTransmision !== undefined) {
-            muestra.id = idMxTransmision;
+        if (idMxBhc > 0 && idMxBhc !== undefined) {
+            muestra.id = idMxBhc;
         }
 
 
@@ -709,6 +721,8 @@ const MxBhcContainer = props => {
                 disableMxNoTomada={disableMxNoTomada}
                 disabledMotivoNoFif={disabledMotivoNoFif}
                 houseCode={houseCode}
+                disableSaveDatosGenerales={disableSaveDatosGenerales}
+
                 handleChangeCode={handleChangeCode}
                 onKeyPressCode={onKeyPressCode}
                 handleChangePanel1={handleChangePanel1}

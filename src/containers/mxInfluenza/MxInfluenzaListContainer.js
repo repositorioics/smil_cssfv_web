@@ -203,7 +203,7 @@ const MxInfluenzaListContainer = props => {
                         "codigo": response.data[i].muestraId.codigoParticipante,
                         "fechaToma": response.data[i].muestraId.fechaToma,
                         "horaToma": response.data[i].muestraId.horaToma,
-                        "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
+                        "tipoPrueba": response.data[i].tipoPruebaId !== null ? response.data[i].tipoPruebaId.descripcion : '',
                         "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                         //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                         "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
@@ -234,7 +234,7 @@ const MxInfluenzaListContainer = props => {
                             "fechaRegistro": response.data[i].muestraId.fechaRegistro,
                             "fechaToma": response.data[i].muestraId.fechaToma,
                             "horaToma": response.data[i].muestraId.horaToma,
-                            "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
+                            "tipoPrueba": response.data[i].tipoPruebaId !== null ? response.data[i].tipoPruebaId.descripcion : '',
                             "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                             //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                             "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"

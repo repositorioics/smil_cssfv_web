@@ -73,7 +73,7 @@ const ResultadosMuestras = props => {
                                                 onChange={props.handleChangeMx}
                                             >
                                                 <MenuItem value="0">
-                                                    <em>None</em>
+                                                    <em>Seleccione</em>
                                                 </MenuItem>
                                                 {props.dataMx.map((e, keyIndex) => {
                                                     return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)})
@@ -91,7 +91,7 @@ const ResultadosMuestras = props => {
                                                 onChange={props.handleChangeTypeOfTest}
                                             >
                                                 <MenuItem value="0">
-                                                    <em>None</em>
+                                                    <em>Seleccione</em>
                                                 </MenuItem>
                                                 {props.dataTypeOfTest.map((e, keyIndex) => {
                                                     return (<MenuItem key={keyIndex} value={e.id}>{e.nombre} - {e.idCatMuestra.descripcion}</MenuItem>)})

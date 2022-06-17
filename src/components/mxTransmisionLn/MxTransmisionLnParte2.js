@@ -121,7 +121,7 @@ const MxTransmisionLnParte2 = props => {
                             onChange={props.handleChangeBionalista}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.bioanalistas.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -138,12 +138,12 @@ const MxTransmisionLnParte2 = props => {
                         <Select
                             labelId="tipo-muestra-label"
                             id="tipo-muestra-select"
-                            value={props.selectedTipoMuestra}
-                            onChange={props.handleChangeTipoMuestra}
-                            disabled={true}
+                            value={props.selectedTipoMx}
+                            onChange={props.handleChangeTipoMx}
+                            disabled={false}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.tipoMuestra.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

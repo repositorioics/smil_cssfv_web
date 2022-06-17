@@ -191,7 +191,7 @@ const MxDengueListContainer = props => {
     const getMxDengueList = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getMuestrasDengue();
+            const response = await DataServices.muestrasDengueHematicas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -218,10 +218,10 @@ const MxDengueListContainer = props => {
     }
 
     /**Metodo para obtener todos los registros por el filtro aplicado*/
-    const getMxDengueListByFilter = async (code, startDate, endDate) => {
+    const getMxDengueListByFilter = async (code, startDate, endDate, mxType) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.filtroMxDengue(code, startDate, endDate);
+            const response = await DataServices.filtroMxDengue(code, startDate, endDate, mxType);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -345,7 +345,7 @@ const MxDengueListContainer = props => {
 
     const editMxDengue = (row) => {
         if (row.estado === "Activa") {
-            history.push(`/muestras/editar-muestra-dengue/${row.id}`);
+            history.push(`/muestras/editar-muestra-dengue/${row.id}/${'dengue'}`);
         }
     }
 
@@ -360,7 +360,7 @@ const MxDengueListContainer = props => {
     const searchData = () => {
         if (validateSearchData()) {
             if (validateDates()) {
-                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate);
+                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate, 'hematica');
             }
 
         }
@@ -369,7 +369,7 @@ const MxDengueListContainer = props => {
     const onKeyPressCode = (e) => {
         if (code !== '' || code !== null || code !== undefined) {
             if (e.charCode === 13) {
-                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate);
+                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate, 'hematica');
             }
         }
     }

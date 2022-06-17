@@ -25,7 +25,14 @@ const obtenerEdad = (fechaNac) => {
     let months = Math.floor(days_diff / 30.4167);
     let days = Math.floor(days_diff % 30.4167);
 
-    return `${years} Años | ${months} Meses | ${days} Días`;
+    const result = {
+        years: years,
+        months: months,
+        days: days
+    };
+
+    //return `${years} Años | ${months} Meses | ${days} Días`;
+    return result;
 }
 
 /**Metodo para verificar que las fechas no sean mayor a la fecha del día */
@@ -49,11 +56,67 @@ const CalculateDifferenceDates = (date1, date2) => {
     return endDate.diff(startDate, 'days');
 }
 
+/**Metodo para crear codigos lab scan */
+const createCodLabScan = (fif, fechaToma, codLab) => {
+    let barCodeFif = '';
+    let barCodeFechaToma = '';
+    let barCodeSpace = '  ';
+    if (fif === null || fif === undefined || fif === '') {
+        barCodeFif = '10/10/3000'
+    } else {
+        const now = new moment(fif);
+        barCodeFif = now.format("DD/MM/YYYY");
+    }
+    if (fechaToma !== null || fechaToma !== undefined || fechaToma !== '') {
+        const now = new moment(fechaToma);
+        barCodeFechaToma = now.format("DD/MM/YYYY");
+    }
+    console.log('cod', `${barCodeFif}${barCodeFechaToma}${barCodeSpace}${codLab}`);
+    return `${barCodeFif}${barCodeFechaToma}${barCodeSpace}${codLab}`;
+}
+
+/**Metodo para generar el consecutivo segun la letra de la A-Z*/
+const nextString = (str) => {
+    if (!str)
+        return 'A'  // return 'A' if str is empty or null
+
+    let tail = ''
+    let i = str.length - 1
+    let char = str[i]
+    // find the index of the first character from the right that is not a 'Z'
+    while (char === 'Z' && i > 0) {
+        i--
+        char = str[i]
+        tail = 'A' + tail   // tail contains a string of 'A'
+    }
+    if (char === 'Z') // the string was made only of 'Z'
+        return 'AA' + tail
+    // increment the character that was not a 'Z'
+    return str.slice(0, i) + String.fromCharCode(char.charCodeAt(0) + 1) + tail
+}
+
+const obtenerConsecutivo = (valor) => {
+    let resultado = '';
+    if (valor === '') {
+        resultado = '01';
+    } else {
+        if (valor <= 8) {
+            resultado = `${'0'}${parseInt(valor)+1}`;
+        } else {
+            resultado = `${parseInt(valor)+1}`;
+        }
+    }
+    return resultado;
+}
+
 const utils = {
     obtenerEdad,
     validateDate,
     validateStartDateEndDate,
-    CalculateDifferenceDates
+    CalculateDifferenceDates,
+    createCodLabScan,
+    nextString,
+    obtenerConsecutivo
 }
 
 export default utils;

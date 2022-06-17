@@ -74,8 +74,8 @@ const MxBhcListContainer = props => {
         { dataField: 'codigo', text: 'Código', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'fechaToma', text: 'Fecha toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'horaToma', text: 'Hora toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
-        { dataField: 'tipoPrueba', text: 'Tipo prueba', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
-        { dataField: 'tipoMuestra', text: 'Tipo muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
+        //{ dataField: 'tipoPrueba', text: 'Tipo prueba', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
+        //{ dataField: 'tipoMuestra', text: 'Tipo muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'estado', text: 'Estado muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         {
             dataField: "", text: "", sort: false, formatter: rankFormatter, headerAttrs: { width: 50 }, attrs: { width: 50, className: "EditRow" }
@@ -204,8 +204,8 @@ const MxBhcListContainer = props => {
                         "codigo": response.data[i].muestraId.codigoParticipante,
                         "fechaToma": response.data[i].muestraId.fechaToma,
                         "horaToma": response.data[i].muestraId.horaToma,
-                        "tipoPrueba": response.data[i].tipoPruebaId !== null ? response.data[i].tipoPruebaId.descripcion : '',
-                        "tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
+                       // "tipoPrueba": response.data[i].tipoPruebaId !== null ? response.data[i].tipoPruebaId.descripcion : '',
+                        //"tipoMuestra": response.data[i].tipoMuestraId !== null ? response.data[i].tipoMuestraId.nombre : '',
                         //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                         "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                     });

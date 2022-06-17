@@ -100,11 +100,21 @@ const MxDengue = props => {
                                     study={props.study}
                                     age={props.age}
                                     codeLab={props.codeLab}
+                                    abrirImpresion={props.abrirImpresion}
                                     selectedCambCat={props.selectedCambCat}
                                     cambiosCategorias={props.cambiosCategorias}
                                     onSelectRequestBy={props.onSelectRequestBy}
+                                    orina={props.orina}
+                                    saliva={props.saliva}
+                                    titleChkZkDen={props.titleChkZkDen}
+                                    positvoZika={props.positvoZika}
                                     disableFif={props.disableFif}
                                     disableCode={props.disableCode}
+                                    disableTypeOfTest={props.disableTypeOfTest}
+                                    disableTubo={props.disableTubo}
+                                    disableCambioCategoria={props.disableCambioCategoria}
+                                    metabolomicaHide={props.metabolomicaHide}
+                                    positivoZkDenHide={props.positivoZkDenHide}
                                     handleChangeCode={props.handleChangeCode}
                                     onKeyPressCode={props.onKeyPressCode}
                                     handleChangeTypeOfTest={props.handleChangeTypeOfTest}
@@ -115,6 +125,9 @@ const MxDengue = props => {
                                     handleChangeFif={props.handleChangeFif}
                                     handleChangeFis={props.handleChangeFis}
                                     handleChangeFtoma={props.handleChangeFtoma}
+                                    handleChangeOrina={props.handleChangeOrina}
+                                    handleChangeSaliva={props.handleChangeSaliva}
+                                    handleChangePositvoZika={props.handleChangePositvoZika}
                                     errorCode={props.errorCode}
                                     errorTypeOfTest={props.errorTypeOfTest}
                                     errorTubo={props.errorTubo}
@@ -185,7 +198,7 @@ const MxDengue = props => {
                             </Button>
                         </div>
                     </Accordion>
-                    <Accordion expanded={props.expanded3 === 'panel3'} onChange={props.handleChangePanel3('panel3')}>
+                    <Accordion hidden={props.accordionPanel3} expanded={props.expanded3 === 'panel3'} onChange={props.handleChangePanel3('panel3')}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel3bh-content"
@@ -232,7 +245,7 @@ const MxDengue = props => {
                             </Button>
                         </div>
                     </Accordion>
-                    <Accordion expanded={props.expanded4 === 'panel4'} onChange={props.handleChangePanel4('panel4')}>
+                    <Accordion hidden={props.accordionPanel4} expanded={props.expanded4 === 'panel4'} onChange={props.handleChangePanel4('panel4')}>
                         <AccordionSummary
                             expandIcon={<ExpandMoreIcon />}
                             aria-controls="panel4bh-content"

@@ -107,7 +107,7 @@ const MxTransmisionParte1 = props => {
                             onChange={props.handleChangeTipoTubo}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.tipoTubo.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
@@ -144,7 +144,7 @@ const MxTransmisionParte1 = props => {
                             onChange={props.handleChangeVisita}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.visitas.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -184,7 +184,7 @@ const MxTransmisionParte1 = props => {
                             onChange={props.handleChangeMedico}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.medicos.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

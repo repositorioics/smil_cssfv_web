@@ -146,7 +146,7 @@ const MxTransmisionLn = props => {
                                     bioanalistas={props.bioanalistas}
                                     tipoMuestra={props.tipoMuestra}
                                     selectedBioanalista={props.selectedBioanalista}
-                                    selectedTipoMuestra={props.selectedTipoMuestra}
+                                    selectedTipoMx={props.selectedTipoMx}
                                     observations={props.observations}
                                     motivoNoMx={props.motivoNoMx}
                                     mxTomada={props.mxTomada}
@@ -160,7 +160,7 @@ const MxTransmisionLn = props => {
                                     disabledMotivoNoFif={props.disabledMotivoNoFif}
                                     handleChangeMotivoNoFif={props.handleChangeMotivoNoFif}
                                     handleChangeBionalista={props.handleChangeBionalista}
-                                    handleChangeTipoMuestra={props.handleChangeTipoMuestra}
+                                    handleChangeTipoMx={props.handleChangeTipoMx}
                                     handleChangeObservations={props.handleChangeObservations}
                                     handleChangeMotivoNoMx={props.handleChangeMotivoNoMx}
                                     handleChangeMxTomada={props.handleChangeMxTomada}

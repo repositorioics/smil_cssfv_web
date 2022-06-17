@@ -95,7 +95,7 @@ const MxU01Parte1 = props => {
                             onChange={props.handleChangeTipoTubo}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.tipoTubo.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
@@ -124,18 +124,18 @@ const MxU01Parte1 = props => {
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-sm">
                     <FormControl className={classes.formControl}>
-                        <InputLabel id="test-input-consultas">Consulta</InputLabel>
+                        <InputLabel id="test-input-visita">Visita</InputLabel>
                         <Select
-                            labelId="request-label-consulta"
-                            id="request-select-consulta"
-                            value={props.selectedConsulta}
+                            labelId="request-label-visita"
+                            id="request-select-visita"
+                            value={props.selectedVisita}
                             onChange={props.handleChangeConsulta}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.consultas.map((e, keyIndex) => {
-                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
+                                return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                             })
                             }
                         </Select>
@@ -152,7 +152,7 @@ const MxU01Parte1 = props => {
                             onChange={props.handleChangeClasificacion}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.clasificacion.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -174,7 +174,7 @@ const MxU01Parte1 = props => {
                             onChange={props.handleChangeMedico}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.medicos.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

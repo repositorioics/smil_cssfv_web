@@ -15,7 +15,7 @@ import * as Constants from '../../Constants';
 
 const MxTransmisionLnListContainer = props => {
     let history = useHistory();
-    const [titleForm] = useState('Muestras de lavado nasal');
+    const [titleForm] = useState('Muestras respiratorias');
     const [data, setData] = useState([]);
     const [executeLoading, setExecuteLoading] = useState(false);
     const [mounted, setMounted] = useState(true);

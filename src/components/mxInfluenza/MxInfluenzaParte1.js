@@ -104,7 +104,7 @@ const MxInfluenzaParte1 = props => {
                             onChange={props.onSelectRequestBy}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.medicos.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -205,7 +205,7 @@ const MxInfluenzaParte1 = props => {
                             
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.dataTypeOfTest.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

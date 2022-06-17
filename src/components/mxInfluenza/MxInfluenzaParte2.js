@@ -82,7 +82,7 @@ const MxInfluenzaParte2 = (props) => {
                             onChange={props.handleChangeBionalista}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.bioanalistas.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -115,7 +115,7 @@ const MxInfluenzaParte2 = (props) => {
                             onChange={props.onSelectTypeOfMx}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.typeMx.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -198,7 +198,7 @@ const MxInfluenzaParte2 = (props) => {
                             onChange={props.onSelectMismoEpFif}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.mismoEpFif.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

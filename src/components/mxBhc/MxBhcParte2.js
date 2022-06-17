@@ -101,7 +101,7 @@ const MxBhcParte2 = props => {
                             onChange={props.handleChangeBionalista}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.bioanalistas.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

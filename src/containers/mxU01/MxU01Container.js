@@ -22,7 +22,7 @@ const MxU01Container = props => {
     //const [codLabScan, setCodLabScan] = useState('');
     const [selectedTubo, setSelectedTubo] = useState('');
     const [tipoTubo, setTipoTubo] = useState([]);
-    const [selectedConsulta, setSelectedConsulta] = useState('');
+    const [selectedVisita, setSelectedVisita] = useState('');
     const [consultas, setConsultas] = useState([]);
     const [selectedClasificacion, setSelectedClasificacion] = useState('');
     const [clasificacion, setClasificacion] = useState([]);
@@ -94,7 +94,7 @@ const MxU01Container = props => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
             getListTubosActivos();
-            getListConsultasActivos();
+            getListVisitasActivos();
             getListClasificacionesActivas();
             getMedicos();
             getBionalistas();
@@ -111,7 +111,7 @@ const MxU01Container = props => {
                             setCode(response.data.muestraId.codigoParticipante);
                             setCodLab(response.data.codLab);
                             setSelectedTubo(response.data.tuboId.id);
-                            setSelectedConsulta(response.data.consultaId.id);
+                            setSelectedVisita(response.data.visitaId.id);
                             setSelectedClasificacion(response.data.clasificacionId.id);
                             if (response.data.muestraId.fif !== null) {
                                 let dateVar = moment(response.data.muestraId.fif);
@@ -200,10 +200,10 @@ const MxU01Container = props => {
     }
 
     /**Metodo para obtener todas las consultas activas */
-    const getListConsultasActivos = async () => {
+    const getListVisitasActivos = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllConsultasActivas();
+            const response = await DataServices.getAllVisitasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setConsultas(response.data);
@@ -301,7 +301,7 @@ const MxU01Container = props => {
                         setStudy(response.data.estudiosparticipante !== '' ? response.data.estudiosparticipante : '');
                         if (response.data.fechanac !== '' && response.data.fechanac !== null) {
                             const edad = Utils.obtenerEdad(response.data.fechanac);
-                            setAge(edad)
+                            setAge(`${edad.years} Años | ${edad.months} Meses | ${edad.days} Días`);
                         }
                         setHouseCode(response.data.codigocasa);
                         setEstudiosParticipante(response.data.estudiosparticipante);
@@ -321,20 +321,47 @@ const MxU01Container = props => {
     }
 
     /**Funcion para obtener la cantidad de muestras tomadas de UO1 para el codigo ingresado */
-    const getMuestrasByCodExpedienteAndCatMxId = async (event) => {
+    const getCodigoLabByCodExpediente = async (event) => {
         event.preventDefault();
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxU01Id);
+            const response = await DataServices.codigoLabUltimaMxUO1IngresadaPorCodigo(code);
             if (response.status === 200) {
-                setExecuteLoading(false);
-                let count = response.data + 1;
-                if (count <= 9) {
-                    count = `${code}.0${count}`
-                    setCodLab(count);
-                } else {
-                    count = `${code}.${count}`
-                    setCodLab(count);
+                if (response.data !== '') {
+                    if (response.data !== null) {
+                        const resultado = response.data.split('.');
+                        debugger
+                        if (resultado !== null) {
+                            //POSITIVOS DE INFLUENZA
+                            if (resultado[2] === "UPI") {
+                                setCodLab(`${resultado[0]}.${resultado[1]}.${'UPF'}`);
+                                setSelectedVisita(6);
+                                setSelectedTubo(1);
+                            } else if (resultado[2] === "URI") {
+                                setCodLab(`${resultado[0]}.${resultado[1]}.${'URF'}`);
+                                setSelectedVisita(6);
+                                setSelectedTubo(2);
+                            } else if (resultado[2] === "VPI") { //MUESTRA PRE Y POST VACUNA
+                                setCodLab(`${resultado[0]}.${resultado[1]}.${'VPF'}`);
+                                setSelectedVisita(6);
+                                setSelectedTubo(1);
+                            } else if (resultado[2] === "VRI") {
+                                setCodLab(`${resultado[0]}.${resultado[1]}.${'VRF'}`);
+                                setSelectedVisita(6);
+                                setSelectedTubo(2);
+                            } else if (resultado[2] === "CPI") {
+                                setCodLab(`${resultado[0]}.${resultado[1]}.${'CPF'}`);
+                                setSelectedVisita(6);
+                                setSelectedTubo(1);
+                            } else if (resultado[2] === "CRI") {
+                                setCodLab(`${resultado[0]}.${resultado[1]}.${'CRF'}`);
+                                setSelectedVisita(6);
+                                setSelectedTubo(2);
+                            } else {
+                                // Retornar mensaje
+                            }
+                        }
+                    }
                 }
             }
         } catch (error) {
@@ -404,7 +431,7 @@ const MxU01Container = props => {
             if (validateCode()) {
                 e.preventDefault();
                 getParticipante(code);
-                getMuestrasByCodExpedienteAndCatMxId(e);
+                getCodigoLabByCodExpediente(e);
                 setName('');
                 setStudy('');
                 setAge('');
@@ -419,7 +446,7 @@ const MxU01Container = props => {
 
     const handleChangeConsulta = (e) => {
         setErrorConsulta('');
-        setSelectedConsulta(e.target.value);
+        setSelectedVisita(e.target.value);
     }
 
     const handleChangeClasificacion = (e) => {
@@ -649,8 +676,8 @@ const MxU01Container = props => {
             setErrorTubo('Debe seleccionar el tipo de tubo');
             return false;
         }
-        if (selectedConsulta === '' || selectedConsulta === null || selectedConsulta === undefined || selectedConsulta === '0') {
-            setErrorConsulta('Debe seleccionar la consulta');
+        if (selectedVisita === '' || selectedVisita === null || selectedVisita === undefined || selectedVisita === '0') {
+            setErrorConsulta('Debe seleccionar la visita');
             return false;
         }
         if (selectedClasificacion === '' || selectedClasificacion === null || selectedClasificacion === undefined || selectedClasificacion === '0') {
@@ -804,7 +831,7 @@ const MxU01Container = props => {
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
         let clasificacionId = {};
-        let consultaId = {};
+        let visitaId = {};
         let bioanalistaId = {};
         let tuboId = {}
         let time = null;
@@ -874,13 +901,13 @@ const MxU01Container = props => {
 
         usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
         clasificacionId.id  = selectedClasificacion;
-        consultaId.id = selectedConsulta;
+        visitaId.id = selectedVisita;
         bioanalistaId.id = selectedBioanalista;
         tuboId.id = selectedTubo;
 
         muestra.muestraId.usuarioId = usuarioId;
         muestra.clasificacionId = clasificacionId;
-        muestra.consultaId = consultaId;
+        muestra.visitaId = visitaId;
         if (selectedBioanalista !== '' && selectedBioanalista !== null && selectedBioanalista !== undefined && selectedBioanalista) {
             if (selectedBioanalista > 0) {
                 bioanalistaId.id = selectedBioanalista;
@@ -920,7 +947,7 @@ const MxU01Container = props => {
 
                 selectedTubo={selectedTubo}
                 tipoTubo={tipoTubo}
-                selectedConsulta={selectedConsulta}
+                selectedVisita={selectedVisita}
                 consultas={consultas}
                 selectedClasificacion={selectedClasificacion}
                 clasificacion={clasificacion}

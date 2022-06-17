@@ -73,6 +73,42 @@ const MxDengueParte1 = props => {
                         helperText={props.errorCode}/>
                     {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorCode}</label> */}
                 </div>
+                <div className="checkbox mleft-20 col" hidden={props.metabolomicaHide}>
+                    <label>
+                        <input
+                            className="custom-checkbox"
+                            id="mxOrina"
+                            type="checkbox"
+                            name="orina"
+                            checked={props.orina}
+                            onChange={props.handleChangeOrina}
+                        /> Orina
+                    </label>
+                </div>
+                <div className="checkbox mleft-20 col" hidden={props.metabolomicaHide}>
+                    <label>
+                        <input
+                            className="custom-checkbox"
+                            id="mxSaliva"
+                            type="checkbox"
+                            name="saliva"
+                            checked={props.saliva}
+                            onChange={props.handleChangeSaliva}
+                        /> Saliva
+                    </label>
+                </div>
+                <div className="checkbox mleft-20 col" hidden={props.positivoZkDenHide}>
+                    <label>
+                        <input
+                            className="custom-checkbox"
+                            id="positvoZika"
+                            type="checkbox"
+                            name="positvoZika"
+                            checked={props.positvoZika}
+                            onChange={props.handleChangePositvoZika}
+                        /> {props.titleChkZkDen}
+                    </label>
+                </div>
                 <div>
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Imprimir código</Tooltip>}>
                         <span className="d-inline-block">
@@ -83,7 +119,7 @@ const MxDengueParte1 = props => {
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-sm">
-                    <FormControl className={classes.formControl} disabled={props.disableTypeOfTest}>
+                    <FormControl className={classes.formControl} hidden={props.disableTypeOfTest}>
                         <InputLabel id="test-input-label">Tipo de prueba</InputLabel>
                         <Select
                             labelId="test-label"
@@ -91,10 +127,10 @@ const MxDengueParte1 = props => {
                             value={props.selectedTypeOfTest}
                             onChange={props.handleChangeTypeOfTest}>
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.dataTypeOfTest.map((e, keyIndex) => {
-                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
+                                return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                             })
                             }
                         </Select>
@@ -102,7 +138,7 @@ const MxDengueParte1 = props => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    <FormControl className={classes.formControl}>
+                    <FormControl className={classes.formControl} hidden={props.disableTubo}>
                         <InputLabel id="test-input-tip o-tubo">Tipo de tubo</InputLabel>
                         <Select
                             labelId="request-label"
@@ -110,7 +146,7 @@ const MxDengueParte1 = props => {
                             value={props.selectedTubo}
                             onChange={props.handleChangeTipoTubo}>
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.tipoTubo.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
@@ -131,7 +167,7 @@ const MxDengueParte1 = props => {
                             value={props.selectedConsulta}
                             onChange={props.handleChangeConsulta}>
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.consultas.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
@@ -150,7 +186,7 @@ const MxDengueParte1 = props => {
                             value={props.selectedCategoria}
                             onChange={props.handleChangeCategoria}>
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.categoria.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -171,7 +207,7 @@ const MxDengueParte1 = props => {
                             value={props.selectedMedico}
                             onChange={props.onSelectRequestBy}>
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.medicos.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
@@ -182,7 +218,7 @@ const MxDengueParte1 = props => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    <FormControl className={classes.formControl}>
+                    <FormControl className={classes.formControl} hidden={props.disableCambioCategoria}>
                         <InputLabel id="test-input-label-request-camb-cat">Hubo cambio de Cat.</InputLabel>
                         <Select
                             labelId="request-label-camb-cat"
@@ -190,7 +226,7 @@ const MxDengueParte1 = props => {
                             value={props.selectedCambCat}
                             onChange={props.handleChangeCambCategoria}>
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.cambiosCategorias.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
@@ -308,7 +344,7 @@ const MxDengueParte1 = props => {
                         id="codeLab"
                         autoComplete="off"
                         type="text"
-                        style={{ height: 'auto', marginTop: 20, width: 250 }}
+                        style={{ height: 'auto', marginTop: 20, width: 300 }}
                         maxLength={50}
                         className="form-control"
                         name="codeLab"

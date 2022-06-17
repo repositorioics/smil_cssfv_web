@@ -86,7 +86,7 @@ const AlertDialogMismoEF = (props) => {
                             onChange={props.handleChangeMismoEpFifDialog}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.mismoEpFif.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

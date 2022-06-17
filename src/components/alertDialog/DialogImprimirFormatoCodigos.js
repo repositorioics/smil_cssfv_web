@@ -27,7 +27,7 @@ const DialogImprimirFormatoCodigos = (props) => {
 
     return (
         <div>
-            <Dialog disableBackdropClick 
+            <Dialog disableBackdropClick
                 open={props.openFormatoCodigos}
                 onClose={props.handleCloseFormatoCodigos}
                 aria-labelledby="alert-dialog-title"
@@ -45,7 +45,7 @@ const DialogImprimirFormatoCodigos = (props) => {
                                 onChange={props.handleChangeFormatoCodigo}
                             >
                                 <MenuItem value="0">
-                                    <em>None</em>
+                                    <em>Seleccione</em>
                                 </MenuItem>
                                 {Constants.TIPOS_CODIGOS.map((e, keyIndex) => {
                                     return (<MenuItem key={keyIndex} value={e.id}>{e.valor}</MenuItem>)

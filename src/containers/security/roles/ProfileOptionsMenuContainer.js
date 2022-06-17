@@ -209,9 +209,10 @@ const ProfileOptionsMenuContainer = props => {
     }
 
     const validateData = () => {
-        if (profileSelected === '' || profileSelected === null || profileSelected === undefined) {
+        if (profileSelected === '' || profileSelected === null || profileSelected === undefined || profileSelected ==='0') {
+            if (profileSelected ==='0') {}
             setType('warning');
-            setMessageAlert('Debe seleccionar el perfil');
+            setMessageAlert('Debe seleccionar un perfil');
             setTimeout(function () {
                 initialStateToast();
             }, 6000);

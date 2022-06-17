@@ -19,7 +19,7 @@ const MxTransmisionContainer = props => {
     const [idMx, setIdMx] = useState(0);
     const [idMxTransmision, setIdMxTransmision] = useState(0)
     const [codLab, setCodLab] = useState('');
-    //const [codLabScan, setCodLabScan] = useState('');
+    let [codLabScan, setCodLabScan] = useState('');
     let [plasma, setPlasma] = useState(false);
     const [selectedTubo, setSelectedTubo] = useState('');
     const [tipoTubo, setTipoTubo] = useState([]);
@@ -291,24 +291,24 @@ const MxTransmisionContainer = props => {
                 setExecuteLoading(false);
                 if (response.data !== '') {
                     /**Validando que el participante no sea solo del estudio de dengue */
-                    const estudiosP = response.data.estudiosparticipante.includes('UO1');
+                    //const estudiosP = response.data.estudiosparticipante.includes('UO1');
                     //console.log('estudiosP', estudiosP);
-                    if (!estudiosP) {
+                    /*if (!estudiosP) {
                         setCodLab('');
                         setOpenAlertDialog(true);
                         setAlertMessageDialog("El participante no pertenece al estudio UO1, no se puede tomar muestra.");
-                    } else {
+                    } else {*/
                         setOpenAlertDialog(false);
                         setName(response.data.nombre1 + " " + response.data.nombre2 + " " + response.data.apellido1 + " " + response.data.apellido2);
                         setStudy(response.data.estudiosparticipante !== '' ? response.data.estudiosparticipante : '');
                         if (response.data.fechanac !== '' && response.data.fechanac !== null) {
                             const edad = Utils.obtenerEdad(response.data.fechanac);
-                            setAge(edad)
+                            setAge(`${edad.years} Años | ${edad.months} Meses | ${edad.days} Días`);
                         }
                         setHouseCode(response.data.codigocasa);
                         setEstudiosParticipante(response.data.estudiosparticipante);
                         //setData(response.data);
-                    }
+                    //}
                 } else {
                     setOpenAlertDialog(true);
                     setAlertMessageDialog("No existe información para el código ingresado");
@@ -327,16 +327,41 @@ const MxTransmisionContainer = props => {
         event.preventDefault();
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getCountMuestrasByCodigoParticipanteYCatMuestraId(code, mxTransmisionId);
+            const response = await DataServices.codigoLabUltimaMxTransmisionPorCodigo(code);
             if (response.status === 200) {
+                //console.log('Tramsmision serolgia', response.data);
                 setExecuteLoading(false);
-                let count = response.data + 1;
-                if (count <= 9) {
-                    count = `${code}.0${count}`
-                    setCodLab(count);
-                } else {
-                    count = `${code}.${count}`
-                    setCodLab(count);
+                if (response.data !== '') {
+                    const resultado = response.data.split('.');
+                    if (resultado !== null) {
+                        if (resultado[2] === "TRI") {
+                            setCodLab(`${resultado[0]}.${resultado[1]}.${'TRF'}`);
+                            setSelectedVisita(6);
+                            setSelectedTubo(2);
+                        } else if (resultado[2] === "TPI") {
+                            setCodLab(`${resultado[0]}.${resultado[1]}.${'TPF'}`);
+                            setSelectedVisita(6);
+                            setSelectedTubo(1);
+                        } else if (resultado[2] === "SRI") {
+                            setCodLab(`${resultado[0]}.${resultado[1]}.${'SRF'}`);
+                            setSelectedVisita(6);
+                            setSelectedTubo(2);
+                        } else if (resultado[2] === "SPI") {
+                            setCodLab(`${resultado[0]}.${resultado[1]}.${'SPF'}`);
+                            setSelectedVisita(6);
+                            setSelectedTubo(1);
+                        } else if (resultado[2] === "IRI") {
+                            setCodLab(`${resultado[0]}.${resultado[1]}.${'IRF'}`);
+                            setSelectedVisita(6);
+                            setSelectedTubo(2);
+                        } else if (resultado[2] === "IPI") {
+                            setCodLab(`${resultado[0]}.${resultado[1]}.${'IPF'}`);
+                            setSelectedVisita(6);
+                            setSelectedTubo(1);
+                        } else {
+                            // Retornar mensaje
+                        }
+                    }
                 }
             }
         } catch (error) {
@@ -650,6 +675,11 @@ const MxTransmisionContainer = props => {
             return false;
         }
         if (codLab === '' || codLab === undefined || codLab === null) {
+            setType("warning");
+            setMessageAlert("Código lab invalido");
+            setTimeout(function () {
+                initialStateToast();
+            }, 100);
             return false;
         }
         if (selectedTubo === '' || selectedTubo === null || selectedTubo === undefined || selectedTubo === '0') {
@@ -792,6 +822,9 @@ const MxTransmisionContainer = props => {
       }
 
     const saveData = () => {
+        codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
+        console.log(codLabScan);
+        setCodLabScan(codLabScan);
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
         let visitaId = {};
@@ -812,7 +845,7 @@ const MxTransmisionContainer = props => {
         const muestra = {
             codLab: codLab,
             codLabM: '',
-            codLabScan: '',
+            codLabScan: codLabScan,
             fechaEnvio: '',
             horaEnvio: '',
             horaRefrigeracion: timeRefrigeracion,
@@ -892,11 +925,11 @@ const MxTransmisionContainer = props => {
                 muestra.muestraId.fechaToma = fechaToma;
             }
             /**Actualizando la muestra de transmision*/
-            putMxTransmision(muestra);
+            //putMxTransmision(muestra);
             //console.log('put', muestra);
         } else {
             /**Nueva muestra de transmision*/
-            postMxTransmision(muestra);
+           // postMxTransmision(muestra);
             //console.log('post', muestra);
         }
     }

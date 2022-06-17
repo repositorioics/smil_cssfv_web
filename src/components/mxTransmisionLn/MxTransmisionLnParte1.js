@@ -108,7 +108,7 @@ const MxTransmisionLnParte1 = props => {
                             disabled={true}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.tipoPrueba.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
@@ -145,7 +145,7 @@ const MxTransmisionLnParte1 = props => {
                             onChange={props.handleChangeMedico}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.medicos.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

@@ -53,7 +53,7 @@ const RegisterContainer = props => {
         }
     }, [props])
 
-    /**Metodo para obtener todos los registros */
+    /**Metodo para obtener el registro a modificar */
     const getById = async (id) => {
         setExecuteLoading(true);
         try {

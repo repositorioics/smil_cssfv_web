@@ -43,7 +43,7 @@ const AnularMx = props => {
                                                 onChange={props.handleChangeMotivo}
                                             >
                                                 <MenuItem value="0">
-                                                    <em>None</em>
+                                                    <em>Seleccione</em>
                                                 </MenuItem>
                                                 {props.motivosAnulacion.map((e, keyIndex) => {
                                                     return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)

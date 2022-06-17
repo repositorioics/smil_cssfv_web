@@ -74,7 +74,7 @@ const MxInfluenzaParte4 = (props) => {
                             onChange={props.handleChangeTesResultVsr}
                         >
                             <MenuItem value="0">
-                                <em>None</em>
+                                <em>Seleccione</em>
                             </MenuItem>
                             {props.dataResultVsr.map((e, keyIndex) => {
                                 return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)

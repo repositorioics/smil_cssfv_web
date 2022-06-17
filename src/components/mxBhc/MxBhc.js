@@ -119,6 +119,7 @@ const MxBhc = props => {
                                 variant="contained"
                                 color="primary"
                                 onClick={props.saveDatosGenerales}
+                                disabled={props.disableSaveDatosGenerales}
                                 className={classes.button}
                             >Guardar
                             </Button>
