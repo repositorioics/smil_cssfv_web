@@ -1,5 +1,6 @@
 import moment from "moment";
-/**Metodo para obtener la edad */
+import DataServices from '../service/Api';
+/**Metodo para obtener la edad*/
 /* const obtenerEdad = (fechaNac) => {
     let a = moment();
     let b = moment(fechaNac, 'DD-MM-YYYY');
@@ -101,10 +102,53 @@ const obtenerConsecutivo = (valor) => {
         resultado = '01';
     } else {
         if (valor <= 8) {
-            resultado = `${'0'}${parseInt(valor)+1}`;
+            resultado = `${'0'}${parseInt(valor) + 1}`;
         } else {
-            resultado = `${parseInt(valor)+1}`;
+            resultado = `${parseInt(valor) + 1}`;
         }
+    }
+    return resultado;
+}
+
+const obtenerMuestraByCodLabScan = async (valor, codLabScab) => {
+    let resultado = '';
+    if (valor === 'Dengue') {
+        const response = await DataServices.muestraDengueByCodLabScan(codLabScab);
+        if (response.status === 200) {
+            if (response.data !== '') {
+                resultado = response.data;
+            }
+        }
+    } else if (valor === 'Bhc') {
+        const response = await DataServices.muestraBHCByCodLabScan(codLabScab);
+        if (response.status === 200) {
+            if (response.data !== '') {
+                resultado = response.data;
+            }
+        }
+    } else if (valor === 'Influenza') {
+        const response = await DataServices.muestraBHCByCodLabScan(codLabScab);
+        if (response.status === 200) {
+            if (response.data !== '') {
+                resultado = response.data;
+            }
+        }
+    } else if (valor === 'UO1') {
+        const response = await DataServices.muestraBHCByCodLabScan(codLabScab);
+        if (response.status === 200) {
+            if (response.data !== '') {
+                resultado = response.data;
+            }
+        }
+    } else if (valor === 'Transmision') {
+        const response = await DataServices.muestraTransmisionByCodLabScan(codLabScab);
+        if (response.status === 200) {
+            if (response.data !== '') {
+                resultado = response.data;
+            }
+        }
+    } else {
+        resultado = '';
     }
     return resultado;
 }
@@ -116,7 +160,8 @@ const utils = {
     CalculateDifferenceDates,
     createCodLabScan,
     nextString,
-    obtenerConsecutivo
+    obtenerConsecutivo,
+    obtenerMuestraByCodLabScan
 }
 
 export default utils;

@@ -9,6 +9,7 @@ import ToastContainer from '../../components/toast/Toast';
 //import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
+import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
 
 const RecepcionMxContainer = props => {
     //let history = useHistory();
@@ -82,6 +83,11 @@ const RecepcionMxContainer = props => {
     /**Alert Dialog */
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const [alertMessageDialog, setAlertMessageDialog] = useState('');
+
+    /**Alert Dialog Recepcion*/
+    const [openAlertDialogRecep, setOpenAlertDialogRecep] = useState(false);
+    const [alertMessageDialogRecep, setAlertMessageDialogRecep] = useState('');
+    const [valorDetalle, setValorDetalle] = useState({});
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
@@ -318,7 +324,7 @@ const RecepcionMxContainer = props => {
     }
 
     /**Metodo para verificar si el codigo lab scan es valido */
-    const getByCodLabScan = async (valor) => {
+    const getFormatCodeLabScanByCod = async (valor) => {
         setExecuteLoading(true);
         try {
             const response = await DataServices.getCatRecepcionByCodLabScan(valor);
@@ -662,7 +668,7 @@ const RecepcionMxContainer = props => {
             setCodeLabScan(event.target.value)
             //setDisabledCodeLabScan(true);
             const result = event.target.value;
-            getByCodLabScan(result);
+            getFormatCodeLabScanByCod(result);
         }
     }
 
@@ -691,6 +697,11 @@ const RecepcionMxContainer = props => {
     const handleCloseAlertDialog = () => {
         setOpenAlertDialog(false);
         setAlertMessageDialog('');
+    }
+
+    const handleCloseAlertDialogRecep = () => {
+        setOpenAlertDialogRecep(false);
+        setAlertMessageDialogRecep('');
     }
 
     const initialStateToast = () => {
@@ -776,7 +787,7 @@ const RecepcionMxContainer = props => {
                 volumen: volMedioMl
             }
 
-            debugger
+            //debugger
             /**Cohorte de Familia, Cohorte Pediatrica Influenza, Cohorte Pediatrica Influenza/UO1 */
             if (idStudy === 1 || idStudy === 4 || idStudy === 5) {
                 saveDataByStudyFlu(muestraId)
@@ -886,6 +897,16 @@ const RecepcionMxContainer = props => {
         setExecuteLoading(true);
         //let tuboId = {};
         try {
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('Dengue', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setValorDetalle(result);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                setOpenAlertDialogRecep(true);
+                console.log(result)
+                return;
+            }
             let categoriaId = {};
             let consultaId = {};
             let tipoPruebaId = {};
@@ -968,6 +989,16 @@ const RecepcionMxContainer = props => {
     const postMxInfluenza = async (muestraId) => {
         setExecuteLoading(true);
         try {
+
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setOpenAlertDialog(true);
+                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
             const mxId = {};
             let tipoMuestraId = {};
             const muestra = {
@@ -1009,6 +1040,16 @@ const RecepcionMxContainer = props => {
     const postMxBhc = async (muestraId) => {
         setExecuteLoading(true);
         try {
+
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setOpenAlertDialog(true);
+                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
             const mxId = {};
             const muestra = {
                 codLab: codLab,
@@ -1038,6 +1079,16 @@ const RecepcionMxContainer = props => {
     const postMxTransmisionLn = async (muestraId) => {
         setExecuteLoading(true);
         try {
+
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setOpenAlertDialog(true);
+                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
             const mxId = {};
             let tipoPruebaId = {}
             let tipoMuestraId = {};
@@ -1085,6 +1136,16 @@ const RecepcionMxContainer = props => {
     const postMxTransmisionResp = async (muestraId) => {
         setExecuteLoading(true);
         try {
+
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setOpenAlertDialog(true);
+                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
             const mxId = {};
             let tipoPruebaId = {}
             let tipoMuestraId = {};
@@ -1132,6 +1193,15 @@ const RecepcionMxContainer = props => {
     const postMxTransmisionSerologia = async (muestraId) => {
         setExecuteLoading(true);
         try {
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setOpenAlertDialog(true);
+                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
             const mxId = {};
             let tipoPruebaId = {}
             let tuboId = {};
@@ -1188,6 +1258,15 @@ const RecepcionMxContainer = props => {
     const postMxUO1 = async (muestraId) => {
         setExecuteLoading(true);
         try {
+            /**Verificamos si existe el codigo lab scan */
+            const result = await Utils.obtenerMuestraByCodLabScan('UO1', codeLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setOpenAlertDialog(true);
+                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
             const mxId = {};
             let tipoPruebaId = {};
             let clasificacionId = {};
@@ -1358,6 +1437,12 @@ const RecepcionMxContainer = props => {
                 openAlertDialog={openAlertDialog}
                 alertMessageDialog={alertMessageDialog}
                 handleCloseAlertDialog={handleCloseAlertDialog}
+            />
+            <AlertDialogRecepcion
+                valorDetalle={valorDetalle}
+                openAlertDialogRecep={openAlertDialogRecep}
+                alertMessageDialogRecep={alertMessageDialogRecep}
+                handleCloseAlertDialogRecep={handleCloseAlertDialogRecep}
             />
             <ToastContainer
                 type={type}

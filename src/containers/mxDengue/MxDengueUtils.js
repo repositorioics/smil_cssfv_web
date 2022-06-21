@@ -198,7 +198,7 @@ const validateMetabolomica = (orina, saliva) => {
     return result;
 
 }
-const validatePbmc = (categoria, fis, fechaToma) => {
+/*const validatePbmc = (categoria, fis, fechaToma) => {
     const ftoma = moment(fechaToma, 'YYYY-MM-DD');
     const fFis = moment(fis, 'YYYY-MM-DD');
     const result = {
@@ -212,7 +212,7 @@ const validatePbmc = (categoria, fis, fechaToma) => {
     return result;
 }
 const validateBhc = () => { }
-const validatePaxgene = () => { }
+const validatePaxgene = () => { }*/
 
 const MxDengueUtils = {
     obtenerUltimoCodigoLabMxDengue,

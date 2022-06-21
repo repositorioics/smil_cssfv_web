@@ -9,6 +9,7 @@ import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
+import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
 import utils from '../../utils/Utils';
 
 const MxBhcContainer = props => {
@@ -20,6 +21,7 @@ const MxBhcContainer = props => {
     const [idMx, setIdMx] = useState(0);
     const [idMxBhc, setIdMxBhc] = useState(0)
     const [codLab, setCodLab] = useState('');
+    let [codLabScan, setCodLabScan] = useState('');
     //const [selectedConsulta, setSelectedConsulta] = useState('');
     //const [consultas, setConsultas] = useState([]);
     const [selectedMedico, setSelectedMedico] = useState('');
@@ -77,6 +79,11 @@ const MxBhcContainer = props => {
     const [openAlertDialogText, setOpenAlertDialogText] = useState(false);
     const [alertMessageDialogText, setAlertMessageDialogText] = useState('');
     const [errorAlertMotivoNoFif, setErrorAlertMotivoNoFif] = useState('');
+
+    /**Alert Dialog Recepcion*/
+    const [openAlertDialogRecep, setOpenAlertDialogRecep] = useState(false);
+    const [alertMessageDialogRecep, setAlertMessageDialogRecep] = useState('');
+    const [valorDetalle, setValorDetalle] = useState({});
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -453,6 +460,11 @@ const MxBhcContainer = props => {
         setErrorMotivoSinFif('');
     }
 
+    const handleCloseAlertDialogRecep = () => {
+        setOpenAlertDialogRecep(false);
+        setAlertMessageDialogRecep('');
+    }
+
     const cancelAlertDialogText = () => {
         setOpenAlertDialogText(false);
         setMotivoNoFif('');
@@ -601,7 +613,26 @@ const MxBhcContainer = props => {
           }
       }
 
-    const saveData = () => {
+    const saveData = async() => {
+
+        /**Creando el codigo lab scan a guardar */
+        
+        codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
+        console.log(codLabScan);
+        setCodLabScan(codLabScan);
+        
+
+        /**Verificamos si existe el codigo lab scan */
+        const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codLabScan);
+        if (result !== '') {
+            setExecuteLoading(false);
+            setValorDetalle(result);
+            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+            setOpenAlertDialogRecep(true);
+            console.log(result)
+            return;
+        }
+
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
         //let consultaId = {};
@@ -616,7 +647,7 @@ const MxBhcContainer = props => {
         const muestra = {
             codLab: codLab,
             codLabM: '',
-            codLabScan: '',
+            codLabScan: codLabScan,
             //"id": 0,
             motivoSinFif: motivoNoFif,
             muestraId: {
@@ -767,6 +798,12 @@ const MxBhcContainer = props => {
                 cancelAlertDialogText={cancelAlertDialogText}
                 acceptAlertDialogText={acceptAlertDialogText}
                 errorAlertMotivoNoFif={errorAlertMotivoNoFif}
+            />
+            <AlertDialogRecepcion
+                valorDetalle={valorDetalle}
+                openAlertDialogRecep={openAlertDialogRecep}
+                alertMessageDialogRecep={alertMessageDialogRecep}
+                handleCloseAlertDialogRecep={handleCloseAlertDialogRecep}
             />
             <ToastContainer
                 type={type}

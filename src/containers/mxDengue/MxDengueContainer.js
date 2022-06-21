@@ -1547,10 +1547,10 @@ const MxDengueContainer = props => {
         }
         if (idMx > 0) {
             /**Actualizando la muestra de influenza*/
-            //putMxDengue(muestra);
+            putMxDengue(muestra);
         } else {
             /**Nueva muestra de influenza*/
-            //postMxDengue(muestra);
+            postMxDengue(muestra);
         }
     }
 

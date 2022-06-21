@@ -10,6 +10,7 @@ import ToastContainer from '../../components/toast/Toast';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
 import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import AlertDialogMismoEF from '../../components/alertDialog/AlertDialogMismoEF';
+import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
 import DialogImprimirFormatoCodigos from '../../components/alertDialog/DialogImprimirFormatoCodigos';
 import * as Constants from '../../Constants';
 
@@ -124,6 +125,11 @@ const MxInfluenzaContainer = props => {
     const [alertMessageDifFif, setAlertMessageDifFif] = useState('');
     const [errorMismoEpFifDialog, setErrorMismoEpFifDialog] = useState('');
     const [fifUltMxTomada, setFifUltMxTomada] = useState('');
+
+    /**Alert Dialog Recepcion*/
+    const [openAlertDialogRecep, setOpenAlertDialogRecep] = useState(false);
+    const [alertMessageDialogRecep, setAlertMessageDialogRecep] = useState('');
+    const [valorDetalle, setValorDetalle] = useState({});
 
     /**Imprimir codigos QR, CodaBar, Etc */
     const [openFormatoCodigos, setOpenFormatoCodigos] = useState(false);
@@ -325,6 +331,30 @@ const MxInfluenzaContainer = props => {
             }
         }
     }
+
+    const handleChangePanel1 = (panel) => (event, isExpanded) => {
+        setExpanded1(isExpanded ? panel : false);
+    };
+
+    const handleChangePanel2 = (panel) => (event, isExpanded) => {
+        if (existenDatosGenerales) {
+            setExpanded2(isExpanded ? panel : false);
+        }
+    };
+
+    const handleChangePanel3 = (panel) => (event, isExpanded) => {
+        if (existenDatosGenerales) {
+            setExpanded3(isExpanded ? panel : false);
+        }
+
+    };
+
+    const handleChangePanel4 = (panel) => (event, isExpanded) => {
+        if (existenDatosGenerales) {
+            setExpanded4(isExpanded ? panel : false);
+        }
+
+    };
 
     const handleChangeMxCv = (e) => {
         mxCv = e.target.checked;
@@ -621,6 +651,11 @@ const MxInfluenzaContainer = props => {
     const handleChangeCantCopiasCod = (e) => {
         setCantidadCopiasCod(e.target.value);
         setErrorCantidadCopiasCod('');
+    }
+
+    const handleCloseAlertDialogRecep = () => {
+        setOpenAlertDialogRecep(false);
+        setAlertMessageDialogRecep('');
     }
 
     const onChangeBarcode = (event) => {
@@ -1337,31 +1372,28 @@ const MxInfluenzaContainer = props => {
         initialStateToast();
     }
 
-    const handleChangePanel1 = (panel) => (event, isExpanded) => {
-        setExpanded1(isExpanded ? panel : false);
-    };
+    
 
-    const handleChangePanel2 = (panel) => (event, isExpanded) => {
-        if (existenDatosGenerales) {
-            setExpanded2(isExpanded ? panel : false);
+    const saveData = async() => {
+
+        /**Creando el codigo lab scan a guardar */
+        
+        codeLabScan = Utils.createCodLabScan(fif, fechaToma, codeLab);
+        console.log(codeLabScan);
+        setCodeLabScan(codeLabScan);
+        
+        /**Verificamos si existe el codigo lab scan */
+        const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codeLabScan);
+        if (result !== '') {
+            setExecuteLoading(false);
+            setValorDetalle(result);
+            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+            setOpenAlertDialogRecep(true);
+            console.log(result)
+            return;
         }
-    };
+        /****************************************/
 
-    const handleChangePanel3 = (panel) => (event, isExpanded) => {
-        if (existenDatosGenerales) {
-            setExpanded3(isExpanded ? panel : false);
-        }
-
-    };
-
-    const handleChangePanel4 = (panel) => (event, isExpanded) => {
-        if (existenDatosGenerales) {
-            setExpanded4(isExpanded ? panel : false);
-        }
-
-    };
-
-    const saveData = () => {
         let tipoMuestraId = {};
         let usuarioId = {};
         let bioanalistaId = {};
@@ -1373,16 +1405,6 @@ const MxInfluenzaContainer = props => {
         if (selectedHoraToma !== null) {
             time = moment(selectedHoraToma).format("hh:mm A");
         }
-
-        /**Creando el codigo lab scan a guardar */
-        
-        
-
-        codeLabScan = Utils.createCodLabScan(fif, fechaToma, codeLab);
-        console.log(codeLabScan);
-        setCodeLabScan(codeLabScan);
-        
-        /****************************************/
 
         const muestra = {
             casoIndiceEstTransm: 0,
@@ -1491,10 +1513,10 @@ const MxInfluenzaContainer = props => {
                 muestra.muestraId.fechaToma = fechaToma;
             }
             /**Actualizando la muestra de influenza*/
-            //putMxInfluenza(muestra);
+            putMxInfluenza(muestra);
         } else {
             /**Nueva muestra de influenza*/
-            //postMxInfluenza(muestra);
+            postMxInfluenza(muestra);
         }
     }
 
@@ -1551,7 +1573,6 @@ const MxInfluenzaContainer = props => {
                 }
             }
         }
-
         /**------------------------------------- */
 
         if (validatedDialogEF) {
@@ -1584,8 +1605,6 @@ const MxInfluenzaContainer = props => {
         setErrorMotivoNoMx('');
         setObservations('');
     }
-
-
 
     return (
         <>
@@ -1750,6 +1769,12 @@ const MxInfluenzaContainer = props => {
                 errorFormatoCodigo={errorFormatoCodigo}
                 errorCantidadCopiasCod={errorCantidadCopiasCod}
                 imprimir={imprimir}
+            />
+            <AlertDialogRecepcion
+                valorDetalle={valorDetalle}
+                openAlertDialogRecep={openAlertDialogRecep}
+                alertMessageDialogRecep={alertMessageDialogRecep}
+                handleCloseAlertDialogRecep={handleCloseAlertDialogRecep}
             />
         </>
     );

@@ -9,6 +9,7 @@ import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
+import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
 
 const MxTransmisionContainer = props => {
     let history = useHistory();
@@ -90,6 +91,11 @@ const MxTransmisionContainer = props => {
     const [openAlertDialogText, setOpenAlertDialogText] = useState(false);
     const [alertMessageDialogText, setAlertMessageDialogText] = useState('');
     const [errorAlertMotivoNoFif, setErrorAlertMotivoNoFif] = useState('');
+
+    /**Alert Dialog Recepcion*/
+    const [openAlertDialogRecep, setOpenAlertDialogRecep] = useState(false);
+    const [alertMessageDialogRecep, setAlertMessageDialogRecep] = useState('');
+    const [valorDetalle, setValorDetalle] = useState({});
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -631,6 +637,11 @@ const MxTransmisionContainer = props => {
 
     }
 
+    const handleCloseAlertDialogRecep = () => {
+        setOpenAlertDialogRecep(false);
+        setAlertMessageDialogRecep('');
+    }
+
     const handleChangeMotivoNoFif = (e) => {
         setMotivoNoFif(e.target.value);
         setErrorMotivoSinFif('');
@@ -821,10 +832,29 @@ const MxTransmisionContainer = props => {
           }
       }
 
-    const saveData = () => {
+    const saveData = async() => {
+        //codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
+        //console.log(codLabScan);
+        //setCodLabScan(codLabScan);
+
+
+        /**Creando el codigo lab scan a guardar */
         codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
-        console.log(codLabScan);
         setCodLabScan(codLabScan);
+        
+
+        /**Verificamos si existe el codigo lab scan */
+        const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codLabScan);
+        if (result !== '') {
+            setExecuteLoading(false);
+            setValorDetalle(result);
+            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+            setOpenAlertDialogRecep(true);
+            console.log(result)
+            return;
+        }
+        /****************************************/
+
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
         let visitaId = {};
@@ -925,11 +955,11 @@ const MxTransmisionContainer = props => {
                 muestra.muestraId.fechaToma = fechaToma;
             }
             /**Actualizando la muestra de transmision*/
-            //putMxTransmision(muestra);
+            putMxTransmision(muestra);
             //console.log('put', muestra);
         } else {
             /**Nueva muestra de transmision*/
-           // postMxTransmision(muestra);
+            postMxTransmision(muestra);
             //console.log('post', muestra);
         }
     }
@@ -1030,6 +1060,12 @@ const MxTransmisionContainer = props => {
                 cancelAlertDialogText={cancelAlertDialogText}
                 acceptAlertDialogText={acceptAlertDialogText}
                 errorAlertMotivoNoFif={errorAlertMotivoNoFif}
+            />
+            <AlertDialogRecepcion
+                valorDetalle={valorDetalle}
+                openAlertDialogRecep={openAlertDialogRecep}
+                alertMessageDialogRecep={alertMessageDialogRecep}
+                handleCloseAlertDialogRecep={handleCloseAlertDialogRecep}
             />
             <ToastContainer
                 type={type}

@@ -464,6 +464,12 @@ const muestrasPendientesInfluenza = (id) => {
     }});
 }
 
+const muestraInfluenzaByCodLabScan = (codLabScan) => {
+    return instance.get(`muestras/influenza/cod_lab_scan`, { params: {
+        codLabScan: codLabScan
+    }});
+}
+
 /**Muestras BHC */
 const getMuestrasBhc = () => {
     return instance.get("muestras/bhc/fechaDelDia");
@@ -501,6 +507,12 @@ const codigoLabUltimaMxBHCPorCodigo = (codigo) => {
     }});
 }
 
+const muestraBHCByCodLabScan = (codLabScan) => {
+    return instance.get(`muestras/bhc/cod_lab_scan`, { params: {
+        codLabScan: codLabScan
+    }});
+}
+
 /**Muestras U01 */
 const getMuestrasU01 = () => {
     return instance.get("muestras/u01/fechaDelDia");
@@ -535,6 +547,13 @@ const muestrasPendientesUO1 = (id) => {
 const codigoLabUltimaMxUO1IngresadaPorCodigo = (codigo) => {
     return instance.get(`muestras/u01/ultimo/code_lab`, { params: {
         codigo: codigo
+    }});
+}
+
+
+const muestraUO1ByCodLabScan = (codLabScan) => {
+    return instance.get(`muestras/u01/cod_lab_scan`, { params: {
+        codLabScan: codLabScan
     }});
 }
 
@@ -581,6 +600,12 @@ const muestrasPendientesTransmision = (id) => {
 const codigoLabUltimaMxTransmisionPorCodigo = (codigo) => {
     return instance.get(`muestras/transmision/ultimo/code_lab`, { params: {
         codigo: codigo
+    }});
+}
+
+const muestraTransmisionByCodLabScan = (codLabScan) => {
+    return instance.get(`muestras/transmision/cod_lab_scan`, { params: {
+        codLabScan: codLabScan
     }});
 }
 
@@ -715,6 +740,13 @@ const mxDengueHematicaPorCodigo = (codigo) => {
         codigo: codigo
     }});
 }
+
+const muestraDengueByCodLabScan = (codLabScan) => {
+    return instance.get(`muestras/dengue/cod_lab_scan`, { params: {
+        codLabScan: codLabScan
+    }});
+}
+
 /**----------------------------------- */
 /**Api para el catalogo motivos de anulacion*/
 const getMotivosAnulaciones = () => {
@@ -867,7 +899,12 @@ const api = {
     postCatAnioEstudio,
     putCatAnioEstudio,
     getAllCatAnioEstudio,
-    getLastAnioEstudio
+    getLastAnioEstudio,
+    muestraBHCByCodLabScan,
+    muestraInfluenzaByCodLabScan,
+    muestraUO1ByCodLabScan,
+    muestraTransmisionByCodLabScan,
+    muestraDengueByCodLabScan
 };
 
 export default api;

@@ -576,7 +576,6 @@ const App = () => {
 
                 )}
               />
-
               <Route path="/muestras/agregar-muestra-metabolomica"
                 exact
                 render={props =>
@@ -587,7 +586,6 @@ const App = () => {
 
                 )}
               />
-
               <Route path="/muestras/agregar-muestra-dengue-bhc"
                 exact
                 render={props =>
@@ -598,7 +596,6 @@ const App = () => {
 
                 )}
               />
-
               <Route path="/muestras/agregar-muestra-dengue-paxgene"
                 exact
                 render={props =>
@@ -609,7 +606,6 @@ const App = () => {
 
                 )}
               />
-
               <Route path="/muestras/agregar-muestra-dengue-pbmc"
                 exact
                 render={props =>
@@ -620,8 +616,6 @@ const App = () => {
 
                 )}
               />
-
-
               <Route path="/muestras/editar-muestra-dengue/:id/:mx"
                 exact
                 render={props =>
@@ -671,7 +665,6 @@ const App = () => {
 
                 )}
               />
-
               <Route path="/envio/muestras"
                 exact
                 render={props =>

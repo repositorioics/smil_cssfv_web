@@ -5,8 +5,6 @@ import WarningIcon from '@material-ui/icons/Warning';
 import InfoIcon from '@material-ui/icons/Info';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import '../toast/Toast.css';
-
-
 import 'react-toastify/dist/ReactToastify.css';
 
 const Toast = (props) => {
