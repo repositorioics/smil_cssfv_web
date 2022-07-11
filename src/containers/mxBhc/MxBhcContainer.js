@@ -9,7 +9,7 @@ import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
-import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
+import AlertDialogMxDuplicada from '../../components/alertDialog/AlertDialogMxDuplicada';
 import utils from '../../utils/Utils';
 
 const MxBhcContainer = props => {
@@ -22,6 +22,7 @@ const MxBhcContainer = props => {
     const [idMxBhc, setIdMxBhc] = useState(0)
     const [codLab, setCodLab] = useState('');
     let [codLabScan, setCodLabScan] = useState('');
+    let [catRecepcionId, setCatRecepcionId] = useState(0);
     //const [selectedConsulta, setSelectedConsulta] = useState('');
     //const [consultas, setConsultas] = useState([]);
     const [selectedMedico, setSelectedMedico] = useState('');
@@ -51,7 +52,7 @@ const MxBhcContainer = props => {
 
     const [executeLoading, setExecuteLoading] = useState(false);
     const [disabledMotivoNoFif, setDisabledMotivoNoFif] = useState(true);
-    const [disableSaveDatosGenerales, setDisableSaveDatosGenerales] = useState(false);
+    const [disablePacienteMenor, setDisablePacienteMenor] = useState(false);
 
     const [expanded1, setExpanded1] = useState(false);
     const [expanded2, setExpanded2] = useState(false);
@@ -92,8 +93,8 @@ const MxBhcContainer = props => {
             getBionalistas();
             if (props.match.params && Object.keys(props.match.params).length > 0) {
                 setExecuteLoading(true);
-                setTitle('Editar muestra bhc');
-                const getMxUO1ById = async() => {
+                setTitle('Editar muestra BHC');
+                const getMxBhcById = async() => {
                     try {
                         const response = await DataServices.muestrasBhcById(props.match.params.id);
                         if (response.status === 200) {
@@ -101,8 +102,10 @@ const MxBhcContainer = props => {
                             setIdMx(response.data.muestraId.id);
                             setIdMxBhc(response.data.id);
                             setCode(response.data.muestraId.codigoParticipante);
-                            setCodLab(response.data.codLab);
+                            setCodLab(response.data.muestraId.codLab);
+                            setCodLabScan(response.data.muestraId.codLabScan);
                             //setSelectedConsulta(response.data.consultaId.id);
+                            setCatRecepcionId(response.data.muestraId.catRecepcionId.id);
                             if (response.data.muestraId.fif !== null) {
                                 let dateVar = moment(response.data.muestraId.fif);
                                 let newDateVar = dateVar.utc().format();
@@ -131,7 +134,7 @@ const MxBhcContainer = props => {
                             if (response.data.muestraId.horaToma !== null) {
                                 const time = response.data.muestraId.horaToma;
                                 let today = new Date().toISOString().slice(0, 10)
-                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm').format();
+                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm a').format();
                                 setSelectedHoraToma(dateTime);
                             } else {
                                 setSelectedHoraToma(null);
@@ -157,9 +160,9 @@ const MxBhcContainer = props => {
                         console.log('error', error);
                     }
                 }
-                getMxUO1ById();
+                getMxBhcById();
             } else {
-                setTitle('Muestra bhc');
+                setTitle('Muestra BHC');
             }
         } else {
             props.history.push('/');
@@ -241,12 +244,12 @@ const MxBhcContainer = props => {
                             //console.log(edad);
                             if (edad.years <= 2) {
                                 setAge(`${edad.years} Años | ${edad.months} Meses | ${edad.days} Días`);
-                                setDisableSaveDatosGenerales(false);
+                                setDisablePacienteMenor(false);
                                 
                             } else {
                                 setOpenAlertDialog(true);
                                 setAlertMessageDialog("El participante es mayor de 2 años, no puede tomar la muestra.");
-                                setDisableSaveDatosGenerales(true);
+                                setDisablePacienteMenor(true);
                             }
                             
                         }
@@ -277,7 +280,7 @@ const MxBhcContainer = props => {
                 setExecuteLoading(false);
                 if (response.data !== '') {
                     const resultado = response.data.toString().split('.');
-                    const result = utils.obtenerConsecutivo(resultado[1]);
+                    const result = utils.obtenerConsecutivo(resultado[1].substr(0, 2));
                     setCodLab(`${resultado[0]}.${result}${'BHC'}`);
                 } else {
                     const result = utils.obtenerConsecutivo('');
@@ -616,21 +619,41 @@ const MxBhcContainer = props => {
     const saveData = async() => {
 
         /**Creando el codigo lab scan a guardar */
-        
-        codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
-        console.log(codLabScan);
-        setCodLabScan(codLabScan);
-        
+        if (codLabScan === '') {
+            codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
+            //console.log(codLabScan);
+            setCodLabScan(codLabScan);
+        }
+
+        /**Verificamos si el codigo tiene el formato correcto*/
+        if (catRecepcionId <= 0) { // se evalua que sea un registro nuevo
+            const response = await DataServices.getCatRecepcionByCodLabScan(codLabScan);
+            if (response.status === 200) {
+                if (response.data !== "") {
+                    catRecepcionId = response.data.id;
+                    setCatRecepcionId(catRecepcionId);
+                } else {
+                    setType("error");
+                    setMessageAlert("Código lab scan no valido");
+                    setTimeout(function () {
+                        initialStateToast();
+                    }, 100);
+                    return;
+                }
+            }
+        }
 
         /**Verificamos si existe el codigo lab scan */
-        const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codLabScan);
-        if (result !== '') {
-            setExecuteLoading(false);
-            setValorDetalle(result);
-            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
-            setOpenAlertDialogRecep(true);
-            console.log(result)
-            return;
+        if (idMx <= 0) {
+            const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setValorDetalle(result);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                setOpenAlertDialogRecep(true);
+                //console.log(result)
+                return;
+            }
         }
 
         const accountData = JSON.parse(localStorage.getItem('accountData'));
@@ -643,14 +666,13 @@ const MxBhcContainer = props => {
             time = moment(selectedHoraToma).format("hh:mm A");
         }
 
-
         const muestra = {
-            codLab: codLab,
             codLabM: '',
-            codLabScan: codLabScan,
             //"id": 0,
             motivoSinFif: motivoNoFif,
             muestraId: {
+                codLab: codLab,
+                codLabScan: codLabScan,
                 anulada: false,
                 codigoCasa: houseCode,
                 codigoParticipante: code,
@@ -679,7 +701,10 @@ const MxBhcContainer = props => {
                 otroMotivoAnulacion: false,
                 quienOrdena: selectedMedico,
                 //"usuarioAnulacion": 0,
-                volumen: volSangre
+                volumen: volSangre,
+                catRecepcionId: {
+                    id: catRecepcionId
+                }
             },
             mxFinalInicial: false,
             mxNoTomada: mxNoTomada,
@@ -698,7 +723,7 @@ const MxBhcContainer = props => {
 
         muestra.muestraId.usuarioId = usuarioId;
         //muestra.consultaId = consultaId;
-        if (selectedBioanalista !== '' && selectedBioanalista !== null && selectedBioanalista !== undefined && selectedBioanalista) {
+        if (selectedBioanalista !== '' && selectedBioanalista !== null && selectedBioanalista !== undefined) {
             if (selectedBioanalista > 0) {
                 bioanalistaId.id = selectedBioanalista;
                 muestra.muestraId.bioanalistaId = bioanalistaId;
@@ -752,7 +777,7 @@ const MxBhcContainer = props => {
                 disableMxNoTomada={disableMxNoTomada}
                 disabledMotivoNoFif={disabledMotivoNoFif}
                 houseCode={houseCode}
-                disableSaveDatosGenerales={disableSaveDatosGenerales}
+                disablePacienteMenor={disablePacienteMenor}
 
                 handleChangeCode={handleChangeCode}
                 onKeyPressCode={onKeyPressCode}
@@ -799,7 +824,7 @@ const MxBhcContainer = props => {
                 acceptAlertDialogText={acceptAlertDialogText}
                 errorAlertMotivoNoFif={errorAlertMotivoNoFif}
             />
-            <AlertDialogRecepcion
+            <AlertDialogMxDuplicada
                 valorDetalle={valorDetalle}
                 openAlertDialogRecep={openAlertDialogRecep}
                 alertMessageDialogRecep={alertMessageDialogRecep}

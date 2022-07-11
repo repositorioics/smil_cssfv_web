@@ -249,6 +249,7 @@ const MxDengueParte1 = props => {
                             value={props.fif !== null ? props.fif : null}
                             onChange={props.handleChangeFif}
                             disabled={props.disableFif}
+                            inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -264,6 +265,7 @@ const MxDengueParte1 = props => {
                             autoOk={true}
                             value={props.fis !== null ? props.fis : null}
                             onChange={props.handleChangeFis}
+                            inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -279,6 +281,7 @@ const MxDengueParte1 = props => {
                             autoOk={true}
                             value={props.fechaToma !== null ? props.fechaToma : null}
                             onChange={props.handleChangeFtoma}
+                            inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}

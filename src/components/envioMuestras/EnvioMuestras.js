@@ -99,6 +99,7 @@ const EnvioMuestras = props => {
                                         autoOk={true}
                                         value={props.date !== null ? props.date : null}
                                         onChange={props.handleChangeDate}
+                                        inputProps={{ autoComplete: 'off' }}
                                         KeyboardButtonProps={{
                                             'aria-label': 'change date',
                                         }}

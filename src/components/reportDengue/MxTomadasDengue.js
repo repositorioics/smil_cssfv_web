@@ -33,7 +33,7 @@ const MxTomadasDengue = props => {
     }
   };*/
   const findMedicalName = (id) => {
-    console.log('data', props.data);
+    //console.log('data', props.data);
     if (props.medicos.length > 0) {
       const result = props.medicos.filter(item => item.id === id);
       return result[0].nombre;
@@ -132,8 +132,8 @@ const MxTomadasDengue = props => {
                     <td>{item.muestraId.horaToma}</td>
                     <td>{item.muestraId.volumen}</td>
                     <td>{findMedicalName(item.muestraId.quienOrdena)}</td>
-                    <td>{item.muestraId.bioanalistaId.nombres + ' ' + item.muestraId.bioanalistaId.apellidos}</td>
-                    <td>{item.tuboId.descripcion}</td>
+                    <td>{item.muestraId.bioanalistaId !== null ? item.muestraId.bioanalistaId.nombres + ' ' + item.muestraId.bioanalistaId.apellidos : null}</td>
+                    <td>{item.tuboId !== null ? item.tuboId.descripcion : null}</td>
                     {/* <td className={assignColorToTicketStatus(item)}>
                       {item.estado}
                     </td> */}

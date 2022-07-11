@@ -4,7 +4,6 @@ import utils from '../../utils/Utils';
 const obtenerUltimoCodigoLabMxDengue = async (valor, codigo) => {
     let result = '';
     if (valor !== null && valor !== '' && valor !== undefined) {
-
         if (valor.trim() === 'metabolomica') {
             const response = await DataServices.codigoLabUltimaMxDengueMetabolomicaPorCodigo(codigo);
             if (response.status === 200) {
@@ -62,9 +61,8 @@ const obtenerUltimoCodigoLabMxDengue = async (valor, codigo) => {
     return result;
 }
 
-const generarCodigoLabScan = (consulta, fif, fechaToma, categoria, code, positvoZika, type,
+const generarCodigoLabScanDengue = (consulta, fif, fechaToma, categoria, code, positvoZika, type,
     lastAnioEstudio, lastCodeLab, orina, saliva, lastRecordMxDengue) => {
-
     let resultadoCodLab = '';
     let valorConsulta = '';
     let valorFif = '';
@@ -84,11 +82,9 @@ const generarCodigoLabScan = (consulta, fif, fechaToma, categoria, code, positvo
     } else {
         nVecesEnfermo = utils.nextString(str);
     }
-
     if (lastAnioEstudio !== null) {
         anioEstudio = lastAnioEstudio.anio
     }
-
     if (consulta === 1) {
         valorConsulta = 'I';
     }
@@ -119,70 +115,86 @@ const generarCodigoLabScan = (consulta, fif, fechaToma, categoria, code, positvo
     valorFechaToma = newDateFechaToma;
     if (valorFif !== '10/10/3000') {
         diffDay = utils.CalculateDifferenceDates(fif, new Date());
-        console.log('diffDay', diffDay);
+        //console.log('diffDay', diffDay);
     }
-    
+
     if (type === 'dengue') {
-        if (valorConsulta === 'I') {
-            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.1'}`;
-        }
-        if (valorConsulta === 'C') {
-            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.2'}`;
+        if (valorCategoria === 'A' || valorCategoria === 'B' || valorCategoria === 'D') {
+            if (valorConsulta === 'I') {
+                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.1'}`;
+            }
+            if (valorConsulta === 'C') {
+                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.2'}`;
+            }
+        } else {
+            if (valorConsulta === 'I') {
+                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${'C'}${nVecesEnfermo}${'.1'}`;
+            }
+            if (valorConsulta === 'C') {
+                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${'C'}${nVecesEnfermo}${'.2'}`;
+            }
         }
     }
     if (type === 'metabolomica') {
-        if (diffDay !== '') {
-            if (diffDay <= 7) {
-                if (orina) {
-                    if (positvoZika) {
-                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.5Z1'}`;
-                    } else {
-                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.5'}`;
+        if (valorCategoria === 'A' || valorCategoria === 'B' || valorCategoria === 'D') {
+            if (diffDay !== '') {
+                if (diffDay <= 7) {
+                    if (orina) {
+                        if (positvoZika) {
+                            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.5Z1'}`;
+                        } else {
+                            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.5'}`;
+                        }
                     }
-                }
-                if (saliva) {
-                    if (positvoZika) {
-                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.6Z1'}`;
-                    } else {
-                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.6'}`;
+                    if (saliva) {
+                        if (positvoZika) {
+                            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.6Z1'}`;
+                        } else {
+                            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.6'}`;
+                        }
                     }
-                }
-            } else {
-                if (orina) {
-                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.5Z2'}`;
-                }
-                if (saliva) {
-                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.6Z2'}`;
+                } else {
+                    if (orina) {
+                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.5Z2'}`;
+                    }
+                    if (saliva) {
+                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.6Z2'}`;
+                    }
                 }
             }
         }
     }
     if (type === 'bhc') {
-        if (diffDay !== '') {
-            if (diffDay <= 7) {
-                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.1BH'}`;
-            } else {
-                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.2BH'}`;
+        if (valorCategoria === 'A' || valorCategoria === 'B' || valorCategoria === 'D') {
+            if (diffDay !== '') {
+                if (diffDay <= 7) {
+                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.1BH'}`;
+                } else {
+                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.2BH'}`;
+                }
             }
         }
     }
     if (type === 'paxgene') {
-        if (diffDay !== '') {
-            if (diffDay <= 7) {
-                if (positvoZika) {
-                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.8q1'}`;
+        if (valorCategoria === 'A' || valorCategoria === 'B' || valorCategoria === 'D') {
+            if (diffDay !== '') {
+                if (diffDay <= 7) {
+                    if (positvoZika) {
+                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.8q1'}`;
+                    } else {
+                        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.8q5'}`;
+                    }
                 } else {
-                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.8q5'}`;
+                    resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.8q3'}`;
                 }
-            } else {
-                resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.8q3'}`;
             }
         }
     }
     if (type === 'pbmc') {
-        resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.'}${'7'}`;
+        if (valorCategoria === 'A' || valorCategoria === 'B' || valorCategoria === 'D') {
+            resultadoCodLab = `${valorConsulta}${valorFif}${valorFechaToma}${valorCategoria}${code}${'.'}${anioEstudio}${'.'}${nVecesEnfermo}${'.'}${'7'}`;
+        }
     }
-
     return resultadoCodLab;
 }
 
@@ -196,7 +208,6 @@ const validateMetabolomica = (orina, saliva) => {
         result.mensaje = 'Debe indicar si la muestra es Orina o Saliva';
     }
     return result;
-
 }
 /*const validatePbmc = (categoria, fis, fechaToma) => {
     const ftoma = moment(fechaToma, 'YYYY-MM-DD');
@@ -216,7 +227,7 @@ const validatePaxgene = () => { }*/
 
 const MxDengueUtils = {
     obtenerUltimoCodigoLabMxDengue,
-    generarCodigoLabScan,
+    generarCodigoLabScanDengue,
     validateMetabolomica
 }
 

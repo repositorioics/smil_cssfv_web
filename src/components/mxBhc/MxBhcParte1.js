@@ -135,6 +135,7 @@ const MxBhcParte1 = props => {
                             autoOk={true}
                             value={props.fif !== null ? props.fif : null}
                             onChange={props.handleChangeFif}
+                            inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}
@@ -150,6 +151,7 @@ const MxBhcParte1 = props => {
                             autoOk={true}
                             value={props.fechaToma !== null ? props.fechaToma : null}
                             onChange={props.handleChangeFtoma}
+                            inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
                             }}

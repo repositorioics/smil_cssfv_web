@@ -74,7 +74,7 @@ const MxDengueMetabolomicaContainer = props => {
         { dataField: 'fechaToma', text: 'Fecha toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'horaToma', text: 'Hora toma', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'tipoPrueba', text: 'Tipo prueba', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
-        { dataField: 'tipo', text: 'Tipo', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
+        //{ dataField: 'tipo', text: 'Tipo', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         { dataField: 'estado', text: 'Estado muestra', sort: true, filter: textFilter({ placeholder: 'Ingrese' }) },
         {
             dataField: "", text: "", sort: false, formatter: rankFormatter, headerAttrs: { width: 50 }, attrs: { width: 50, className: "EditRow" }
@@ -195,7 +195,7 @@ const MxDengueMetabolomicaContainer = props => {
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
-                console.log(response.data);
+                //console.log(response.data);
                 for (var i = 0; i < response.data.length; i++) {
                     newData.push({
                         "id": response.data[i].id,
@@ -204,8 +204,8 @@ const MxDengueMetabolomicaContainer = props => {
                         "codigo": response.data[i].muestraId.codigoParticipante,
                         "fechaToma": response.data[i].muestraId.fechaToma,
                         "horaToma": response.data[i].muestraId.horaToma,
-                        "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
-                        "tipo": response.data[i].muestraId.catRecepcionId.tipo,
+                        "tipoPrueba": response.data[i].muestraId.catRecepcionId.catTipoMuestraId.descripcion,
+                        //"tipo": response.data[i].muestraId.catRecepcionId.tipo,
                         "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                     });
                 }
@@ -234,8 +234,8 @@ const MxDengueMetabolomicaContainer = props => {
                             "fechaRegistro": response.data[i].muestraId.fechaRegistro,
                             "fechaToma": response.data[i].muestraId.fechaToma,
                             "horaToma": response.data[i].muestraId.horaToma,
-                            "tipoPrueba": response.data[i].tipoPruebaId.descripcion,
-                            "tipo": response.data[i].muestraId.catRecepcionId.tipo,
+                            "tipoPrueba": response.data[i].muestraId.catRecepcionId.catTipoMuestraId.descripcion,
+                            //"tipo": response.data[i].muestraId.catRecepcionId.tipo,
                             //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
                             "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
                         });

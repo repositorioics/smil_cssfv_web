@@ -44,7 +44,8 @@ const RecepcionListContainer = props => {
         { dataField: 'id', text: 'Id', hidden: true },
         { dataField: 'estudio', text: 'Estudio', sort: true, filter: textFilter({ placeholder: 'Ingrese el estudio' }) },
         { dataField: 'tipo', text: 'Tipo', sort: true, filter: textFilter({ placeholder: 'Ingrese el tipo' }) },
-        { dataField: 'cadena', text: 'Cadena de Caracteres', sort: true, filter: textFilter({ placeholder: 'Ingrese la cadena' }) },
+        { dataField: 'cadena', text: 'Cadena de Caracteres', sort: true, filter: textFilter({ placeholder: 'Ingrese la cadena' })}, //, style: { fontSize: 11 }
+        { dataField: 'descripcion', text: 'Descripción', sort: true, filter: textFilter({ placeholder: 'Ingrese la descripción' }) },
         { dataField: 'estado', text: 'Estado', sort: true, filter: textFilter({ placeholder: 'Ingrese el estado' }) },
         { dataField: "", text: "", sort: false, formatter: rankFormatter, headerAttrs: { width: 50 }, attrs: { width: 50, className: "EditRow" } 
       }
@@ -89,8 +90,9 @@ const RecepcionListContainer = props => {
                     newData.push({
                         "id": response.data[i].id,
                         "estudio": response.data[i].nombreEstudio,
-                        "tipo": response.data[i].tipo,
+                        "tipo": response.data[i].catTipoMuestraId.descripcion,
                         "cadena": response.data[i].cadenaCaracteresCodigo,
+                        "descripcion": response.data[i].descripcion,
                         "estado": response.data[i].activo === true ? "Activo" : "Inactivo"
                     });
                 }

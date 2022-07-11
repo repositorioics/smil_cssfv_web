@@ -6,7 +6,7 @@ import Utils from '../../utils/Utils';
 import ToastContainer from '../../components/toast/Toast';
 import * as Constants from '../../Constants';
 
-const MxTomadasDengueContainer = () => {
+const MxTomadasDengueContainer = props => {
 
   const [title] = useState('Muestras de dengue tomadas');
   const [startDate, setStartDate] = useState('');
@@ -26,9 +26,15 @@ const MxTomadasDengueContainer = () => {
   const [messageAlert, setMessageAlert] = useState(null);
 
   useEffect(() => {
-    getMedicos();
-    getAllResultPRD();
-  }, []);
+    const token = localStorage.getItem('token');
+        if (token !== null && token !== undefined && token !== "") {
+          getMedicos();
+          getAllResultPRD();
+        } else {
+          props.history.push('/');
+          //return <Redirect to='/login' />
+      }
+  }, [props.history]);
 
   const initialStateToast = () => {
     setType(null);
@@ -76,10 +82,10 @@ const getAllResultPRD = async () => {
 }
 
   /**Metodo para obtener todos los registros por el filtro aplicado*/
-  const getMxDengueListByFilter = async (code, startDate, endDate) => {
+  const getMxDengueListByFilter = async (startDate, endDate) => {
     setExecuteLoading(true);
     try {
-        const response = await DataServices.filtroMxDengue(code, startDate, endDate);
+        const response = await DataServices.getAllMxDengueRangoFecha(startDate, endDate);
         if (response.status === 200) {
             setExecuteLoading(false);
             if (response.data.length > 0) {
@@ -126,7 +132,7 @@ const getAllResultPRD = async () => {
   const searchData = () => {
     if (validateSearchData()) {
       if (validateDates()) {
-        getMxDengueListByFilter(0, startDate, endDate);
+        getMxDengueListByFilter(startDate, endDate);
       }
 
     }

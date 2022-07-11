@@ -72,7 +72,7 @@ const createCodLabScan = (fif, fechaToma, codLab) => {
         const now = new moment(fechaToma);
         barCodeFechaToma = now.format("DD/MM/YYYY");
     }
-    console.log('cod', `${barCodeFif}${barCodeFechaToma}${barCodeSpace}${codLab}`);
+    //console.log('cod', `${barCodeFif}${barCodeFechaToma}${barCodeSpace}${codLab}`);
     return `${barCodeFif}${barCodeFechaToma}${barCodeSpace}${codLab}`;
 }
 
@@ -127,14 +127,14 @@ const obtenerMuestraByCodLabScan = async (valor, codLabScab) => {
             }
         }
     } else if (valor === 'Influenza') {
-        const response = await DataServices.muestraBHCByCodLabScan(codLabScab);
+        const response = await DataServices.muestraInfluenzaByCodLabScan(codLabScab);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;
             }
         }
     } else if (valor === 'UO1') {
-        const response = await DataServices.muestraBHCByCodLabScan(codLabScab);
+        const response = await DataServices.muestraUO1ByCodLabScan(codLabScab);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;

@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import moment from "moment";
+//import moment from "moment";
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import MxDengueBhcList from '../../components/mxDengue/MxDengueBhcList';
+import MxDenguePbmcCandidatosList from '../../components/mxDengue/MxDenguePbmcCandidatosList';
 import AnularMx from '../../components/AnularMx';
-import Edit from '@material-ui/icons/Edit';
-import CancelIcon from '@material-ui/icons/Cancel';
+import AddCircle from '@material-ui/icons/AddCircle';
+//import CancelIcon from '@material-ui/icons/Cancel';
 import DataServices from '../../service/Api';
 import ToastContainer from '../../components/toast/Toast';
 import Utils from '../../utils/Utils';
 
-const MxDengueBhcContainer = props => {
+const MxDenguePmbcCandidatosListContainer = props => {
     let history = useHistory();
-    const [titleForm] = useState('Muestras Dengue BHC');
+    const [titleForm] = useState('Candidatos para toma de muestras Dengue PBMC');
     const [data, setData] = useState([]);
     const [executeLoading, setExecuteLoading] = useState(false);
     const [mounted, setMounted] = useState(true);
@@ -25,7 +25,7 @@ const MxDengueBhcContainer = props => {
     const [otroMotivo, setOtroMotivo] = useState('');
     const [motivosAnulacion, setMotivosAnulacion] = useState([]);
     const [selectedMotivo, setSelectedMotivo] = useState('');
-    const [muestraId, setMuestraId] = useState(0);
+    //const [muestraId, setMuestraId] = useState(0);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [code, setCode] = useState('');
@@ -50,17 +50,17 @@ const MxDengueBhcContainer = props => {
                     display: "flex"
                 }}>
                 <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Editar</Tooltip>}>
-                    <Edit
+                    <AddCircle
                         onClick={() => editMxDengue(row)}
-                        style={{ fontSize: 20, marginLeft: 15, color: "#efac14" }}
+                        style={{ fontSize: 20, marginLeft: 15, color: "#181848" }}
                     />
                 </OverlayTrigger>
-                <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Anular</Tooltip>}>
+                {/* <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Anular</Tooltip>}>
                     <CancelIcon
                         onClick={() => openMx(row)}
                         style={{ fontSize: 20, marginLeft: 15, color: "#950c0c" }}
                     />
-                </OverlayTrigger>
+                </OverlayTrigger> */}
             </div>
 
         );
@@ -103,7 +103,7 @@ const MxDengueBhcContainer = props => {
         return () => setMounted(false);
     }, [mounted, props])
 
-    const openMx = (row) => {
+    /*const openMx = (row) => {
         setMuestraId(row.muestraId);
         setSelectedMotivo('');
         setDisabledOtroMotivo(true)
@@ -125,7 +125,7 @@ const MxDengueBhcContainer = props => {
                 setShow(true);
             }
         }
-    }
+    }*/
 
     const handleClose = () => {
         setShow(false);
@@ -192,7 +192,7 @@ const MxDengueBhcContainer = props => {
     const getMxDengueList = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.muestrasDengueBhc();
+            const response = await DataServices.muestraDengueCandidatosPbmc();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -212,47 +212,6 @@ const MxDengueBhcContainer = props => {
                     });
                 }
                 setData(newData)          
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error)
-        }
-    }
-
-    /**Metodo para obtener todos los registros por el filtro aplicado*/
-    const getMxDengueListByFilter = async (code, startDate, endDate, mxType) => {
-        setExecuteLoading(true);
-        try {
-            const response = await DataServices.filtroMxDengue(code, startDate, endDate, mxType);
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                const newData = [];
-                if (response.data.length > 0) {
-                    for (var i = 0; i < response.data.length; i++) {
-                        newData.push({
-                            "id": response.data[i].id,
-                            "muestraId": response.data[i].muestraId.id,
-                            "codigo": response.data[i].muestraId.codigoParticipante,
-                            "cod-lab": response.data[i].muestraId.codLab,
-                            "fechaRegistro": response.data[i].muestraId.fechaRegistro,
-                            "fechaToma": response.data[i].muestraId.fechaToma,
-                            "horaToma": response.data[i].muestraId.horaToma,
-                            "tipoPrueba": response.data[i].muestraId.catRecepcionId.catTipoMuestraId.descripcion,
-                            //"tipo": response.data[i].muestraId.catRecepcionId.tipo,
-                            //"tipoMuestra": response.data[i].tipoMuestraId.descripcion,
-                            "estado": response.data[i].muestraId.anulada === true ? "Anulada" : "Activa"
-                        });
-                    }
-                    setData(newData)
-                } else {
-                    setData([]);
-                    setType("info");
-                    setMessageAlert("No se encontraron registros");
-                    setTimeout(function () {
-                        initialStateToast();
-                    }, 500);
-                }
-                
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -285,7 +244,7 @@ const MxDengueBhcContainer = props => {
     }
 
     /**Metodo para anular la muestra */
-    const anularMxDengue = async () => {
+   /*  const anularMxDengue = async () => {
         setExecuteLoading(true);
         try {
 
@@ -316,12 +275,12 @@ const MxDengueBhcContainer = props => {
             console.log('error', error)
         }
         initialStateToast();
-    }
+    } */
 
-    const initialStateToast = () => {
+    /*const initialStateToast = () => {
         setType(null);
         setMessageAlert(null);
-    }
+    }*/
 
     /**Metodo para validar los datos requeridos del motivo de anulacion */
     const validateData = () => {
@@ -348,62 +307,15 @@ const MxDengueBhcContainer = props => {
 
     const editMxDengue = (row) => {
         if (row.estado === "Activa") {
-            history.push(`/muestras/editar-muestra-dengue/${row.id}/${'bhc'}`);
+            history.push(`/muestras/editar-muestra-dengue/${row.id}/${'pbmc'}`);
         }
     }
 
     /**Metodo para guardar una muestra anulada */
     const saveData = () => {
         if (validateData()) {
-            anularMxDengue();
+            //anularMxDengue();
         }
-    }
-
-    /**Metodo para realizar la busqueda */
-    const searchData = () => {
-        if (validateSearchData()) {
-            if (validateDates()) {
-                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate, 'bhc');
-            }
-
-        }
-    }
-
-    const onKeyPressCode = (e) => {
-        if (code !== '' || code !== null || code !== undefined) {
-            if (e.charCode === 13) {
-                getMxDengueListByFilter(code === '' ? 0 : code, startDate, endDate, 'bhc');
-            }
-        }
-    }
-
-    /**Metodo para validar la busqueda y no permitirla sino existen ambas fechas o el codigo */
-    const validateSearchData = () => {
-        if ((code === '' || code === null || code === undefined) &&
-            (startDate === '' || startDate === null || startDate === undefined) &&
-            (endDate === '' || endDate === null || endDate === undefined)) {
-            setType("info");
-            setMessageAlert("Debe ingresar el codigo ó las fechas");
-            setTimeout(function () {
-                initialStateToast();
-            }, 500);
-            return false
-        }
-        return true
-    }
-
-    /** Metodo para validar que fecha inicio no sea mayor a la fecha fin*/
-    const validateDates = () => {
-        const result = Utils.validateStartDateEndDate(startDate, endDate);
-        if (result) {
-            setType("error");
-            setMessageAlert("La fecha inicio no puede ser mayor que la fecha fin");
-            setTimeout(function () {
-                initialStateToast();
-            }, 500);
-            return false
-        }
-        return true
     }
 
     /**Metodo para linpiar los filtros y cargar la lista de las muestras del dia */
@@ -434,7 +346,7 @@ const MxDengueBhcContainer = props => {
                 errorMessageOtroMotivoSelected={errorMessageOtroMotivoSelected}
                 saveData={saveData}
             />
-            <MxDengueBhcList
+            <MxDenguePbmcCandidatosList
                 titleForm={titleForm}
                 data={data}
                 columns={columns}
@@ -448,9 +360,7 @@ const MxDengueBhcContainer = props => {
                 handleChangeCode={handleChangeCode}
                 errorStartDate={errorStartDate}
                 errorEndDate={errorEndDate}
-                searchData={searchData}
                 clearFilters={clearFilters}
-                onKeyPressCode={onKeyPressCode}
 
             />
             <ToastContainer
@@ -461,4 +371,4 @@ const MxDengueBhcContainer = props => {
     );
 }
 
-export default MxDengueBhcContainer;
+export default MxDenguePmbcCandidatosListContainer;

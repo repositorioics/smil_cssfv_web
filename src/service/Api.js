@@ -628,6 +628,22 @@ const getLastMuestrasTomadas = () => {
     return instance.get("muestras/ultimos-registros");
 }
 
+const mxByCodLabScan = (codLabScan) => {
+    return instance.get(`muestras/cod_lab_scan`, {
+        params: {
+            codLabScan: codLabScan
+        }
+    });
+}
+
+const mxByCodLab = (codLab) => {
+    return instance.get(`muestras/cod_lab_scan`, {
+        params: {
+            codLab: codLab
+        }
+    });
+}
+
 /**----------------------------------- */
 /**Muestras Dengue */
 const getMuestrasDengue = () => {
@@ -640,6 +656,13 @@ const filtroMxDengue = (code, startDate, endDate, mxType) => {
         strFecha1: startDate,
         strFecha2: endDate,
         mxType: mxType
+    }})
+}
+
+const getAllMxDengueRangoFecha = (startDate, endDate) => {
+    return instance.get(`muestras/dengue/rango-fecha`, { params: {
+        strFecha1: startDate,
+        strFecha2: endDate
     }})
 }
 
@@ -745,6 +768,10 @@ const muestraDengueByCodLabScan = (codLabScan) => {
     return instance.get(`muestras/dengue/cod_lab_scan`, { params: {
         codLabScan: codLabScan
     }});
+}
+
+const muestraDengueCandidatosPbmc = () => {
+    return instance.get("muestras/dengue/candidatos/pbmc");
 }
 
 /**----------------------------------- */
@@ -858,6 +885,7 @@ const api = {
     getAllCambiosCategoriasActivas,
     getMuestrasDengue,
     filtroMxDengue,
+    getAllMxDengueRangoFecha,
     postMuestraDengue,
     putMuestraDengue,
     getMuestraDengueById,
@@ -904,7 +932,10 @@ const api = {
     muestraInfluenzaByCodLabScan,
     muestraUO1ByCodLabScan,
     muestraTransmisionByCodLabScan,
-    muestraDengueByCodLabScan
+    muestraDengueByCodLabScan,
+    mxByCodLabScan,
+    mxByCodLab,
+    muestraDengueCandidatosPbmc
 };
 
 export default api;

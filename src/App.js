@@ -62,6 +62,7 @@ import MxDengueContainer from "./containers/mxDengue/MxDengueContainer";
 import MxDengueMetabolomicaContainer from "./containers/mxDengue/MxDengueMetabolomicaListContainer";
 import MxDengueBhcContainer from "./containers/mxDengue/MxDengueBhcListContainer";
 import MxDenguePbmcContainer from "./containers/mxDengue/MxDenguePbmcListContainer";
+import MxDenguePmbcCandidatosListContainer from "./containers/mxDengue/MxDenguePmbcCandidatosListContainer";
 import MxDenguePaxGeneContainer from "./containers/mxDengue/MxDenguePaxGeneListContainer";
 
 import EnvioMxContainer from "./containers/envioMx/EnvioMxContainer";
@@ -655,6 +656,17 @@ const App = () => {
 
                 )}
               />
+              <Route path="/muestras/dengue/candidatos-toma/pbmc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDenguePmbcCandidatosListContainer {...props} />
+                  </Header>
+
+                )}
+              />
+              
               <Route path="/muestras/dengue/paxgene"
                 exact
                 render={props =>

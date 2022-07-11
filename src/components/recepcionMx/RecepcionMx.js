@@ -6,9 +6,10 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
-    TimePicker,
+    //TimePicker,
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 import { es } from 'date-fns/locale';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -145,7 +146,8 @@ const RecepcionMx = props => {
                                     name="codeLabScan"
                                     value={props.codeLabScan}
                                     onChange={props.onChangeBarcode}
-                                    onKeyDown={props.onKeyPressBarcode}
+                                    //onKeyDown={props.onKeyPressBarcode}
+                                    onKeyPress={props.onKeyPressBarcode}
                                     disabled={props.disabledCodeLabScan}
                                     label="Cod-lab scan" />
                             </div>
@@ -195,16 +197,16 @@ const RecepcionMx = props => {
                                         <Select
                                             labelId="request-label"
                                             id="request-select"
-                                            value={props.selectedRequestBy}
+                                            value={props.selectedRequestBy === -1 ? '' : props.selectedRequestBy}
                                             onChange={props.handleChaneSelectRequestBy}
                                         >
                                             <MenuItem value="0">
                                                 <em>Seleccione</em>
                                             </MenuItem>
-                                            {props.medicos.map((e, keyIndex) => {
+                                            {props.medicos.length > 0 ? props.medicos.map((e, keyIndex) => {
                                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                                             })
-                                            }
+                                                : null}
                                         </Select>
                                         <label className="messageError">{props.errorRequestBy}</label>
                                     </FormControl>
@@ -243,6 +245,7 @@ const RecepcionMx = props => {
                                             autoOk={true}
                                             value={props.fis !== null ? props.fis : null}
                                             onChange={props.handleChangeFis}
+                                            inputProps={{ autoComplete: 'off' }}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
@@ -258,6 +261,7 @@ const RecepcionMx = props => {
                                             autoOk={true}
                                             value={props.fechaToma !== null ? props.fechaToma : null}
                                             onChange={props.handleChangeFtoma}
+                                            inputProps={{ autoComplete: 'off' }}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
@@ -271,10 +275,12 @@ const RecepcionMx = props => {
                             <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
                                 <Grid container justify="space-between">
                                     <div className="col-sm" style={{ marginTop: 15, marginLeft: 10 }}>
-                                        <TimePicker
+                                        <KeyboardTimePicker
                                             id="horaTomaRecepMx"
                                             label="Hora toma"
-                                            value={props.selectedHoraToma}
+                                            mask="__:__ _M"
+                                            inputProps={{ autoComplete: 'off' }}
+                                            value={props.selectedHoraToma !== null ? props.selectedHoraToma : null}
                                             onChange={date => props.handleChangeHoraToma(date)}
                                         />
                                         <div>
@@ -282,10 +288,12 @@ const RecepcionMx = props => {
                                         </div>
                                     </div>
                                     <div className="col-sm" style={{ marginTop: 15 }}>
-                                        <TimePicker
+                                        <KeyboardTimePicker
                                             id="horaRefrigeracionRecepMx"
                                             label="Hora refrigeración"
-                                            value={props.selectedHoraRefrigeracion}
+                                            mask="__:__ _M"
+                                            inputProps={{ autoComplete: 'off' }}
+                                            value={props.selectedHoraRefrigeracion !== null ? props.selectedHoraRefrigeracion : null}
                                             onChange={date => props.handleChangeHoraRefrigeracion(date)}
                                         />
                                         <div>
@@ -556,7 +564,6 @@ const RecepcionMx = props => {
                                                 id="request-select-clasificación"
                                                 value={props.selectedClassification}
                                                 onChange={props.handleChangeClassification}
-                                                /* disabled={true} */
                                             >
                                                 <MenuItem value="0">
                                                     <em>Seleccione</em>
@@ -648,6 +655,7 @@ const RecepcionMx = props => {
                                             value={props.fif !== null ? props.fif : null}
                                             onChange={props.handleChangeFif}
                                             disabled={true}
+                                            inputProps={{ autoComplete: 'off' }}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}

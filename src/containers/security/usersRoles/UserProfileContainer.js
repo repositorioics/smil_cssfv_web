@@ -258,13 +258,13 @@ const UserProfileContainer = props => {
             setDisableBtnSave(false);
             setIsActive(false);
             setUserSelected([]);
-            setProfileSelected([]);
+            //setProfileSelected([]);
             setErrorMessageUser('');
             setErrorMessageProfile('');
         } else {
             setDisableBtnSave(false);
             setIsActive(false);
-            setProfileSelected([]);
+            //setProfileSelected([]);
             setErrorMessageUser('');
             setErrorMessageProfile('');
         }

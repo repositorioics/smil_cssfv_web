@@ -34,6 +34,7 @@ const CatalogoAnioEstudio = props => {
                                                     autoOk={true}
                                                     value={props.fechaInicio !== null ? props.fechaInicio : null}
                                                     onChange={props.handleChangeFechaInicio}
+                                                    inputProps={{ autoComplete: 'off' }}
                                                     KeyboardButtonProps={{
                                                         'aria-label': 'change date',
                                                     }}
@@ -49,6 +50,7 @@ const CatalogoAnioEstudio = props => {
                                                     autoOk={true}
                                                     value={props.fechaFin !== null ? props.fechaFin : null}
                                                     onChange={props.handleChangeFechaFin}
+                                                    inputProps={{ autoComplete: 'off' }}
                                                     KeyboardButtonProps={{
                                                         'aria-label': 'change date',
                                                     }}

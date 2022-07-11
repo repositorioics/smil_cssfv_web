@@ -73,6 +73,7 @@ const MxDengueParte3 = (props) => {
                                     autoOk={true}
                                     value={props.fechaSeparacion !== null ? props.fechaSeparacion : null}
                                     onChange={props.handleChangeFSeparacion}
+                                    inputProps={{ autoComplete: 'off' }}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
                                     }}

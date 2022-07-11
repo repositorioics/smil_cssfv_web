@@ -145,6 +145,7 @@ const MxDengue = props => {
                                 variant="contained"
                                 color="primary"
                                 onClick={props.saveGeneralData}
+                                disabled={props.disableGeneralData}
                                 className={classes.button}
                             >Guardar
                             </Button>

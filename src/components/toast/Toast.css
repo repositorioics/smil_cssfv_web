@@ -22,3 +22,13 @@
 .Toastify__toast--error {
     background: #d1052a !important;
 }
+
+.Toastify__toast-container--top-center {
+    /*top: 1em;
+    left: 50%;
+    transform: translateX(-50%);*/
+    top: auto !important;
+    right: auto !important;
+    bottom: 40%;
+    left: 7%;
+}

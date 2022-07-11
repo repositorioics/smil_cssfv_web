@@ -119,7 +119,7 @@ const MxBhc = props => {
                                 variant="contained"
                                 color="primary"
                                 onClick={props.saveDatosGenerales}
-                                disabled={props.disableSaveDatosGenerales}
+                                disabled={props.disablePacienteMenor}
                                 className={classes.button}
                             >Guardar
                             </Button>
@@ -169,6 +169,7 @@ const MxBhc = props => {
                                 variant="contained"
                                 color="primary"
                                 onClick={props.saveMxTomada}
+                                disabled={props.disablePacienteMenor}
                                 className={classes.button}
                             >Guardar
                             </Button>

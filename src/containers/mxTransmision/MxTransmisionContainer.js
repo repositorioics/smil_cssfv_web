@@ -9,7 +9,7 @@ import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import Utils from '../../utils/Utils';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
-import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
+import AlertDialogMxDuplicada from '../../components/alertDialog/AlertDialogMxDuplicada';
 
 const MxTransmisionContainer = props => {
     let history = useHistory();
@@ -24,6 +24,7 @@ const MxTransmisionContainer = props => {
     let [plasma, setPlasma] = useState(false);
     const [selectedTubo, setSelectedTubo] = useState('');
     const [tipoTubo, setTipoTubo] = useState([]);
+    const [catRecepcionId, setCatRecepcionId] = useState(0);
     //const [selectedConsulta, setSelectedConsulta] = useState('');
     //const [consultas, setConsultas] = useState([]);
     const [selectedVisita, setSelectedVisita] = useState('');
@@ -100,97 +101,30 @@ const MxTransmisionContainer = props => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getListTubosActivos();
-            //getListConsultasActivos();
-            getListVisitasActivas();
-            getMedicos();
-            getBionalistas();
+            loadData();
             if (props.match.params && Object.keys(props.match.params).length > 0) {
                 setExecuteLoading(true);
                 setTitle('Editar muestra de serología - Estudio transmisión');
-                const getMxUO1ById = async() => {
-                    try {
-                        const response = await DataServices.getMuestrasTransmisionById(props.match.params.id);
-                        if (response.status === 200) {
-                            //console.log('Data', response.data);
-                            setIdMx(response.data.muestraId.id);
-                            setIdMxTransmision(response.data.id);
-                            setCode(response.data.muestraId.codigoParticipante);
-                            setCodLab(response.data.codLab);
-                            setSelectedTubo(response.data.tuboId.id);
-                            //setSelectedConsulta(response.data.consultaId.id);
-                            setSelectedVisita(response.data.visitaId.id);
-                            if (response.data.muestraId.fif !== null) {
-                                let dateVar = moment(response.data.muestraId.fif);
-                                let newDateVar = dateVar.utc().format();
-                                setFif(newDateVar);
-                            }
-                            /*if (response.data.muestraId.fis !== null) {
-                                let dateVar = moment(response.data.muestraId.fis);
-                                let newDateVar = dateVar.utc().format();
-                                setFis(newDateVar);
-                            }*/
-                            if (response.data.muestraId.fechaToma !== null) {
-                                let dateVar = moment(response.data.muestraId.fechaToma);
-                                let newDateVar = dateVar.utc().format();
-                                setFechaToma(newDateVar);
-                            }
-                            if (response.data.muestraId.bioanalistaId !== null) {
-                                setSelectedBioanalista(response.data.muestraId.bioanalistaId.id);
-                                setDisableMxNoTomada(true);
-                            }
-                            medicoById(response.data.muestraId.quienOrdena);
-                            setMxTomada(response.data.muestraId.mxTomada);
-                            setMxNoTomada(response.data.mxNoTomada);
-                            setMotivoNoMx(response.data.muestraId.motivoNoMx);
-                            setPlasma(response.data.plasma);
-                            if (response.data.mxNoTomada) {}
-
-                            if (response.data.muestraId.horaToma !== null) {
-                                const time = response.data.muestraId.horaToma;
-                                let today = new Date().toISOString().slice(0, 10)
-                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm').format();
-                                setSelectedHoraToma(dateTime);
-                            } else {
-                                setSelectedHoraToma(null);
-                            }
-                            if (response.data.horaRefrigeracion !== null) {
-                                const time = response.data.horaRefrigeracion;
-                                let today = new Date().toISOString().slice(0, 10)
-                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm').format();
-                                setSelectedHoraRefrigeracion(dateTime);
-                            } else {
-                                setSelectedHoraRefrigeracion(null);
-                            }
-                            if (response.data.muestraId.volumen !== null) {
-                                setVolSangre(response.data.muestraId.volumen);
-                            } else {
-                                setVolSangre('');
-                            }
-                            if (response.data.motivoSinFif !== '' && response.data.motivoSinFif !== null && response.data.motivoSinFif !== undefined) {
-                                setDisabledMotivoNoFif(false);
-                            }
-                            setMotivoNoFif(response.data.motivoSinFif);
-                            setLoggedInUser(response.data.muestraId.usuarioId.id);
-                            setRegisterDate(response.data.muestraId.fechaRegistro);
-                            setObservations(response.data.muestraId.observacion);
-                            getParticipante(response.data.muestraId.codigoParticipante);
-                            setDisableCode(true);
-                            setExistenDatosGenerales(true);
-                        }
-                    } catch (error) {
-                        setExecuteLoading(false);
-                        console.log('error', error);
-                    }
-                }
-                getMxUO1ById();
+                
+                //getMxUO1ById();
             } else {
                 setTitle('Muestra de serología - Estudio transmisión');
             }
         } else {
             props.history.push('/');
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.history, props.match.params])
+
+    const loadData = async() => {
+        await getListTubosActivos();
+        await getListVisitasActivas();
+        await getMedicos();
+        await getBionalistas();
+        if (props.match.params && Object.keys(props.match.params).length > 0) { 
+            getMxUO1ById(props.match.params.id);
+        }
+    }
 
     /**Metodo para obtener todos los tubos activos */
     const getListTubosActivos = async () => {
@@ -200,6 +134,84 @@ const MxTransmisionContainer = props => {
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setTipoTubo(response.data);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error);
+        }
+    }
+
+    const getMxUO1ById = async (id) => {
+        try {
+            const response = await DataServices.getMuestrasTransmisionById(id);
+            if (response.status === 200) {
+                //console.log('Data', response.data);
+                setIdMx(response.data.muestraId.id);
+                setIdMxTransmision(response.data.id);
+                setCode(response.data.muestraId.codigoParticipante);
+                setCodLab(response.data.muestraId.codLab);
+                setCodLabScan(response.data.muestraId.codLabScan);
+                setSelectedTubo(response.data.tuboId.id);
+                //setSelectedConsulta(response.data.consultaId.id);
+                setSelectedVisita(response.data.visitaId.id);
+                if (response.data.muestraId.fif !== null) {
+                    let dateVar = moment(response.data.muestraId.fif);
+                    let newDateVar = dateVar.utc().format();
+                    setFif(newDateVar);
+                }
+                /*if (response.data.muestraId.fis !== null) {
+                    let dateVar = moment(response.data.muestraId.fis);
+                    let newDateVar = dateVar.utc().format();
+                    setFis(newDateVar);
+                }*/
+                if (response.data.muestraId.fechaToma !== null) {
+                    let dateVar = moment(response.data.muestraId.fechaToma);
+                    let newDateVar = dateVar.utc().format();
+                    setFechaToma(newDateVar);
+                }
+                if (response.data.muestraId.bioanalistaId !== null) {
+                    setSelectedBioanalista(response.data.muestraId.bioanalistaId.id);
+                    setDisableMxNoTomada(true);
+                }
+                setCatRecepcionId(response.data.muestraId.catRecepcionId.id);
+                medicoById(response.data.muestraId.quienOrdena);
+                setMxTomada(response.data.muestraId.mxTomada);
+                setMxNoTomada(response.data.mxNoTomada);
+                setMotivoNoMx(response.data.muestraId.motivoNoMx);
+                setPlasma(response.data.plasma);
+                if (response.data.mxNoTomada) { }
+
+                if (response.data.muestraId.horaToma !== null) {
+                    const time = response.data.muestraId.horaToma;
+                    let today = new Date().toISOString().slice(0, 10)
+                    const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm a').format();
+                    setSelectedHoraToma(dateTime);
+                } else {
+                    setSelectedHoraToma(null);
+                }
+                if (response.data.horaRefrigeracion !== null) {
+                    const time = response.data.horaRefrigeracion;
+                    let today = new Date().toISOString().slice(0, 10)
+                    const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm a').format();
+                    setSelectedHoraRefrigeracion(dateTime);
+                } else {
+                    setSelectedHoraRefrigeracion(null);
+                }
+                if (response.data.muestraId.volumen !== null) {
+                    setVolSangre(response.data.muestraId.volumen);
+                } else {
+                    setVolSangre('');
+                }
+                if (response.data.motivoSinFif !== '' && response.data.motivoSinFif !== null && response.data.motivoSinFif !== undefined) {
+                    setDisabledMotivoNoFif(false);
+                }
+                setMotivoNoFif(response.data.motivoSinFif);
+                setLoggedInUser(response.data.muestraId.usuarioId.id);
+                setRegisterDate(response.data.muestraId.fechaRegistro);
+                setObservations(response.data.muestraId.observacion);
+                getParticipante(response.data.muestraId.codigoParticipante);
+                setDisableCode(true);
+                setExistenDatosGenerales(true);
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -224,7 +236,7 @@ const MxTransmisionContainer = props => {
 
     /**Metodo para obtener todas las clasificaciones activas */
     const getListVisitasActivas = async () => {
-        setExecuteLoading(true);
+        //setExecuteLoading(true);
         try {
             const response = await DataServices.getAllVisitasActivas();
             if (response.status === 200) {
@@ -239,7 +251,7 @@ const MxTransmisionContainer = props => {
 
     /**Funcion para obtener los medicos */
     const getMedicos = async () => {
-        setExecuteLoading(true);
+        //setExecuteLoading(true);
         try {
             const response = await DataServices.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
@@ -264,7 +276,7 @@ const MxTransmisionContainer = props => {
 
     /**Funcion para obtener los bioanalistas */
     const getBionalistas = async () => {
-        setExecuteLoading(true);
+        //setExecuteLoading(true);
         try {
             const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
@@ -304,16 +316,16 @@ const MxTransmisionContainer = props => {
                         setOpenAlertDialog(true);
                         setAlertMessageDialog("El participante no pertenece al estudio UO1, no se puede tomar muestra.");
                     } else {*/
-                        setOpenAlertDialog(false);
-                        setName(response.data.nombre1 + " " + response.data.nombre2 + " " + response.data.apellido1 + " " + response.data.apellido2);
-                        setStudy(response.data.estudiosparticipante !== '' ? response.data.estudiosparticipante : '');
-                        if (response.data.fechanac !== '' && response.data.fechanac !== null) {
-                            const edad = Utils.obtenerEdad(response.data.fechanac);
-                            setAge(`${edad.years} Años | ${edad.months} Meses | ${edad.days} Días`);
-                        }
-                        setHouseCode(response.data.codigocasa);
-                        setEstudiosParticipante(response.data.estudiosparticipante);
-                        //setData(response.data);
+                    setOpenAlertDialog(false);
+                    setName(response.data.nombre1 + " " + response.data.nombre2 + " " + response.data.apellido1 + " " + response.data.apellido2);
+                    setStudy(response.data.estudiosparticipante !== '' ? response.data.estudiosparticipante : '');
+                    if (response.data.fechanac !== '' && response.data.fechanac !== null) {
+                        const edad = Utils.obtenerEdad(response.data.fechanac);
+                        setAge(`${edad.years} Años | ${edad.months} Meses | ${edad.days} Días`);
+                    }
+                    setHouseCode(response.data.codigocasa);
+                    setEstudiosParticipante(response.data.estudiosparticipante);
+                    //setData(response.data);
                     //}
                 } else {
                     setOpenAlertDialog(true);
@@ -672,7 +684,7 @@ const MxTransmisionContainer = props => {
             saveData();
         }
     }
-    
+
     const saveMxTomada = () => {
         if (validateMxTomada()) {
             //console.log('Enviar a guardar');
@@ -725,19 +737,19 @@ const MxTransmisionContainer = props => {
         return true;
     }
 
-   /*  const validateSelectedConsulta = () => {
-        if (selectedConsulta === 'Inicial') {
-            if (selectedTubo === 'LEUCOSEP') {}
-            if (selectedTubo === 'ROJO') {}
-            return false;
-        }
-        if (selectedConsulta === 'Convaleciente') {
-            if (selectedTubo === 'LEUCOSEP') {}
-            if (selectedTubo === 'ROJO') {}
-            return false;
-        }
-        return true;
-    } */
+    /*  const validateSelectedConsulta = () => {
+         if (selectedConsulta === 'Inicial') {
+             if (selectedTubo === 'LEUCOSEP') {}
+             if (selectedTubo === 'ROJO') {}
+             return false;
+         }
+         if (selectedConsulta === 'Convaleciente') {
+             if (selectedTubo === 'LEUCOSEP') {}
+             if (selectedTubo === 'ROJO') {}
+             return false;
+         }
+         return true;
+     } */
 
     const validateMxTomada = () => {
         if (mxTomada) {
@@ -791,12 +803,12 @@ const MxTransmisionContainer = props => {
         setMessageAlert(null);
     }
 
-     /**Funcion para guardar los datos */
-     const postMxTransmision = async(muestra) => {
+    /**Funcion para guardar los datos */
+    const postMxTransmision = async (muestra) => {
         setExecuteLoading(true);
-         try {
-             const response = await DataServices.postMuestraTransmision(muestra);
-             if (response.status === 200) {
+        try {
+            const response = await DataServices.postMuestraTransmision(muestra);
+            if (response.status === 200) {
                 setExecuteLoading(false);
                 setIdMx(response.data.muestraId.id);
                 setIdMxTransmision(response.data.id);
@@ -806,54 +818,69 @@ const MxTransmisionContainer = props => {
                 setTimeout(function () {
                     initialStateToast();
                 }, 100);
-             }
-         } catch (error) {
+            }
+        } catch (error) {
             setExecuteLoading(false);
             console.log('error', error);
-         }
-     }
+        }
+    }
 
-      /**Funcion para actualizar los datos */
-      const putMxTransmision = async(muestra) => {
+    /**Funcion para actualizar los datos */
+    const putMxTransmision = async (muestra) => {
         setExecuteLoading(true);
-          try {
-              const response = await DataServices.putMuestraTransmision(muestra);
-              if (response.status === 200) {
+        try {
+            const response = await DataServices.putMuestraTransmision(muestra);
+            if (response.status === 200) {
                 setExecuteLoading(false);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
                 setTimeout(function () {
                     initialStateToast();
                 }, 100);
-              }
-          } catch (error) {
+            }
+        } catch (error) {
             setExecuteLoading(false);
             console.log('error', error);
-          }
-      }
+        }
+    }
 
-    const saveData = async() => {
-        //codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
-        //console.log(codLabScan);
-        //setCodLabScan(codLabScan);
-
-
+    const saveData = async () => {
         /**Creando el codigo lab scan a guardar */
-        codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
-        setCodLabScan(codLabScan);
+        if (codLabScan === '') {
+            codLabScan = Utils.createCodLabScan(fif, fechaToma, codLab);
+            //console.log(codLabScan);
+            setCodLabScan(codLabScan);
+        }
         
+        /**Verificamos si el codigo tiene el formato correcto*/
+        if (catRecepcionId <= 0) { // se evalua que sea un registro nuevo
+            const response = await DataServices.getCatRecepcionByCodLabScan(codLabScan);
+            if (response.status === 200) {
+                if (response.data !== "") {
+                    setCatRecepcionId(response.data.id);
+                } else {
+                    setType("error");
+                    setMessageAlert("Código lab scan no valido");
+                    setTimeout(function () {
+                        initialStateToast();
+                    }, 100);
+                    return;
+                }
+            }
+        }
 
         /**Verificamos si existe el codigo lab scan */
-        const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codLabScan);
-        if (result !== '') {
-            setExecuteLoading(false);
-            setValorDetalle(result);
-            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
-            setOpenAlertDialogRecep(true);
-            console.log(result)
-            return;
+        if (idMx <= 0) {
+            const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setValorDetalle(result);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                setOpenAlertDialogRecep(true);
+                //console.log(result)
+                return;
+            }
         }
-        /****************************************/
 
         const accountData = JSON.parse(localStorage.getItem('accountData'));
         let usuarioId = {};
@@ -862,7 +889,7 @@ const MxTransmisionContainer = props => {
         let bioanalistaId = {};
         let tuboId = {}
         let time = null;
-        let timeRefrigeracion =  null
+        let timeRefrigeracion = null
 
         if (selectedHoraToma !== null) {
             time = moment(selectedHoraToma).format("hh:mm A");
@@ -873,9 +900,7 @@ const MxTransmisionContainer = props => {
         }
 
         const muestra = {
-            codLab: codLab,
             codLabM: '',
-            codLabScan: codLabScan,
             fechaEnvio: '',
             horaEnvio: '',
             horaRefrigeracion: timeRefrigeracion,
@@ -883,6 +908,8 @@ const MxTransmisionContainer = props => {
             //"id": 0,
             motivoSinFif: motivoNoFif,
             muestraId: {
+                codLab: codLab,
+                codLabScan: codLabScan,
                 anulada: false,
                 codigoCasa: houseCode,
                 codigoParticipante: code,
@@ -894,6 +921,9 @@ const MxTransmisionContainer = props => {
                 horaToma: time,
                 //"id": 0,
                 motivoAnulacion: '',
+                catRecepcionId: {
+                    id: catRecepcionId
+                },
                 /* "motivoAnulacionId": {
                     "activo": true,
                     "descripcion": "string",
@@ -917,7 +947,7 @@ const MxTransmisionContainer = props => {
             mxNoTomada: mxNoTomada,
             viaje: ''
         }
-        
+
         if (idMx > 0 && idMx !== undefined) {
             muestra.muestraId.id = idMx;
         }
@@ -928,7 +958,7 @@ const MxTransmisionContainer = props => {
 
 
         usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
-        visitaId.id  = selectedVisita;
+        visitaId.id = selectedVisita;
         //consultaId.id = selectedConsulta;
         //bioanalistaId.id = selectedBioanalista;
         tuboId.id = selectedTubo;
@@ -1061,7 +1091,7 @@ const MxTransmisionContainer = props => {
                 acceptAlertDialogText={acceptAlertDialogText}
                 errorAlertMotivoNoFif={errorAlertMotivoNoFif}
             />
-            <AlertDialogRecepcion
+            <AlertDialogMxDuplicada
                 valorDetalle={valorDetalle}
                 openAlertDialogRecep={openAlertDialogRecep}
                 alertMessageDialogRecep={alertMessageDialogRecep}

@@ -200,7 +200,7 @@ const ResultadosMuestrasContainer = props => {
                 activo: isChecked,
                 idCatTipoPrueba: {
                     id: selectedTypeOftest,
-                },
+                }
             }
             const response = await DataServices.postResulMx(catResultadosMuestras);
             if (response.status === 200) {
@@ -227,9 +227,9 @@ const ResultadosMuestrasContainer = props => {
                 codigo: code,
                 descripcion: description,
                 activo: isChecked,
-                /* idCatMuestra: {
-                    id: selectedMx,
-                } */
+                idCatTipoPrueba: {
+                    id: selectedTypeOftest,
+                }
             }
             
             const response = await DataServices.putResultMx(catResultadosMuestras);

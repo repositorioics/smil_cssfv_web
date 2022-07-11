@@ -53,7 +53,8 @@ export default function Textarea(props) {
                     placeholder={props.placeholder}
                     onChange={props.handleChange}
                     disabled={disabled}
-                    rows="8"
+                    //"8"
+                    rows={props.rowValue}
                 />
             </div>
         </div>

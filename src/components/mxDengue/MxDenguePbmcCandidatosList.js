@@ -3,27 +3,27 @@ import { Link } from "react-router-dom";
 import BootstrapTable from 'react-bootstrap-table-next';
 import filterFactory from 'react-bootstrap-table2-filter';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import NotInterestedIcon from '@material-ui/icons/NotInterested';
-import SearchIcon from '@material-ui/icons/Search';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+//import NotInterestedIcon from '@material-ui/icons/NotInterested';
+//import SearchIcon from '@material-ui/icons/Search';
 import { Divider } from '@material-ui/core';
 import Paper from '@material-ui/core/Paper';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import { blue } from '@material-ui/core/colors';
+//import { makeStyles } from '@material-ui/core/styles';
+//import TextField from '@material-ui/core/TextField';
+import { red } from '@material-ui/core/colors';
 import Loading from '../loading/Loading';
 import '../mxDengue/MxDengue.css';
 
-const useStyles = makeStyles((theme) => ({
+/*const useStyles = makeStyles((theme) => ({
     textField: {
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         width: 200,
     },
-}));
+}));*/
 
-const MxDenguePbmcList = props => {
-    const classes = useStyles();
+const MxDenguePbmcCandidatosList = props => {
+    //const classes = useStyles();
     return (
         <>
             <Loading
@@ -37,20 +37,14 @@ const MxDenguePbmcList = props => {
                         </div>
                     </div>
                     <div className="m-top hover">
-                        {/* <Link to={{pathname:'/muestras/agregar-muestra-dengue-pbmc', state: {mx: 'pbmc' }}}><OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Agregar</Tooltip>}>
+                         <Link to={{pathname:'/muestras/dengue/pbmc'}}>
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Regresar</Tooltip>}>
                             <span className="d-inline-block">
-                                <AddCircleIcon style={{ color: blue[500] }} size={20} />
+                                <KeyboardBackspaceIcon style={{ color: red[500] }} size={20} />
                             </span>
-                        </OverlayTrigger></Link> */}
-                        <Link to={{pathname:'/muestras/dengue/candidatos-toma/pbmc', state: {mx: 'pbmc' }}}>
-                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Ver Candidatos</Tooltip>}>
-                            <span className="d-inline-block">
-                                <AddCircleIcon style={{ color: blue[500] }} size={20} />
-                            </span>
-                        </OverlayTrigger></Link>
-                        
+                        </OverlayTrigger></Link>   
                     </div>
-                    <div className="input-group row" style={{ marginTop: 15, marginLeft: 10 }}>
+                    {/*<div className="input-group row" style={{ marginTop: 15, marginLeft: 10 }}>
                         <div>
                             <TextField
                                 id="startDate"
@@ -110,7 +104,7 @@ const MxDenguePbmcList = props => {
                                 </span>
                             </OverlayTrigger>
                         </div>
-                    </div>
+                    </div>*/}
                     <Divider />
                     <div style={{ marginTop: 25, boxShadow: "none" }}>
                         <BootstrapTable
@@ -132,4 +126,4 @@ const MxDenguePbmcList = props => {
     );
 }
 
-export default MxDenguePbmcList;
+export default MxDenguePbmcCandidatosList;

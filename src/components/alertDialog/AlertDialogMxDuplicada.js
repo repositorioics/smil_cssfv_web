@@ -92,12 +92,13 @@ const StyledTreeItem = styled((props) => (
   [`& .${treeItemClasses.group}`]: {
     marginLeft: 15,
     paddingLeft: 18,
+    //width:'100%',
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
 }));
 
 
-const AlertDialogRecepcion = (props) => {
+const AlertDialogMxDuplicada = (props) => {
   //console.log(props.valorDetalle);
   return (
     <>
@@ -128,20 +129,20 @@ const AlertDialogRecepcion = (props) => {
                   >
                     <StyledTreeItem nodeId="1" label="Ver Detalle">
                       <StyledTreeItem nodeId="2" label="Cod-Lab">
-                        <StyledTreeItem nodeId="3" label={props.valorDetalle.codLab} />
+                        <StyledTreeItem nodeId="3" label={props.valorDetalle.muestraId.codLab} />
                       </StyledTreeItem>
 
                       <StyledTreeItem nodeId="4" label="Cod-Lab-Scan">
-                        <StyledTreeItem nodeId="5" label={props.valorDetalle.codLabScan} />
+                        <StyledTreeItem nodeId="5" label={props.valorDetalle.muestraId.codLabScan} />
                       </StyledTreeItem>
 
                       <StyledTreeItem nodeId="6" label="Fecha Toma">
                         <StyledTreeItem nodeId="7" label={props.valorDetalle.muestraId.fechaToma} />
                       </StyledTreeItem>
 
-                      <StyledTreeItem nodeId="8" label="Usuario Recepciona">
+                      {/* <StyledTreeItem nodeId="8" label="Usuario Recepciona">
                         <StyledTreeItem nodeId="9" label={props.valorDetalle.muestraId.usuarioRecepciona.usuario} />
-                      </StyledTreeItem>
+                      </StyledTreeItem> */}
 
                     </StyledTreeItem>
                   </TreeView>
@@ -160,4 +161,4 @@ const AlertDialogRecepcion = (props) => {
   );
 }
 
-export default AlertDialogRecepcion;
+export default AlertDialogMxDuplicada;

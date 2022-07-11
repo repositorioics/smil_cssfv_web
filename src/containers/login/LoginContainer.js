@@ -106,7 +106,8 @@ const LoginContainer = props => {
             if (response.status === 200) {
                 setExecuteLoading(false);
                 localStorage.setItem('accountData', JSON.stringify(response.data));
-                props.history.push('/home');
+                //props.history.push('/home');
+                props.history.push({  pathname: '/home'});
             }
         } catch (error) {
             setExecuteLoading(false);

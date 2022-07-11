@@ -37,8 +37,8 @@ const Toast = (props) => {
     return (
         <>
             {notify()}
-            <ToastContainer
-                position="top-right"
+            <ToastContainer 
+                position="top-center"
                 autoClose={5000}
                 hideProgressBar={false}
                 newestOnTop={false}

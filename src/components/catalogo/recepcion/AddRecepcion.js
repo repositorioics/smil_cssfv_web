@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     formControl: {
         minWidth: '100%',
         marginTop: 0
-    },
+    }
 }));
 
 function Item(props) {
@@ -99,7 +99,25 @@ const AddRecepcion = props => {
                                     <Grid item xs={4}>
                                         <Item>
                                             <div className="col-sm">
-                                                <TextField
+                                                <FormControl className={classes.formControl}>
+                                                    <InputLabel id="test-input-label-type-study">Tipo muestra</InputLabel>
+                                                    <Select
+                                                        labelId="request-label-type-study"
+                                                        id="request-select-type-study"
+                                                        value={props.selectedTypeMx}
+                                                        onChange={props.handleChangeTypeMx}
+                                                    >
+                                                        <MenuItem value="0">
+                                                            <em>Seleccione</em>
+                                                        </MenuItem>
+                                                        {props.typeMx.map((e, keyIndex) => {
+                                                            return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
+                                                        })
+                                                        }
+                                                    </Select>
+                                                    <label className="messageError">{props.errorMessageTypeMx}</label>
+                                                </FormControl>
+                                                {/* <TextField
                                                     id="type"
                                                     autoComplete="off"
                                                     type="text"
@@ -109,7 +127,7 @@ const AddRecepcion = props => {
                                                     value={props.type}
                                                     onChange={props.handleChangeTypeMx}
                                                     label="Tipo muestra" />
-                                                <label className="messageError">{props.errorMessageTypeMx}</label>
+                                                <label className="messageError">{props.errorMessageTypeMx}</label> */}
                                             </div>
                                         </Item>
                                     </Grid>
@@ -140,6 +158,7 @@ const AddRecepcion = props => {
                                                     value={props.criteriosEvaluar}
                                                     handleChange={props.handleChangeCriteriosEvaluar}
                                                     appearance={textarea_appearances.primary}
+                                                    rowValue={8}
                                                 />
                                             </div>
                                             <label style={{ marginLeft: 20 }} className="messageError">{props.errorMessageCriteriosEvaluar}</label>
@@ -156,6 +175,7 @@ const AddRecepcion = props => {
                                                     value={props.charactersString}
                                                     appearance={textarea_appearances.primary}
                                                     handleChange={props.handleChangeCharactersString}
+                                                    rowValue={3}
                                                 />
                                             </div>
                                             <label style={{ marginLeft: 20 }} className="messageError">{props.errorMessageCharactersString}</label>
@@ -172,6 +192,7 @@ const AddRecepcion = props => {
                                                     value={props.regex}
                                                     appearance={textarea_appearances.primary}
                                                     handleChange={props.handleChangeRegex}
+                                                    rowValue={3}
                                                 />
                                             </div>
                                             <label style={{ marginLeft: 20 }} className="messageError">{props.errorMessageRegex}</label>
@@ -188,6 +209,7 @@ const AddRecepcion = props => {
                                                     value={props.descriptionString}
                                                     appearance={textarea_appearances.primary}
                                                     handleChange={props.handleChangeDescriptionString}
+                                                    rowValue={8}
                                                 />
                                             </div>
                                             <label style={{ marginLeft: 20 }} className="messageError">{props.errorMessageDescriptionString}</label>
@@ -209,7 +231,7 @@ const AddRecepcion = props => {
                                 <div className="row" style={{ marginTop: 15 }}>
                                     <button style={{ width: '15%' }} type="button" className="btn btn-default custom-btn-register-back" onClick={() => props.goBack()}>Regresar</button>
                                     <button style={{ width: '15%' }} type="button" className="btn btn-default custom-btn-register" onClick={props.saveData} disabled={props.disableBtnSave}>Guardar</button>
-                                    <button style={{ width: '15%' }} type="button" className="btn btn-default custom-btn-register-clear" onClick={props.clearData}>Limpiar</button>
+                                    <button disabled={props.disableBtnLimpiar} style={{ width: '15%' }} type="button" className="btn btn-default custom-btn-register-clear" onClick={props.clearData}>Limpiar</button>
                                 </div>
                             </form>
                         </div>

@@ -10,7 +10,7 @@ import ToastContainer from '../../components/toast/Toast';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
 import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import AlertDialogMismoEF from '../../components/alertDialog/AlertDialogMismoEF';
-import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
+import AlertDialogMxDuplicada from '../../components/alertDialog/AlertDialogMxDuplicada';
 import DialogImprimirFormatoCodigos from '../../components/alertDialog/DialogImprimirFormatoCodigos';
 import * as Constants from '../../Constants';
 
@@ -26,7 +26,7 @@ const MxInfluenzaContainer = props => {
     const [data, setData] = useState({});
     const [medicos, setMedicos] = useState([]);
     const [codeLab, setCodLab] = useState('');
-    let [codeLabScan, setCodeLabScan] = useState('');
+    let [codLabScan, setCodLabScan] = useState('');
     const [estudiosParticipante, setEstudiosParticipante] = useState('');
     const [bioanalistas, setBioanalistas] = useState([]);
     const [name, setName] = useState('');
@@ -167,8 +167,8 @@ const MxInfluenzaContainer = props => {
                                 setIsMxCv(false);
                             }
                             setPositivoMi(response.data.covidPositivo);
-                            setCodeLabScan(response.data.codLabScan);
-                            setCodLab(response.data.codLab);
+                            setCodLabScan(response.data.muestraId.codLabScan);
+                            setCodLab(response.data.muestraId.codLab);
                             if (response.data.motivoSinFif !== '' && response.data.motivoSinFif !== null && response.data.motivoSinFif !== undefined) {
                                 setDisabledMotivoNoFif(false);
                             }
@@ -197,7 +197,7 @@ const MxInfluenzaContainer = props => {
                             } else {
                                 setSelectedTypeOfTest('');
                             }
-                            
+
                             getParticipante(response.data.muestraId.codigoParticipante);
                             medicoById(response.data.muestraId.quienOrdena);
                             setMxTomada(response.data.muestraId.mxTomada);
@@ -220,7 +220,7 @@ const MxInfluenzaContainer = props => {
                                 //const newDate = dateStr + ' ' + time
                                 //const result = new Date(newDate).getTime();
                                 let today = new Date().toISOString().slice(0, 10)
-                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm').format();
+                                const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm a').format();
 
                                 //date.setTime(result);
                                 setSelectedHoraToma(dateTime);
@@ -270,7 +270,7 @@ const MxInfluenzaContainer = props => {
                             setExistenDatosGenerales(true);
                             setExecuteLoading(false);
                             setDisabledCodeLabScan(true);
-                            
+
                         }
                     } catch (error) {
                         setExecuteLoading(false);
@@ -327,7 +327,7 @@ const MxInfluenzaContainer = props => {
                 setName('');
                 setStudy('');
                 setAge('');
-                setCodeLabScan('');
+                setCodLabScan('');
             }
         }
     }
@@ -660,14 +660,14 @@ const MxInfluenzaContainer = props => {
 
     const onChangeBarcode = (event) => {
         //regex.test(event.target.value)
-        setCodeLabScan(event.target.value)
+        setCodLabScan(event.target.value)
         //console.log(event.target.value);
         //console.log(codeLabScan);
     }
 
     const onKeyPressBarcode = (event) => {
         if (event.keyCode === 13) {
-            setCodeLabScan(event.target.value)
+            setCodLabScan(event.target.value)
             setDisabledCodeLabScan(true);
             const result = event.target.value;
             const partes = result.split('  ');
@@ -1372,27 +1372,43 @@ const MxInfluenzaContainer = props => {
         initialStateToast();
     }
 
-    
-
-    const saveData = async() => {
-
+    const saveData = async () => {
         /**Creando el codigo lab scan a guardar */
-        
-        codeLabScan = Utils.createCodLabScan(fif, fechaToma, codeLab);
-        console.log(codeLabScan);
-        setCodeLabScan(codeLabScan);
-        
-        /**Verificamos si existe el codigo lab scan */
-        const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codeLabScan);
-        if (result !== '') {
-            setExecuteLoading(false);
-            setValorDetalle(result);
-            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
-            setOpenAlertDialogRecep(true);
-            console.log(result)
-            return;
+        if (codLabScan === '') {
+            codLabScan = Utils.createCodLabScan(fif, fechaToma, codeLab);
+            //console.log(codeLabScan);
+            setCodLabScan(codLabScan);
         }
-        /****************************************/
+        
+        /**Verificamos si el codigo tiene el formato correcto*/
+        if (catRecepcionId <= 0) { // se evalua que sea un registro nuevo
+            const response = await DataServices.getCatRecepcionByCodLabScan(codLabScan);
+            if (response.status === 200) {
+                if (response.data !== "") {
+                    setCatRecepcionId(response.data.id);
+                } else {
+                    setType("error");
+                    setMessageAlert("Código lab scan no valido");
+                    setTimeout(function () {
+                        initialStateToast();
+                    }, 100);
+                    return;
+                }
+            }
+        }
+
+        /**Verificamos si existe el codigo lab scan */
+        if (idMx <= 0) {
+            const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codLabScan);
+            if (result !== '') {
+                setExecuteLoading(false);
+                setValorDetalle(result);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                setOpenAlertDialogRecep(true);
+                //console.log(result)
+                return;
+            }
+        }
 
         let tipoMuestraId = {};
         let usuarioId = {};
@@ -1408,12 +1424,13 @@ const MxInfluenzaContainer = props => {
 
         const muestra = {
             casoIndiceEstTransm: 0,
-            codLab: codeLab,
-            codLabScan: codeLabScan,
+            
             covidPositivo: false, //Pendiente
             motivoMismoEf: selectedMismoEpFif !== null ? selectedMismoEpFif : null,
             motivoSinFif: motivoNoFif,
             muestraId: {
+                codLab: codeLab,
+                codLabScan: codLabScan, 
                 anulada: false,
                 codigoCasa: houseCode,
                 codigoParticipante: code,
@@ -1443,7 +1460,7 @@ const MxInfluenzaContainer = props => {
                 }, */
                 volumen: volMedioMl,
                 catRecepcionId: {
-                    id: catRecepcionId <= 0 ? null : catRecepcionId
+                    id: catRecepcionId
                 },
             },
             mxCovid: mxCv,
@@ -1500,7 +1517,7 @@ const MxInfluenzaContainer = props => {
             }
         }
 
-        console.log('muestra', muestra);
+        //console.log('muestra', muestra);
         if (idMx > 0) {
             /**Actualizar muestra influenza*/
             if (fif !== null) {
@@ -1626,7 +1643,7 @@ const MxInfluenzaContainer = props => {
                 esRetoma={esRetoma}
                 dataTypeOfTest={dataTypeOfTest}
                 medicos={medicos}
-                codeLabScan={codeLabScan}
+                codeLabScan={codLabScan}
                 codeLab={codeLab}
                 bioanalistas={bioanalistas}
                 typeMx={typeMx}
@@ -1770,7 +1787,7 @@ const MxInfluenzaContainer = props => {
                 errorCantidadCopiasCod={errorCantidadCopiasCod}
                 imprimir={imprimir}
             />
-            <AlertDialogRecepcion
+            <AlertDialogMxDuplicada
                 valorDetalle={valorDetalle}
                 openAlertDialogRecep={openAlertDialogRecep}
                 alertMessageDialogRecep={alertMessageDialogRecep}

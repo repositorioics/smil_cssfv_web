@@ -9,7 +9,7 @@ import ToastContainer from '../../components/toast/Toast';
 //import AlertDialogText from '../../components/alertDialog/AlertDialogText';
 import * as Constants from '../../Constants';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
-import AlertDialogRecepcion from '../../components/alertDialog/AlertDialogRecepcion';
+import AlertDialogMxDuplicada from '../../components/alertDialog/AlertDialogMxDuplicada';
 
 const RecepcionMxContainer = props => {
     //let history = useHistory();
@@ -24,9 +24,9 @@ const RecepcionMxContainer = props => {
     const [age, setAge] = useState('');
     const [houseCode, setHouseCode] = useState('');
     const [selectedMedico, setSelectedMedico] = useState('');
-    const [medicos, setMedicos] = useState([]);
-    const [bioanalistas, setBioanalistas] = useState([]);
-    const [selectedRequestBy, setSelectedRequestBy] = useState('');
+    let [medicos, setMedicos] = useState([]);
+    let [bioanalistas, setBioanalistas] = useState([]);
+    let [selectedRequestBy, setSelectedRequestBy] = useState('');
     const [typeMx, setTypeMx] = useState([]);
     const [tipoTubo, setTipoTubo] = useState([]);
     const [classification, setClassification] = useState([]);
@@ -48,6 +48,7 @@ const RecepcionMxContainer = props => {
     const [catRecepcionId, setCatRecepcionId] = useState(0);
     let [orina, setOrina] = useState(false);
     let [saliva, setSaliva] = useState(false);
+    let [positivoDengZika, setPositivoDengZika] = useState(false);
 
     const [fif, setFif] = useState(null);
     const [fis, setFis] = useState(null);
@@ -87,7 +88,7 @@ const RecepcionMxContainer = props => {
     /**Alert Dialog Recepcion*/
     const [openAlertDialogRecep, setOpenAlertDialogRecep] = useState(false);
     const [alertMessageDialogRecep, setAlertMessageDialogRecep] = useState('');
-    const [valorDetalle, setValorDetalle] = useState({});
+    let [valorDetalle, setValorDetalle] = useState({});
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
@@ -113,6 +114,7 @@ const RecepcionMxContainer = props => {
         } else {
             props.history.push('/');
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.history, props.match.params])
 
     /**Metodo para obtener los medicos */
@@ -128,11 +130,19 @@ const RecepcionMxContainer = props => {
                         const newObject = {}
                         newObject.id = response.data[i].usuarioId.id;
                         newObject.nombre = response.data[i].usuarioId.nombres + " " + response.data[i].usuarioId.apellidos;
-
                         multiSelectData.push(newObject);
                     }
                 }
-                setMedicos(multiSelectData);
+                /*const filterMedico = multiSelectData.filter(function(item) {
+                    return item.nombre === 'Miguel Plazaola';
+                }).map(function(item) {
+                    return item.id;
+                });*/
+                medicos = multiSelectData;
+                setMedicos(medicos);
+                const filterMedico = medicos.find(a => a.nombre.trim() === 'Miguel Plazaola');
+                setSelectedRequestBy(filterMedico.id);
+                
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -147,6 +157,7 @@ const RecepcionMxContainer = props => {
             const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
+                const accountData = JSON.parse(localStorage.getItem('accountData'));
                 const multiSelectData = [];
                 if (response.data.length > 0) {
                     for (let i = 0; i < response.data.length; i++) {
@@ -157,7 +168,15 @@ const RecepcionMxContainer = props => {
                         multiSelectData.push(newObject);
                     }
                 }
-                setBioanalistas(multiSelectData);
+                
+                bioanalistas = multiSelectData;
+                setBioanalistas(bioanalistas);
+                if (accountData !== null) {
+                    let result = bioanalistas.filter(item => item.id === accountData.usuarioId);
+                    if (result.length > 0) {
+                        setSelectedBioanalistaRecepciona(result[0].id);
+                    }
+                }
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -333,21 +352,30 @@ const RecepcionMxContainer = props => {
                 if (response.data !== "") {
                     setCodeLabScan(valor);
                     console.log("Resultado Cod Lab Scan: ", response.data);
-                    setSubTitle1(response.data.tipo);
-                    if (response.data.tipo !== null && response.data.tipo !== '' && response.data.tipo !== undefined) {
-                        if (response.data.tipo.includes('ORINA')) {
+                    if (response.data.descripcion !== null) {
+                        if (response.data.descripcion === response.data.catTipoMuestraId.descripcion) {
+                            setSubTitle1(response.data.catTipoMuestraId.descripcion);
+                        } else {
+                            setSubTitle1(response.data.descripcion + ' ' + response.data.catTipoMuestraId.descripcion);
+                        }
+                    } else {
+                        setSubTitle1(response.data.catTipoMuestraId.descripcion);
+                    }
+                    
+                    if (response.data.catTipoMuestraId !== null && response.data.catTipoMuestraId !== '' && response.data.catTipoMuestraId !== undefined) {
+                        if (response.data.catTipoMuestraId.nombre === 'ORINA') {
                             setOrina(true);
-                            console.log('ORINA', true);
+                            //console.log('ORINA', true);
                         } else {
                             setOrina(false);
-                            console.log('ORINA', false);
+                            //console.log('ORINA', false);
                         }
-                        if (response.data.tipo.includes('SALIVA')) {
+                        if (response.data.catTipoMuestraId.nombre === 'SALIVA') {
                             setSaliva(true);
-                            console.log('SALIVA', true);
+                            //console.log('SALIVA', true);
                         } else {
                             setSaliva(false);
-                            console.log('SALIVA', false);
+                            //console.log('SALIVA', false);
                         }
                     }
                     setSubTitle2(response.data.nombreEstudio);
@@ -381,8 +409,7 @@ const RecepcionMxContainer = props => {
                     setSubTitle2("");
                     clearData();
                     setType("error");
-                    setMessageAlert("Código no valido");
-
+                    setMessageAlert("Código lab scan no valido");
                 }
 
             }
@@ -421,11 +448,18 @@ const RecepcionMxContainer = props => {
                 const res = codeLabScan.includes('SR1') || codeLabScan.includes('SR2') || codeLabScan.includes('SR3')
                     || codeLabScan.includes('SR4') || codeLabScan.includes('SR5') || codeLabScan.includes('SR6');
 
+                const res2 = codeLabScan.includes('TR1') || codeLabScan.includes('TR2') || codeLabScan.includes('TR3')
+                    || codeLabScan.includes('TR4') || codeLabScan.includes('TR5') || codeLabScan.includes('TR6');
+
+                const res3 = codeLabScan.includes('TL1') || codeLabScan.includes('TL2');
                 const resultTuboPBMC = codeLabScan.includes('P');
-                if (resultTuboRojo && !res) {
+                if (res || res2 || res3) {
+                    setSelectedTypeOfMxRecep(4);
+                }
+                if (resultTuboRojo && !res && !res2) {
                     setSelectedTuboRecep(2);
                 }
-                if (resultTuboPBMC) {
+                if (resultTuboPBMC && !res && !res2) {
                     setSelectedTuboRecep(1);
                 }
                 if (partes[1].includes('TL1')) {
@@ -435,6 +469,12 @@ const RecepcionMxContainer = props => {
                 if (partes[1].includes('TL2')) {
                     setHideConsulta(false);
                     setSelectedConsulta(2);
+                }
+                if (codeLabScan.includes('VPI') || codeLabScan.includes('VRI') || codeLabScan.includes('VPF') || codeLabScan.includes('VRF')) {
+                    setSelectedClassification(2);
+                }
+                if (codeLabScan.includes('UPI') || codeLabScan.includes('URI') || codeLabScan.includes('UPF') || codeLabScan.includes('URF')) {
+                    setSelectedClassification(1);
                 }
                 if (partes[1] !== undefined) {
                     if (partes[1].includes('I')) {
@@ -447,7 +487,6 @@ const RecepcionMxContainer = props => {
                         const filterByName = dataVisita.filter(a => a.nombre.trim() === 'Final');
                         setSelectedVisita(filterByName[0].id);
                     }
-                    
                 }
 
                 setSelectedCategory('');
@@ -494,12 +533,20 @@ const RecepcionMxContainer = props => {
             const categoriaD = valor.substring(21, valor.length).includes('D');
             const consultaInicial = valor.substring(0, 1).includes('I');
             const consultaConvaleciente = valor.substring(0, 1).includes('C');
+            if (valor.substr(33) === 'Z1' || valor.substr(33) === 'Z2') {
+                positivoDengZika = true;
+                setPositivoDengZika(positivoDengZika);
+            } else {
+                setPositivoDengZika(false);
+            }
+            //console.log('positivoDengZika', positivoDengZika, valor.substr(33));
             if (categoriaA || categoriaB || categoriaC || categoriaD) {
                 setHideCategoria(false);
             } else {
                 setHideCategoria(true);
                 setSelectedCategory('');
             }
+            //SELECCIONAR SI ES VACUNA O ENFERMO SEGUN EL CODIGO LAB VPI ETC ETC
             if (categoriaA) {
                 setSelectedCategory(1);
             }
@@ -664,10 +711,11 @@ const RecepcionMxContainer = props => {
     }
 
     const onKeyPressBarcode = (event) => {
-        if (event.keyCode === 13) {
+        if (event.keyCode === 13 || event.key === 'Enter') {
             setCodeLabScan(event.target.value)
             //setDisabledCodeLabScan(true);
             const result = event.target.value;
+            console.log('result', result);
             getFormatCodeLabScanByCod(result);
         }
     }
@@ -723,14 +771,20 @@ const RecepcionMxContainer = props => {
             setErrorHoraToma('Debe ingresar la hora de la toma de muestra');
             return false;
         }
-        if (selectedHoraRefrigeracion === null) {
+        /*if (selectedHoraRefrigeracion === null) {
             setErrorHoraRefrigeracion('Debe ingresar la hora de refrigeración');
             return false;
-        }
+        }*/
         if (volMedioMl === '' || volMedioMl === null || volMedioMl === undefined) {
             setErrorVolMedio('Debe ingresar el volumen de la muestra');
             return false;
         }
+
+        if (volMedioMl < 2 || volMedioMl > 15) {
+            setErrorVolMedio('El volumen esta fuera de rango => (2 - 15)' );
+            return false;
+        }
+
         if (selectedBioanalistaRecepciona === '' || selectedBioanalistaRecepciona <= 0) {
             setErrorBioanlistaRecepciona('Debe seleccionar quien recepciona la muestra');
             return false;
@@ -761,7 +815,8 @@ const RecepcionMxContainer = props => {
                 fis: fis,
                 horaToma: time,
                 motivoAnulacion: '',
-
+                codLab: codLab,
+                codLabScan: codeLabScan,
                 motivoNoMx: '',
                 mxCompartida: false,
                 mxEnviada: false,
@@ -787,7 +842,6 @@ const RecepcionMxContainer = props => {
                 volumen: volMedioMl
             }
 
-            //debugger
             /**Cohorte de Familia, Cohorte Pediatrica Influenza, Cohorte Pediatrica Influenza/UO1 */
             if (idStudy === 1 || idStudy === 4 || idStudy === 5) {
                 saveDataByStudyFlu(muestraId)
@@ -826,12 +880,11 @@ const RecepcionMxContainer = props => {
             }
         }
         //const result = subTitle2.indexOf(study.trim());
-        return result;
     }
 
     const saveDataByStudyFlu = (muestraId) => {
-        if (validateStudy()) {
-            console.log(codeLabScan);
+        //if (validateStudy()) {
+            //console.log(codeLabScan);
             const isMxBHC = codeLabScan.includes('BHC');
             const isTransLN = codeLabScan.includes('TL1') || codeLabScan.includes('TL2');
 
@@ -884,10 +937,10 @@ const RecepcionMxContainer = props => {
                 !isCVUO1 && !isPostivoInfluenzaUO1 && !isPostInfluenzaUO1PrePostVacuna) {
                     postMxInfluenza(muestraId);
                 }
-        } else {
-            setOpenAlertDialog(true);
-            setAlertMessageDialog('Los estudios del participante no coinciden con el estudio requerido para la muertra');
-        }
+        //} else {
+           // setOpenAlertDialog(true);
+           // setAlertMessageDialog('Los estudios del participante no coinciden con el estudio requerido para la muertra');
+        //}
         //console.log('Muestra', muestra);
         //postMxInfluenza(muestra);
     }
@@ -904,7 +957,7 @@ const RecepcionMxContainer = props => {
                 setValorDetalle(result);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 setOpenAlertDialogRecep(true);
-                console.log(result)
+                //console.log(result)
                 return;
             }
             let categoriaId = {};
@@ -916,9 +969,10 @@ const RecepcionMxContainer = props => {
             if (selectedHoraRefrigeracion !== null) {
                 timeHRef = moment(selectedHoraRefrigeracion).format("hh:mm A");
             }
+
             const muestra = {
-                codLab: codLab,
-                codLabScan: codeLabScan,
+                //codLab: codLab,
+                //codLabScan: codeLabScan,
                 mxNoTomada: false,
                 mxPapelFiltro: false,
                 mxPapelFiltroEnviada: false,
@@ -935,6 +989,7 @@ const RecepcionMxContainer = props => {
                 observacion: observations,
                 orina: orina,
                 saliva: saliva,
+                positivoZika: positivoDengZika,
                 muestraId: muestraId,
                 horaRefrigeracion: timeHRef !== null ? timeHRef : null,
             };
@@ -994,16 +1049,18 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setOpenAlertDialog(true);
-                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                //valorDetalle = result
+                setValorDetalle(result);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 return;
             }
 
             const mxId = {};
             let tipoMuestraId = {};
             const muestra = {
-                codLab: codLab,
-                codLabScan: codeLabScan,
+                //codLab: codLab,
+                //codLabScan: codeLabScan,
                 covidPositivo: false,
                 mxCovid: false,
                 mxNoTomada: false,
@@ -1045,20 +1102,20 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setOpenAlertDialog(true);
-                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                //valorDetalle = result
+                setValorDetalle(result);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 return;
             }
 
             const mxId = {};
             const muestra = {
-                codLab: codLab,
-                codLabScan: codeLabScan,
                 motivoSinFif: '',
                 mxNoTomada: false,
                 muestraId: muestraId
             }
-            mxId.id = 6;
+            mxId.id = 1;
             muestra.muestraId.mxId = mxId;
             const response = await DataServices.postMuestraBhc(muestra);
             if (response.status === 200) {
@@ -1084,8 +1141,10 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setOpenAlertDialog(true);
-                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                //valorDetalle = result
+                setValorDetalle(result);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 return;
             }
 
@@ -1093,9 +1152,9 @@ const RecepcionMxContainer = props => {
             let tipoPruebaId = {}
             let tipoMuestraId = {};
             const muestra = {
-                codLab: codLab,
+                //codLab: codLab,
                 codLabM: '',
-                codLabScan: codeLabScan,
+                //codLabScan: codeLabScan,
                 fechaEnvio: '',
                 horaEnvio: '',
                 transmision: false,
@@ -1141,8 +1200,10 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setOpenAlertDialog(true);
-                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                //valorDetalle = result
+                setValorDetalle(result);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 return;
             }
 
@@ -1150,9 +1211,9 @@ const RecepcionMxContainer = props => {
             let tipoPruebaId = {}
             let tipoMuestraId = {};
             const muestra = {
-                codLab: codLab,
+                //codLab: codLab,
                 codLabM: '',
-                codLabScan: codeLabScan,
+                //codLabScan: codeLabScan,
                 fechaEnvio: '',
                 horaEnvio: '',
                 transmision: false,
@@ -1197,8 +1258,10 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setOpenAlertDialog(true);
-                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                //valorDetalle = result
+                setValorDetalle(result);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 return;
             }
 
@@ -1215,9 +1278,9 @@ const RecepcionMxContainer = props => {
                 }
             }
             const muestra = {
-                codLab: codLab,
+                //codLab: codLab,
                 codLabM: '',
-                codLabScan: codeLabScan,
+                //codLabScan: codeLabScan,
                 fechaEnvio: '',
                 horaEnvio: '',
                 transmision: false,
@@ -1262,8 +1325,10 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('UO1', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setOpenAlertDialog(true);
-                setAlertMessageDialog("Ya existe una muestra con el código lab scan ingresado");
+                //valorDetalle = result
+                setValorDetalle(result);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 return;
             }
 
@@ -1282,9 +1347,9 @@ const RecepcionMxContainer = props => {
                 }
             }
             const muestra = {
-                codLab: codLab,
+                //codLab: codLab,
                 codLabM: '',
-                codLabScan: codeLabScan,
+                //codLabScan: codeLabScan,
                 fechaEnvio: '',
                 horaEnvio: '',
                 horaRefrigeracion: timeHRef,
@@ -1303,8 +1368,10 @@ const RecepcionMxContainer = props => {
             muestra.muestraId.mxId = mxId;
             muestra.tipoPruebaId = tipoPruebaId;
             muestra.tuboId = tuboId;
-            clasificacionId.id = selectedClassification;
-            muestra.clasificacionId = clasificacionId;
+            if (selectedClassification !== '' && selectedClassification !== null && selectedClassification !== undefined) {
+                clasificacionId.id = selectedClassification;
+                muestra.clasificacionId = clasificacionId;
+            }
             const response = await DataServices.postMuestraU01(muestra);
             if (response.status === 200) {
                 setExecuteLoading(false);
@@ -1438,7 +1505,7 @@ const RecepcionMxContainer = props => {
                 alertMessageDialog={alertMessageDialog}
                 handleCloseAlertDialog={handleCloseAlertDialog}
             />
-            <AlertDialogRecepcion
+            <AlertDialogMxDuplicada
                 valorDetalle={valorDetalle}
                 openAlertDialogRecep={openAlertDialogRecep}
                 alertMessageDialogRecep={alertMessageDialogRecep}

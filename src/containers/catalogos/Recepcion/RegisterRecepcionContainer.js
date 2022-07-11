@@ -6,8 +6,9 @@ import ToastContainer from '../../../components/toast/Toast';
 const RegisterRecepcionContainer = props => {
     const [title, setTitle] = useState('');
     const [study, setStudy] = useState([]);
-    const [selectedStudy, setSelectedStudy] = useState('');
-    const [typeMx, setTypeMx] = useState('');
+    let [selectedStudy, setSelectedStudy] = useState('');
+    const [typeMx, setTypeMx] = useState([]);
+    let [selectedTypeMx, setSelectedTypeMx] = useState('');
     const [description, setDescription] = useState('');
     const [criteriosEvaluar, setCriteriosEvaluar] = useState('');
     const [charactersString, setCharactersString] = useState('');
@@ -16,6 +17,7 @@ const RegisterRecepcionContainer = props => {
     const [id, setId] = useState(0);
     let [isActive, setIsActive] = useState(false);
     const [disableBtnSave, setDisableBtnSave] = useState(false);
+    const [disableBtnLimpiar, setDisableBtnLimpiar] = useState(false);
     const [executeLoading, setExecuteLoading] = useState(false);
 
     const [errorMessageStudy, setErrorMessageStudy] = useState('');
@@ -31,10 +33,12 @@ const RegisterRecepcionContainer = props => {
 
     useEffect(() => {
         getAllEstudios();
+        getTypeOfMx();
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
             if (props.match.params && Object.keys(props.match.params).length > 0) {
                 setTitle('Editar formato para la recepción');
+                setDisableBtnLimpiar(true);
                 setId(props.match.params.id);
                 getById(props.match.params.id);
             } else {
@@ -61,15 +65,43 @@ const RegisterRecepcionContainer = props => {
         }
     }
 
+
+    /**Funcion para obtener los tipos de muestras */
+    const getTypeOfMx = async () => {
+        setExecuteLoading(true);
+        try {
+            const response = await DataServices.getAllTipoMuestrasActivas();
+            if (response.status === 200) {
+                setExecuteLoading(false);
+                /* const multiSelectData = [];
+                if (response.data.length > 0) {
+                    for (let i = 0; i < response.data.length; i++) {
+                        const newObject = {}
+                        newObject.id = response.data[i].id;
+                        newObject.nombre = response.data[i].descripcion
+
+                        multiSelectData.push(newObject);
+                    }
+                } */
+                //console.log(response);
+                setTypeMx(response.data);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error);
+        }
+    }
+
     const handleChangeStudy = (e) => {
         setErrorMessageStudy('');
         setSelectedStudy(e.target.value)
-        console.log(e.target.value);
+        //console.log(e.target.value);
     }
 
     const handleChangeTypeMx = (e) => {
         setErrorMessageTypeMx('');
-        setTypeMx(e.target.value);
+        //console.log(e.target.value);
+        setSelectedTypeMx(e.target.value);
     }
 
     const handleChangeDescripcion = (e) => {
@@ -130,7 +162,7 @@ const RegisterRecepcionContainer = props => {
                 setCharactersString(response.data.cadenaCaracteresCodigo);
                 setRegex(response.data.expresionRegular);
                 setDescriptionString(response.data.descripcionCadena);
-                setTypeMx(response.data.tipo);
+                setSelectedTypeMx(response.data.catTipoMuestraId.id);
                 setIsActive(response.data.activo);
             }
         } catch (error) {
@@ -147,7 +179,10 @@ const RegisterRecepcionContainer = props => {
             const filtro = study.filter(a => a.codigo === selectedStudy)
             const catRecepcion = {
                 estudio: selectedStudy,
-                tipo: typeMx.toUpperCase(),
+                //tipo: typeMx.toUpperCase(),
+                catTipoMuestraId: {
+                    id: selectedTypeMx
+                },
                 descripcion: description,
                 cadenaCaracteresCodigo: charactersString,
                 criteriosEvaluar: criteriosEvaluar,
@@ -182,7 +217,9 @@ const RegisterRecepcionContainer = props => {
             const catRecepcion = {
                 id: id,
                 estudio: selectedStudy,
-                tipo: typeMx.toUpperCase(),
+                catTipoMuestraId: {
+                    id: selectedTypeMx
+                },
                 descripcion: description,
                 cadenaCaracteresCodigo: charactersString,
                 criteriosEvaluar: criteriosEvaluar,
@@ -211,7 +248,7 @@ const RegisterRecepcionContainer = props => {
             setErrorMessageStudy('El estudio es requerido');
             return false;
         }
-        if (typeMx === '' || typeMx === null || typeMx === undefined) {
+        if (selectedTypeMx === '' || selectedTypeMx === null || selectedTypeMx === undefined) {
             setErrorMessageTypeMx('Debe ingresar el tipo de muestra');
             return false;
         }
@@ -237,7 +274,7 @@ const RegisterRecepcionContainer = props => {
     const clearData = (e) => {
         e.preventDefault();
         setSelectedStudy('');
-        setTypeMx('');
+        setSelectedTypeMx('');
         setCriteriosEvaluar('');
         setCharactersString('');
         setRegex('');
@@ -263,7 +300,8 @@ const RegisterRecepcionContainer = props => {
                 title={title}
                 study={study}
                 selectedStudy={selectedStudy}
-                type={typeMx}
+                typeMx={typeMx}
+                selectedTypeMx={selectedTypeMx}
                 description={description}
                 criteriosEvaluar={criteriosEvaluar}
                 charactersString={charactersString}
@@ -271,6 +309,7 @@ const RegisterRecepcionContainer = props => {
                 descriptionString={descriptionString}
                 isActive={isActive}
                 disableBtnSave={disableBtnSave}
+                disableBtnLimpiar={disableBtnLimpiar}
                 executeLoading={executeLoading}
                 saveData={saveData}
                 goBack={goBack}
