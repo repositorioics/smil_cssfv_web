@@ -9,8 +9,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import '../mxInfluenza/MxInfluenza.css';
 import {
-    TimePicker,
     MuiPickersUtilsProvider,
+    KeyboardTimePicker,
+                            
 } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
@@ -142,13 +143,21 @@ const MxInfluenzaParte2 = (props) => {
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
                 <div className="col-sm">
-                    <div>
+                    {/* <div>
                         <label>Hora toma</label>
-                    </div>
+                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
+                        {/* <TimePicker
                             id="horaToma"
                             value={props.selectedHoraToma}
+                            onChange={date => props.handleChangeHoraToma(date)}
+                        /> */}
+                        <KeyboardTimePicker
+                            id="horaToma"
+                            label="Hora toma"
+                            mask="__:__ _M"
+                            inputProps={{ autoComplete: 'off' }}
+                            value={props.selectedHoraToma !== null ? props.selectedHoraToma : null}
                             onChange={date => props.handleChangeHoraToma(date)}
                         />
                     </MuiPickersUtilsProvider>

@@ -89,7 +89,7 @@ const MxTransmision = props => {
                                     code={props.code}
                                     selectedTubo={props.selectedTubo}
                                     tipoTubo={props.tipoTubo}
-                                    codeLabScan={props.codeLabScan}
+                                    codLabScan={props.codLabScan}
                                     //selectedConsulta={props.selectedConsulta}
                                     //consultas={props.consultas}
                                     selectedVisita={props.selectedVisita}

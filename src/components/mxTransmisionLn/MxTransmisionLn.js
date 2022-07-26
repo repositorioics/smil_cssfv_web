@@ -98,6 +98,7 @@ const MxTransmisionLn = props => {
                                     study={props.study}
                                     age={props.age}
                                     codLab={props.codLab}
+                                    codLabScan={props.codLabScan}
                                     fif={props.fif}
                                     //fis={props.fis}
                                     fechaToma={props.fechaToma}

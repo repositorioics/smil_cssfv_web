@@ -37,7 +37,13 @@ const MxDengueBhcList = props => {
                         </div>
                     </div>
                     <div className="m-top hover">
-                        <Link to={{pathname:'/muestras/agregar-muestra-dengue-bhc', state: {mx: 'bhc' }}}><OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Agregar</Tooltip>}>
+                        {/* <Link to={{pathname:'/muestras/agregar-muestra-dengue-bhc', state: {mx: 'bhc' }}}><OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Agregar</Tooltip>}>
+                            <span className="d-inline-block">
+                                <AddCircleIcon style={{ color: blue[500] }} size={20} />
+                            </span>
+                        </OverlayTrigger></Link> */}
+                        <Link to={{pathname:'/muestras/dengue/candidatos-toma/bhc', state: {mx: 'bhc' }}}>
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Ver Candidatos</Tooltip>}>
                             <span className="d-inline-block">
                                 <AddCircleIcon style={{ color: blue[500] }} size={20} />
                             </span>

@@ -115,9 +115,12 @@ const MxU01Parte1 = props => {
                         maxLength={50}
                         className="form-control"
                         name="codeLabScan"
-                        value={props.codeLabScan}
+                        value={props.codLabScan}
                         readOnly={true}
-                        /* onChange={props.handleChangeCodeLabScan} */
+                        inputProps={{
+                            style: { fontWeight: 'bold' }
+                        }}
+                        //onChange={props.handleChangeCodeLabScan}
                         label="Cod-lab scan" />
                 </div>
             </div>

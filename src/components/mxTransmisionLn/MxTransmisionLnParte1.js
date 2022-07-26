@@ -128,7 +128,10 @@ const MxTransmisionLnParte1 = props => {
                         maxLength={50}
                         className="form-control"
                         name="codeLabScan"
-                        value={props.codeLabScan}
+                        value={props.codLabScan}
+                        inputProps={{
+                            style: { fontWeight: 'bold' }
+                        }}
                         readOnly={true}
                         /* onChange={props.handleChangeCodeLabScan} */
                         label="Cod-lab scan" />

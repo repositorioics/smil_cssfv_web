@@ -120,14 +120,17 @@ const MxTransmisionParte1 = props => {
                 <div className="col-sm">
                     {/* <label>Cod-lab scan</label> */}
                     <TextField
-                        id="codeLabScan"
+                        id="codLabScan"
                         autoComplete="off"
                         type="text"
                         style={{ height: 'auto', marginTop: 20 }}
                         maxLength={50}
                         className="form-control"
                         name="codeLabScan"
-                        value={props.codeLabScan}
+                        value={props.codLabScan}
+                        inputProps={{
+                            style: { fontWeight: 'bold' }
+                        }}
                         readOnly={true}
                         /* onChange={props.handleChangeCodeLabScan} */
                         label="Cod-lab scan" />

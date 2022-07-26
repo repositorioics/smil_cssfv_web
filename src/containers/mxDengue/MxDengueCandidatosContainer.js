@@ -9,12 +9,12 @@ import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
 import AlertDialog from '../../components/alertDialog/AlertDialog';
 import DialogImprimirFormatoCodigos from '../../components/alertDialog/DialogImprimirFormatoCodigos';
-import AlertDialogMismoEF from '../../components/alertDialog/AlertDialogMismoEF';
 import AlertDialogMxDuplicada from '../../components/alertDialog/AlertDialogMxDuplicada';
 import MxDengueUtils from './MxDengueUtils';
 import * as Constants from '../../Constants';
 
-const MxDengueContainer = props => {
+const MxDengueCandidatosContainer = props => {
+
     let history = useHistory();
     const [mxDengueId] = useState(Constants.ID_MUESTRA_DENGUE); // Id de la muestra de Dengue
     const [idMx, setIdMx] = useState(0);
@@ -22,6 +22,7 @@ const MxDengueContainer = props => {
     const [title, setTitle] = useState('');
     const [titleChkZkDen, setTitleChkZkDen] = useState('');
     let [code, setCode] = useState('');
+    let [codLab, setCodLab] = useState('');
     let [codLabScan, setCodLabScan] = useState('');
     const [houseCode, setHouseCode] = useState('');
     const [estudiosParticipante, setEstudiosParticipante] = useState('');
@@ -47,7 +48,6 @@ const MxDengueContainer = props => {
     const [name, setName] = useState('');
     const [study, setStudy] = useState('');
     const [age, setAge] = useState('');
-    const [codeLab, setCodLab] = useState('');
     const [selectedCambCat, setSelectedCambCat] = useState('');
     const [cambiosCategorias, setCambiosCategorias] = useState([]);
     const [executeLoading, setExecuteLoading] = useState(false);
@@ -68,8 +68,8 @@ const MxDengueContainer = props => {
     const [observationsMxSeparada, setObservationsMxSeparada] = useState('');
     const [dataResult, setDataResult] = useState([]);
     const [selectedResult, setSelectedResult] = useState('');
-    const [loggedInUser, setLoggedInUser] = useState(0);
-    const [registerDate, setRegisterDate] = useState(null);
+    //const [loggedInUser, setLoggedInUser] = useState(0);
+    //const [registerDate, setRegisterDate] = useState(null);
     const [numPrueba, setNumPrueba] = useState('');
     let [mxPrDengue, setMxPrDengue] = useState(false);
     let [procInmediato, setProcInmediato] = useState(false);
@@ -77,8 +77,6 @@ const MxDengueContainer = props => {
     const [lastCodeLab, setLastCodeLab] = useState('');
     const [lastRecordMxDengue, setLastRecordMxDengue] = useState({});
     const [lastAnioEstudio, setLastAnioEstudio] = useState({});
-    const [mismoEpFif, setMismoEpFif] = useState([]);
-    const [selectedMismoEpFif, setSelectedMismoEpFif] = useState('');
     let [orina, setOrina] = useState(false);
     let [saliva, setSaliva] = useState(false);
     let [positvoZika, setPositvoZika] = useState(false);
@@ -136,13 +134,6 @@ const MxDengueContainer = props => {
 
     const [existenDatosGenerales, setExistenDatosGenerales] = useState(false);
 
-    /**Alert Dialog Mismo Ep. Febril */
-    const [openAlertDialogMismoEF, setOpenAlertDialogMismoEF] = useState(false);
-    const [alertMessageDialogMismoEF, setAlertMessageDialogMismoEF] = useState('');
-    const [alertMessageDifFif, setAlertMessageDifFif] = useState('');
-    const [errorMismoEpFifDialog, setErrorMismoEpFifDialog] = useState('');
-    const [fifUltMxTomada, setFifUltMxTomada] = useState('');
-
     /**Imprimir codigos QR, CodaBar, Etc */
     const [openFormatoCodigos, setOpenFormatoCodigos] = useState(false);
     const [formatoCodigo, setFormatoCodigo] = useState(1);
@@ -185,7 +176,7 @@ const MxDengueContainer = props => {
                 //setExecuteLoading(true);
                 setMxParam(props.match.params.mx);
                 if (props.match.params.mx.trim() === 'metabolomica') {
-                    setTitle('Editar muestra dengue metabolomica');
+                    setTitle('Agregar muestra dengue metabolomica');
                     setTitleChkZkDen('Positivo Zika');
                     setMetabolomicaHide(false);
                     setPositivoZkDenHide(false);
@@ -198,7 +189,7 @@ const MxDengueContainer = props => {
                     setDisableCambioCategoria(true);
                     /**Crear y mndar a activar los checks de orina y saliva si se necesitan */
                 } else if (props.match.params.mx.trim() === 'bhc') {
-                    setTitle('Editar muestra dengue bhc');
+                    setTitle('Agregar muestra dengue bhc');
                     setMetabolomicaHide(true);
                     setPositivoZkDenHide(true);
                     setAccordionPanel3(true);
@@ -209,7 +200,7 @@ const MxDengueContainer = props => {
                     setDisableTubo(true);
                     setDisableCambioCategoria(true);
                 } else if (props.match.params.mx.trim() === 'paxgene') {
-                    setTitle('Editar muestra dengue paxgene');
+                    setTitle('Agreagar muestra dengue paxgene');
                     setTitleChkZkDen('Positivo Zika o Dengue');
                     setMetabolomicaHide(true);
                     setPositivoZkDenHide(false);
@@ -221,7 +212,7 @@ const MxDengueContainer = props => {
                     setDisableTubo(true);
                     setDisableCambioCategoria(true);
                 } else if (props.match.params.mx.trim() === 'pbmc') {
-                    setTitle('Editar muestra dengue pbmc');
+                    setTitle('Agregar muestra dengue pbmc');
                     setAccordionPanel3(true);
                     setAccordionPanel4(true);
                     setMetabolomicaHide(true);
@@ -236,68 +227,7 @@ const MxDengueContainer = props => {
                     setPositivoZkDenHide(true);
                     /* setOrina(false);
                     setSaliva(false); */
-                    setTitle('Editar muestra de dengue');
-                }
-            } else {
-                if (props.location.state !== undefined) {
-                    if (props.location.state.mx.trim() === 'metabolomica') {
-                        setTitle('Agregar muestra dengue metabolomica');
-                        setTitleChkZkDen('Positivo Zika');
-                        setAccordionPanel3(true);
-                        setAccordionPanel4(true);
-                        setMxParam(props.location.state.mx);
-                        setMetabolomicaHide(false);
-                        setPositivoZkDenHide(false);
-                        setOrina(false);
-                        setSaliva(false);
-                        setDisableTypeOfTest(true);
-                        setDisableTubo(true);
-                        setDisableCambioCategoria(true);
-                    } else if (props.location.state.mx.trim() === 'bhc') {
-                        setTitle('Agregar muestra dengue bhc');
-                        setAccordionPanel3(true);
-                        setAccordionPanel4(true);
-                        setMxParam(props.location.state.mx);
-                        setMetabolomicaHide(true);
-                        setPositivoZkDenHide(true);
-                        setOrina(true);
-                        setSaliva(true);
-                        setDisableTypeOfTest(true);
-                        setDisableTubo(true);
-                        setDisableCambioCategoria(true);
-                    } else if (props.location.state.mx.trim() === 'paxgene') {
-                        setTitle('Agregar muestra dengue paxgene');
-                        setTitleChkZkDen('Positivo Zika o Dengue');
-                        setAccordionPanel3(true);
-                        setAccordionPanel4(true);
-                        setMxParam(props.location.state.mx);
-                        setMetabolomicaHide(true);
-                        setPositivoZkDenHide(false);
-                        setOrina(true);
-                        setSaliva(true);
-                        setDisableTypeOfTest(true);
-                        setDisableTubo(true);
-                        setDisableCambioCategoria(true);
-                    } else if (props.location.state.mx.trim() === 'pbmc') {
-                        setTitle('Agregar muestra dengue pbmc');
-                        setAccordionPanel3(true);
-                        setAccordionPanel4(true);
-                        setMxParam(props.location.state.mx);
-                        setMetabolomicaHide(true);
-                        setPositivoZkDenHide(true);
-                        setOrina(true);
-                        setSaliva(true);
-                        setDisableTypeOfTest(true);
-                        setDisableTubo(true);
-                        setDisableCambioCategoria(true);
-                    } else {
-                        setTitle('Agregar muestra de dengue');
-                        setMxParam(props.location.state.mx);
-                        setMetabolomicaHide(true);
-                        setPositivoZkDenHide(true);
-                        setOrina(true);
-                        setSaliva(true);
-                    }
+                    setTitle('Agregar muestra de dengue');
                 }
             }
         } else {
@@ -320,7 +250,6 @@ const MxDengueContainer = props => {
         await getListCambCategoriasActivas();
         await getBionalistas();
         await getAllResultPRD();
-        await getMismoEpFif();
         await getUltimoAnioEstudio();
         if (props.match.params && Object.keys(props.match.params).length > 0) {
             await getMxDengueById(props.match.params.id);
@@ -335,8 +264,8 @@ const MxDengueContainer = props => {
             setIdMx(response.data.muestraId.id);
             setIdMxDengue(response.data.id);
             setCode(response.data.muestraId.codigoParticipante);
-            setCodLab(response.data.muestraId.codLab !== null ? response.data.muestraId.codLab : '');
-            setCodLabScan(response.data.muestraId.codLabScan !== null ? response.data.muestraId.codLabScan : '');
+            //setCodLab(response.data.muestraId.codLab !== null ? response.data.muestraId.codLab : '');
+            //setCodLabScan(response.data.muestraId.codLabScan !== null ? response.data.muestraId.codLabScan : '');
             if (response.data.muestraId.fif !== null) {
                 let dateVar = moment(response.data.muestraId.fif);
                 let newDateVar = dateVar.utc().format();
@@ -347,16 +276,16 @@ const MxDengueContainer = props => {
                 let newDateVar = dateVar.utc().format();
                 setFis(newDateVar);
             }
-            if (response.data.muestraId.fechaToma !== null) {
+            /*if (response.data.muestraId.fechaToma !== null) {
                 let dateVar = moment(response.data.muestraId.fechaToma);
                 let newDateVar = dateVar.utc().format();
                 setFechaToma(newDateVar);
-            }
-            if (response.data.tipoPruebaId !== null) {
+            }*/
+            /*if (response.data.tipoPruebaId !== null) {
                 setSelectedTypeOfTest(response.data.tipoPruebaId.id);
             } else {
                 setSelectedTypeOfTest('');
-            }
+            }*/
             if (response.data.tuboId !== null) {
                 setSelectedTubo(response.data.tuboId.id);
             } else {
@@ -378,29 +307,29 @@ const MxDengueContainer = props => {
             } else {
                 setSelectedCambCat('');
             }
-            setLoggedInUser(response.data.muestraId.usuarioId.id);
-            setRegisterDate(response.data.muestraId.fechaRegistro);
+            //setLoggedInUser(response.data.muestraId.usuarioId.id);
+            //setRegisterDate(response.data.muestraId.fechaRegistro);
             getParticipante(response.data.muestraId.codigoParticipante);
-            medicoById(response.data.muestraId.quienOrdena);
-            setVolMedioMl(response.data.muestraId.volumen !== null ? response.data.muestraId.volumen : '');
-            setObservations(response.data.muestraId.observacion);
-            if (response.data.motivoMismoEf !== null) {
+            getLastRecordMxDengue(response.data.muestraId.codigoParticipante);
+            obtenerUltimoCodigoLab(response.data.muestraId.codigoParticipante);
+            //medicoById(response.data.muestraId.quienOrdena);
+            //setVolMedioMl(response.data.muestraId.volumen !== null ? response.data.muestraId.volumen : '');
+            //setObservations(response.data.muestraId.observacion);
+            /*if (response.data.motivoMismoEf !== null) {
                 setSelectedMismoEpFif(response.data.motivoMismoEf.id);
             } else {
                 setSelectedMismoEpFif('');
-            }
-            setCatRecepcionId(response.data.muestraId.catRecepcionId.id);
-            setOrina(response.data.orina);
-            setSaliva(response.data.saliva);
+            }*/
+            //setCatRecepcionId(response.data.muestraId.catRecepcionId.id);
+            //setOrina(response.data.orina);
+            //setSaliva(response.data.saliva);
             /**Parte 2 */
-            setMxTomada(response.data.muestraId.mxTomada);
-            setMxPapelFiltro(response.data.mxPapelFiltroEnviada);
-            setMxNoTomada(response.data.mxNoTomada);
-            setMotivoNoMx(response.data.muestraId.motivoNoMx);
-            if (response.data.muestraId.bioanalistaId !== null) {
+            //setMxTomada(response.data.muestraId.mxTomada);
+            //setMxPapelFiltro(response.data.mxPapelFiltroEnviada);
+            //setMxNoTomada(response.data.mxNoTomada);
+            //setMotivoNoMx(response.data.muestraId.motivoNoMx);
+            /*if (response.data.muestraId.bioanalistaId !== null) {
                 setSelectedBioanalista(response.data.muestraId.bioanalistaId.id);
-            } else {
-                setSelectedBioanalista('');
             }
             if (response.data.muestraId.horaToma !== null) {
                 const time = response.data.muestraId.horaToma;
@@ -417,31 +346,26 @@ const MxDengueContainer = props => {
                 setSelectedHoraRefrigeracion(dateTime);
             } else {
                 setSelectedHoraRefrigeracion(null);
-            }
+            }*/
             /**Parte 3*/
-            setMxSeparada(response.data.mxSeparada);
+            /*setMxSeparada(response.data.mxSeparada);
             if (response.data.fechaSeparacion !== null) {
                 let dateVar = moment(response.data.fechaSeparacion);
                 let newDateVar = dateVar.utc().format();
                 setFechaSeparacion(newDateVar);
             } else {
                 setFechaSeparacion(null);
-            }
-            if (response.data.horaSeparacion !== null) {
+            }*/
+            /*if (response.data.horaSeparacion !== null) {
                 const time = response.data.horaSeparacion;
                 let today = new Date().toISOString().slice(0, 10)
                 const dateTime = moment(`${today} ${time}`, 'YYYY-MM-DD hh:mm').format();
                 setSelectedHoraSeparacion(dateTime);
             } else {
                 setSelectedHoraSeparacion(null);
-            }
+            }/*
             setViales(response.data.numViales !== null ? response.data.numViales : '');
-            if (response.data.volumenSuero !== null) {
-                setVolumenSuero(response.data.volumenSuero);
-            } else {
-                setVolumenSuero('');
-            }
-            
+            setVolumenSuero(response.data.volumenSuero);
             if (response.data.horaRefrigeracionVial !== null) {
                 const time = response.data.horaRefrigeracionVial;
                 let today = new Date().toISOString().slice(0, 10)
@@ -457,18 +381,18 @@ const MxDengueContainer = props => {
             }
             setObservationsMxSeparada(response.data.observacionMxSeparada);
             /**Parte 4*/
-            setMxPrDengue(response.data.pruebaRapida);
-            setProcInmediato(response.data.procInmediato);
-            setNumPrueba(response.data.numeroPruebas !== null ? response.data.numeroPruebas : '');
-            if (response.data.resultado !== null && response.data.resultado !== '' && response.data.resultado !== undefined) {
+            //setMxPrDengue(response.data.pruebaRapida);
+            //setProcInmediato(response.data.procInmediato);
+            //setNumPrueba(response.data.numeroPruebas !== null ? response.data.numeroPruebas : '');
+            /*if (response.data.resultado !== null) {
                 setSelectedResult(response.data.resultado);
             } else {
-                setSelectedResult('');
-            }
+                setSelectedResult(null);
+            }*/
             setObservationsPrDengue(response.data.observacionPrRapida !== null ? response.data.observacionPrRapida : '');
             /*----*/
             setDisableCode(true);
-            setExistenDatosGenerales(true);
+            //setExistenDatosGenerales(true);
         }
     }
 
@@ -637,7 +561,7 @@ const MxDengueContainer = props => {
         }
     }
 
-    /**Metodo para obtener el medico seleccionado */
+    /**Metodo para obtener el medico seleccionado 
     const medicoById = async (id) => {
         //setExecuteLoading(true);
         try {
@@ -649,7 +573,7 @@ const MxDengueContainer = props => {
             setExecuteLoading(false);
             console.log('error', error)
         }
-    }
+    }*/
 
     /**Funcion para obtener los resultados para la prueba rapida Dengue */
     const getAllResultPRD = async () => {
@@ -663,31 +587,6 @@ const MxDengueContainer = props => {
         } catch (error) {
             setExecuteLoading(false);
             console.log('error', error)
-        }
-    }
-
-    /**Funcion para obtener todos los episodios febriles */
-    const getMismoEpFif = async () => {
-        //setExecuteLoading(true);
-        try {
-            const response = await DataServices.getAllEpFebriles();
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                const multiSelectData = [];
-                if (response.data.length > 0) {
-                    for (let i = 0; i < response.data.length; i++) {
-                        const newObject = {}
-                        newObject.id = response.data[i].id;
-                        newObject.nombre = response.data[i].nombre
-
-                        multiSelectData.push(newObject);
-                    }
-                }
-                setMismoEpFif(multiSelectData);
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error);
         }
     }
 
@@ -907,9 +806,9 @@ const MxDengueContainer = props => {
             if (validateCode()) {
                 e.preventDefault();
                 getParticipante(code);
-                getLastRecordMxDengue(code);
+                //getLastRecordMxDengue(code);
                 //getMuestrasByCodExpedienteAndCatMxId(e);
-                obtenerUltimoCodigoLab(e);
+                //obtenerUltimoCodigoLab(e);
                 setName('');
                 setStudy('');
                 setAge('');
@@ -921,68 +820,49 @@ const MxDengueContainer = props => {
     /**Metodo para obtener el ultimo registro ingresado para la muestra de dengue */
     const getLastRecordMxDengue = async (codigo) => {
         let response = {};
-        if (props.location.state.mx.trim() === 'metabolomica') {
+        /* if (props.match.params.mx.trim() === 'metabolomica') {
             response = await DataServices.mxDengueMetabolomicaPorCodigo(codigo);
             if (response.status === 200) {
                 setLastRecordMxDengue(response.data);
                 //console.log('Data', response.data);
             }
-        } else if (props.location.state.mx.trim() === 'bhc') {
+        } else if (props.match.params.mx.trim() === 'bhc') {
             response = await DataServices.mxDengueBhcPorCodigo(codigo);
             if (response.status === 200) {
                 setLastRecordMxDengue(response.data);
                 //console.log('Data', response.data);
             }
-        } else if (props.location.state.mx.trim() === 'paxgene') {
+        } else if (props.match.params.mx.trim() === 'paxgene') {
             response = await DataServices.mxDenguePaxGenePorCodigo(codigo);
             if (response.status === 200) {
                 setLastRecordMxDengue(response.data);
                 //console.log('Data', response.data);
             }
-        } else if (props.location.state.mx.trim() === 'pbmc') {
+        } else if (props.match.params.mx.trim() === 'pbmc') {
             response = await DataServices.mxDenguePbmcPorCodigo(codigo);
             if (response.status === 200) {
                 setLastRecordMxDengue(response.data);
                 //console.log('Data', response.data);
             }
-        } else {
-            response = await DataServices.mxDengueHematicaPorCodigo(codigo);
-            if (response.status === 200) {
-                const currentDate = moment(); //Fecha del día;
-                if (response.data !== '') {
-                    console.log('ultimo registro', response.data);
-                    setLastRecordMxDengue(response.data);
-                    let lastFif = null;
-                    if (response.data.muestraId !== null && response.data.muestraId !== undefined && response.data.muestraId !== '') {
-                        if (response.data.muestraId.fif !== null) {
-                            setFifUltMxTomada(response.data.muestraId.fif);
-                            let dateVar = moment(response.data.muestraId.fif).add(13, 'days'); //13 dias despues de la FIF, incluyendo el dia de FIF
-                            let newDateVar = dateVar.toDate();
-                            lastFif = newDateVar;
-                        }
-                        if (lastFif > currentDate) {
-                            setOpenAlertDialog(true);
-                            setDisableGeneralData(true);
-                            setAlertMessageDialog('Niño en seguimiento de Dengue '
-                                + 'no puede tomar muestra hasta su fecha de convalecencia');
-                            return;
-                        } else {
-                            setDisableGeneralData(false);
-                        }
-                    }
-                } else {
-                    setDisableGeneralData(false);
-                }
+        } else { */
+        response = await DataServices.mxDengueHematicaPorCodigo(codigo);
+        if (response.status === 200) {
+            if (response.data !== '') {
+                console.log('ultimo registro', response.data);
+                setLastRecordMxDengue(response.data);
+            } else {
+                setDisableGeneralData(false);
             }
         }
+        //}
     }
 
     /**Metodo para obtener el ultimo codigo lab */
-    const obtenerUltimoCodigoLab = async (event) => {
-        event.preventDefault();
+    const obtenerUltimoCodigoLab = async (code) => {
+        //event.preventDefault();
         setExecuteLoading(true);
         setCodLab('');
-        const result = await MxDengueUtils.obtenerUltimoCodigoLabMxDengue(mxParam, code);
+        const result = await MxDengueUtils.obtenerUltimoCodigoLabMxDengue('dengue', code);
         
         console.log('ulimo cod lab', result);
         if (result !== '') {
@@ -1034,6 +914,16 @@ const MxDengueContainer = props => {
             setDisabledMotivoNoMx(true);
             setMotivoNoMx('');
         }
+    }
+
+    const clearMxTomada = () => {
+        setSelectedBioanalista('');
+        setMxTomada(false);
+        setMxPapelFiltro(false);
+        setSelectedHoraToma(null);
+        setSelectedHoraRefrigeracion(null);
+        setVolMedioMl('');
+
     }
 
     const handleChangeMotivoNoMx = (e) => {
@@ -1156,52 +1046,10 @@ const MxDengueContainer = props => {
         setErrorCantidadCopiasCod('');
     }
 
-    const handleChangeMismoEpFifDialog = (e) => {
-        setSelectedMismoEpFif(e.target.value);
-        setErrorMismoEpFifDialog('');
-    }
-
+ 
     const handleCloseAlertDialogRecep = () => {
         setOpenAlertDialogRecep(false);
         setAlertMessageDialogRecep('');
-    }
-
-    const cancelAlertDialogMismoEF = () => {
-        setOpenAlertDialogMismoEF(false);
-        setSelectedMismoEpFif('');
-        setErrorMismoEpFifDialog('');
-        //setValidMEF(false);
-    }
-
-    const acceptAlertDialogMismoEF = () => {
-        let validatedDialogEF = true;
-        if (selectedMismoEpFif === '' || selectedMismoEpFif === null || selectedMismoEpFif === undefined) {
-            setErrorMismoEpFifDialog('Debe ingrese el motivo');
-            validatedDialogEF = false;
-            //setValidMEF(false);
-        }
-
-        /**Cambiando la fif ingresada por la fif que tiene el ultimo registro
-         * Esto funciona solo cuando se presenta un mismo episodio febril
-         */
-
-        if (lastRecordMxDengue !== '' && lastRecordMxDengue !== null && lastRecordMxDengue !== undefined) {
-            if (lastRecordMxDengue.muestraId.fif !== null && fis !== null) {
-                const date2 = moment(fis).format('YYYY-MM-DD');
-                if (lastRecordMxDengue.muestraId.fif !== date2) {
-                    let dateVar = moment(lastRecordMxDengue.muestraId.fif);
-                    let newDateVar = dateVar.utc().format();
-                    setFif(newDateVar);
-                }
-            }
-        }
-
-        /**------------------------------------- */
-
-        if (validatedDialogEF) {
-            //setValidMEF(true);
-            setOpenAlertDialogMismoEF(false);
-        }
     }
 
     const goBackListMxDengue = () => {
@@ -1253,7 +1101,7 @@ const MxDengueContainer = props => {
             }
         }
 
-        if (mxParam !== 'pbmc') {
+        /* if (mxParam !== 'pbmc') {
             if (selectedTypeOfTest === '' || selectedTypeOfTest === null || selectedTypeOfTest === undefined || selectedTypeOfTest === '0') {
                 setErrorTypeOfTest('Debe seleccionar el tipo de prueba');
                 return false;
@@ -1265,7 +1113,7 @@ const MxDengueContainer = props => {
                 setErrorTubo('Debe seleccionar el tipo de tubo');
                 return false;
             }
-        }
+        } */
         
         if (selectedConsulta === '' || selectedConsulta === null || selectedConsulta === undefined || selectedConsulta === '0') {
             setErrorConsulta('Debe seleccionar la consulta');
@@ -1282,12 +1130,12 @@ const MxDengueContainer = props => {
             return false;
         }
 
-        if (mxParam !== 'pbmc') {
+        /* if (mxParam !== 'pbmc') {
             if (selectedCambCat === '' || selectedCambCat === null || selectedCambCat === undefined || selectedCambCat === '0') {
                 setErrorCambCategoria('Debe indicar si hubo cambio de categoría');
                 return false;
             }
-        }
+        } */
 
         if (fechaToma === '' || fechaToma === undefined || fechaToma === null) {
             setErrorFechaToma('Debe ingresar la fecha de toma de muestra');
@@ -1299,33 +1147,6 @@ const MxDengueContainer = props => {
             setAlertMessageDialog("Debe ingresar la FIF");
             return false;
         }
-
-        if (mxParam === 'dengue' && idMx > 0) {
-            if (lastRecordMxDengue.muestraId.fif !== null) {
-                const diff = Utils.CalculateDifferenceDates(new Date(lastRecordMxDengue.muestraId.fif), new Date(fif));
-                if (diff <= 7 && selectedMismoEpFif <= 0) {
-                    setFifUltMxTomada(lastRecordMxDengue.muestraId.fif);
-                    setOpenAlertDialogMismoEF(true);
-                    //setErrorMismoEpFifDialog('');
-                    setAlertMessageDialogMismoEF('Ya tiene muestra en este episodio febril, ' +
-                        'Revise la FIF que esta ingresando o Documente porque tomará la muestra.');
-                    const date2 = moment(fif).format('YYYY-MM-DD');
-                    if (lastRecordMxDengue.muestraId.fif !== date2) {
-                        setAlertMessageDifFif(' La ultima FIF es diferente a la que esta digitando, Se reemplazará con la FIF inicial, Verifique.');
-                    }
-                    return false;
-                }
-            }
-            return false;
-        }
-        /*if (fif === '' || fif === null || fif === undefined) {
-            if (motivoNoFif === '' || motivoNoFif === null || motivoNoFif === undefined) {
-                setOpenAlertDialogText(true);
-                setErrorAlertMotivoNoFif('');
-                setAlertMessageDialogText('FIF es requerida, si necesita ingresar un regitro sin FIF ingrese el motivo');
-                return false;
-            }
-        }*/
         return true;
     }
 
@@ -1381,12 +1202,6 @@ const MxDengueContainer = props => {
         return true;
     }
 
-    const saveGeneralData = () => {
-        if (validateGeneralData()) {
-            saveData();
-        }
-    }
-
     const saveMxTomada = () => {
         if (validateMxTomada()) {
             saveData();
@@ -1395,13 +1210,13 @@ const MxDengueContainer = props => {
 
     const saveMxSeparada = () => {
         if (validateMxSeparada()) {
-            saveData();
+           // saveData();
         }
     }
 
     const savePRDengue = () => {
         if (validatePrDengue()) {
-            saveData();
+            //saveData();
         }
     }
 
@@ -1459,12 +1274,22 @@ const MxDengueContainer = props => {
             code, positvoZika, mxParam, lastAnioEstudio, lastCodeLab,
             orina, saliva, lastRecordMxDengue);
         //setCodLabScan(codLabScan);
-        console.log('Codigo Lab Scan Generado', result);
-        /*if (result.error === 'Error') {
+        //console.log('Codigo Lab Scan Generado', result);
+        if (result.error === 'Error') {
             setOpenAlertDialog(true);
             setAlertMessageDialog(result.mensajeError);
             return;
-        }*/
+        }
+        if (result.resultado !== '') {
+            codLabScan = result.resultado
+            setCodLabScan(codLabScan);
+        }
+        //if (codLab === '') {
+            if (result.resultado2 !== '') {
+                codLab = result.resultado2
+                setCodLab(codLab);
+            }
+        //}
         /*axios.post(Constants.URL_PRINT_CODES + codLabScan)
                 .then((response) => {
                     //console.log('response', response);
@@ -1475,11 +1300,20 @@ const MxDengueContainer = props => {
                 });
             setOpenFormatoCodigos(false);*/
     }
+
     const imprimir = () => {
         generarCodLabScan();
     }
 
     const saveData = async() => {
+        setDisableGeneralData(false);
+        codLab = '';
+        codLabScan = '';
+        setCodLab(codLab);
+        setCodLabScan(codLabScan);
+        let dengueDetalle = {};
+        let tipoMuestraId = {};
+
         if (codLabScan === '') {
             generarCodLabScan();
         }
@@ -1489,7 +1323,7 @@ const MxDengueContainer = props => {
             const response = await DataServices.getCatRecepcionByCodLabScan(codLabScan);
             if (response.status === 200) {
                 if (response.data !== "") {
-                    catRecepcionId = response.data.id
+                    catRecepcionId = response.data.id;
                     setCatRecepcionId(catRecepcionId);
                 } else {
                     setType("error");
@@ -1503,35 +1337,33 @@ const MxDengueContainer = props => {
         }
 
         /**Verificamos si existe el codigo lab scan */
-        if (idMx <= 0) {
-            const result = await Utils.obtenerMuestraByCodLabScan('Dengue', codLabScan);
-            if (result !== '') {
-                setExecuteLoading(false);
-                const mensaje = {
-                    codigoLab: result.muestraId.codLab,
-                    codigoLabScan: result.muestraId.codLabScan,
-                    fechaTomaMx: result.muestraId.fechaToma
-                };
-                setValorDetalle(mensaje);
-                setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
-                setOpenAlertDialogRecep(true);
-                //console.log(result)
-                return;
-            }
+        const result = await Utils.obtenerMuestraByCodLabScan('Dengue', codLabScan);
+        if (result !== '') {
+            setExecuteLoading(false);
+            const mensaje = {
+                codigoLab: result.muestraId.codLab,
+                codigoLabScan: result.muestraId.codLabScan,
+                fechaTomaMx: result.muestraId.fechaToma
+            };
+            setValorDetalle(mensaje);
+            setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+            setOpenAlertDialogRecep(true);
+            //console.log(result)
+            return;
+        }
 
-            const result2 = await DataServices.mxByCodLab(codeLab);
-            if (result2.data !== '') {
-                setExecuteLoading(false);
-                const mensaje = {
-                    codigoLab: result2.data.codLab,
-                    codigoLabScan: result2.data.codLabScan,
-                    fechaTomaMx: result2.data.fechaToma
-                };
-                setValorDetalle(mensaje);
-                setOpenAlertDialogRecep(true);
-                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
-                return;
-            }
+        const result2 = await DataServices.mxByCodLab(codLab);
+        if (result2.data !== '') {
+            setExecuteLoading(false);
+            const mensaje = {
+                codigoLab: result2.data.codLab,
+                codigoLabScan: result2.data.codLabScan,
+                fechaTomaMx: result2.data.fechaToma
+            };
+            setValorDetalle(mensaje);
+            setOpenAlertDialogRecep(true);
+            setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
+            return;
         }
         
         
@@ -1554,13 +1386,13 @@ const MxDengueContainer = props => {
             horaRefrigeracionVial: selectedHoraRefVial !== null ? moment(selectedHoraRefVial).format("hh:mm A") : null,
             horaSeparacion: selectedHoraSeparacion !== null ? moment(selectedHoraSeparacion).format("hh:mm A") : null,
             muestraId: {
-                codLab: codeLab,
+                codLab: codLab,
                 codLabScan: codLabScan,
                 anulada: false,
                 codigoCasa: houseCode,
                 codigoParticipante: code,
                 estudiosParticipante: estudiosParticipante,
-                fechaRegistro: registerDate === null ? new Date() : registerDate, //Fecha del día,
+                fechaRegistro: new Date(), //Fecha del día,
                 fechaToma: fechaToma,
                 fif: fif,
                 fis: fis,
@@ -1599,13 +1431,13 @@ const MxDengueContainer = props => {
             positvoZika: positvoZika
         }
 
-        if (idMx > 0 && idMx !== undefined) {
+        /*if (idMx > 0 && idMx !== undefined) {
             muestra.muestraId.id = idMx;
         }
 
         if (idMxDengue > 0 && idMxDengue !== undefined) {
             muestra.id = idMxDengue;
-        }
+        }*/
 
         if (selectedCambCat !== '' && selectedCambCat !== null && selectedCambCat !== undefined) {
             if (selectedCambCat > 0) {
@@ -1642,7 +1474,7 @@ const MxDengueContainer = props => {
             }
         }
 
-        usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
+        usuarioId.id = accountData.usuarioId;
         muestra.muestraId.usuarioId = usuarioId;
 
         if (selectedTypeOfTest !== '' && selectedTypeOfTest !== null && selectedTypeOfTest !== undefined) {
@@ -1658,25 +1490,43 @@ const MxDengueContainer = props => {
                 muestra.tuboId = tuboId;
             }
         }
+        debugger
         if (idMx > 0) {
-            /**Actualizando la muestra de influenza*/
-            putMxDengue(muestra);
-        } else {
-            /**Nueva muestra de influenza*/
-            postMxDengue(muestra);
+            /**Nueva muestra*/
+            if (props.match.params.mx.trim() === 'metabolomica') {
+                if (orina) {
+                    tipoMuestraId.id = 10;
+                }
+                if (saliva) {
+                    tipoMuestraId.id = 11;
+                }
+            }
+            if (props.match.params.mx.trim() === 'pbmc') {
+                tipoMuestraId.id = 8;
+            }
+            if (props.match.params.mx.trim() === 'paxgene') {
+                tipoMuestraId.id = 7;
+            }
+            if (props.match.params.mx.trim() === 'bhc') {
+                tipoMuestraId.id = 9;
+            }
+            dengueDetalle.muestraDengueDetalleId = muestra;
+            dengueDetalle.tipoMuestraId = tipoMuestraId;
+            console.log('dengueDetalle', dengueDetalle);
+            postMxDengueDetalle(dengueDetalle);
         }
     }
 
     /**Funcion para guardar los datos */
-    const postMxDengue = async (muestra) => {
+    const postMxDengueDetalle = async (dengueDetalle) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.postMuestraDengue(muestra);
+            const response = await DataServices.postMuestraDengueDetalle(idMxDengue, dengueDetalle);
             if (response.status === 200) {
                 setExecuteLoading(false);
-                setIdMx(response.data.muestraId.id);
+                setIdMx(response.data.muestraDengueDetalleId.muestraId.id);
                 setIdMxDengue(response.data.id);
-                setExistenDatosGenerales(true);
+                setExistenDatosGenerales(false);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
                 setTimeout(function () {
@@ -1685,39 +1535,16 @@ const MxDengueContainer = props => {
             }
         } catch (error) {
             setExecuteLoading(false);
+            setDisableGeneralData(false);
             console.log('error', error);
         }
         initialStateToast();
     }
 
-    /**Funcion para editar los datos */
-    const putMxDengue = async (muestra) => {
-        setExecuteLoading(true);
-        try {
-            const response = await DataServices.putMuestraDengue(muestra);
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                setType("success");
-                setMessageAlert("Se guardarón los datos");
-                setTimeout(function () {
-                    initialStateToast();
-                }, 100);
-            }
-        } catch (error) {
-            setExecuteLoading(false);
-            console.log('error', error);
+    const saveGeneralData = () => {
+        if (validateGeneralData()) {
+            saveData();
         }
-        initialStateToast();
-    }
-
-    const clearMxTomada = () => {
-        setSelectedBioanalista('');
-        setMxTomada(false);
-        setMxPapelFiltro(false);
-        setSelectedHoraToma(null);
-        setSelectedHoraRefrigeracion(null);
-        setVolMedioMl('');
-
     }
 
     return (
@@ -1741,7 +1568,7 @@ const MxDengueContainer = props => {
                 name={name}
                 study={study}
                 age={age}
-                codeLab={codeLab}
+                codeLab={codLab}
                 code={code}
                 selectedCambCat={selectedCambCat}
                 cambiosCategorias={cambiosCategorias}
@@ -1869,19 +1696,6 @@ const MxDengueContainer = props => {
                 type={type}
                 messageAlert={messageAlert}
             />
-            <AlertDialogMismoEF
-                mismoEpFif={mismoEpFif}
-                fifUltMxTomada={fifUltMxTomada}
-                fif={fif}
-                alertMessageDialogMismoEF={alertMessageDialogMismoEF}
-                openAlertDialogMismoEF={openAlertDialogMismoEF}
-                selectedMismoEpFif={selectedMismoEpFif}
-                handleChangeMismoEpFifDialog={handleChangeMismoEpFifDialog}
-                cancelAlertDialogMismoEF={cancelAlertDialogMismoEF}
-                acceptAlertDialogMismoEF={acceptAlertDialogMismoEF}
-                errorMismoEpFifDialog={errorMismoEpFifDialog}
-                alertMessageDifFif={alertMessageDifFif}
-            />
             <DialogImprimirFormatoCodigos
                 formatoCodigo={formatoCodigo}
                 openFormatoCodigos={openFormatoCodigos}
@@ -1901,7 +1715,7 @@ const MxDengueContainer = props => {
             />
         </>
     );
-
 }
 
-export default MxDengueContainer;
+export default MxDengueCandidatosContainer;
+

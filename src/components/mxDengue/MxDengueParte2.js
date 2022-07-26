@@ -9,8 +9,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import '../mxDengue/MxDengue.css';
 import {
-    TimePicker,
     MuiPickersUtilsProvider,
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 
 const useStyles = makeStyles((theme) => ({
@@ -105,13 +105,21 @@ const MxDengueParte2 = (props) => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    <div>
+                    {/* <div>
                         <label>Hora toma</label>
-                    </div>
+                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
+                        {/* <TimePicker
                             id="horaToma"
                             value={props.selectedHoraToma}
+                            onChange={date => props.handleChangeHoraToma(date)}
+                        /> */}
+                        <KeyboardTimePicker
+                            id="horaToma"
+                            label="Hora toma"
+                            mask="__:__ _M"
+                            inputProps={{ autoComplete: 'off' }}
+                            value={props.selectedHoraToma !== null ? props.selectedHoraToma : null}
                             onChange={date => props.handleChangeHoraToma(date)}
                         />
                     </MuiPickersUtilsProvider>
@@ -120,13 +128,21 @@ const MxDengueParte2 = (props) => {
                     </div>
                 </div>
                 <div className="col-sm">
-                    <div>
+                    {/* <div>
                         <label>Hora Refrigeración</label>
-                    </div>
+                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
+                        {/* <TimePicker
                             id="horaRefrigeracion"
                             value={props.selectedHoraRefrigeracion}
+                            onChange={date => props.handleChangeHoraRefrigeracion(date)}
+                        /> */}
+                        <KeyboardTimePicker
+                            id="horaRefrigeracion"
+                            label="Hora Refrigeración"
+                            mask="__:__ _M"
+                            inputProps={{ autoComplete: 'off' }}
+                            value={props.selectedHoraRefrigeracion !== null ? props.selectedHoraRefrigeracion : null}
                             onChange={date => props.handleChangeHoraRefrigeracion(date)}
                         />
                     </MuiPickersUtilsProvider>

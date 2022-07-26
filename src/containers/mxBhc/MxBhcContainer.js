@@ -648,10 +648,29 @@ const MxBhcContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 setOpenAlertDialogRecep(true);
                 //console.log(result)
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
         }

@@ -416,6 +416,7 @@ const MxInfluenza = props => {
                                     fis={props.fis}
                                     fechaToma={props.fechaToma}
                                     codeLab={props.codeLab}
+                                    codLabScan={props.codLabScan}
                                     name={props.name}
                                     study={props.study}
                                     age={props.age}

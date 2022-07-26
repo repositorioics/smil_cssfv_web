@@ -73,7 +73,7 @@ const GeneratePDF = (data, medicos, dataResult, startDate, endDate) => {
       data[i].fechaSeparacion,
       data[i].horaSeparacion,
       data[i].numViales,
-      data[i].volumenSuero,
+      //data[i].volumenSuero,
       data[i].horaRefrigeracionVial,
       findMedicalName(data[i].muestraId.quienOrdena),
       data[i].muestraId.bioanalistaId.nombres + ' ' + data[i].muestraId.bioanalistaId.apellidos,

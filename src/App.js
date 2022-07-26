@@ -59,11 +59,15 @@ import RecepcionMxContainer from "./containers/recepcionMx/RecepcionMxContainer"
 
 import MxDengueListContainer from "./containers/mxDengue/MxDengueListContainer";
 import MxDengueContainer from "./containers/mxDengue/MxDengueContainer";
+import MxDengueCandidatosContainer from "./containers/mxDengue/MxDengueCandidatosContainer";
 import MxDengueMetabolomicaContainer from "./containers/mxDengue/MxDengueMetabolomicaListContainer";
+import MxDengueMetabolomicaCandidatosListContainer from "./containers/mxDengue/MxDengueMetabolomicaCandidatosListContainer";
 import MxDengueBhcContainer from "./containers/mxDengue/MxDengueBhcListContainer";
 import MxDenguePbmcContainer from "./containers/mxDengue/MxDenguePbmcListContainer";
 import MxDenguePmbcCandidatosListContainer from "./containers/mxDengue/MxDenguePmbcCandidatosListContainer";
 import MxDenguePaxGeneContainer from "./containers/mxDengue/MxDenguePaxGeneListContainer";
+import MxDenguePaxGeneCandidatosListContainer from "./containers/mxDengue/MxDenguePaxGeneCandidatosListContainer";
+import MxDengueBhcCandidatosListContainer from "./containers/mxDengue/MxDengueBhcCandidatosListContainer";
 
 import EnvioMxContainer from "./containers/envioMx/EnvioMxContainer";
 
@@ -626,6 +630,15 @@ const App = () => {
                   </Header>
                 )}
               />
+              <Route path="/muestras/agregar-muestra-dengue-candidato/:id/:mx"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueCandidatosContainer {...props} />
+                  </Header>
+                )}
+              />
               <Route path="/muestras/dengue/metabolomicas"
                 exact
                 render={props =>
@@ -636,12 +649,32 @@ const App = () => {
 
                 )}
               />
+              <Route path="/muestras/dengue/candidatos-toma/metabolomica"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueMetabolomicaCandidatosListContainer {...props} />
+                  </Header>
+
+                )}
+              />
               <Route path="/muestras/dengue/bhc"
                 exact
                 render={props =>
                 (
                   <Header {...props}>
                     <MxDengueBhcContainer {...props} />
+                  </Header>
+
+                )}
+              />
+              <Route path="/muestras/dengue/candidatos-toma/bhc"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueBhcCandidatosListContainer {...props} />
                   </Header>
 
                 )}
@@ -677,6 +710,18 @@ const App = () => {
 
                 )}
               />
+
+              <Route path="/muestras/dengue/candidatos-toma/paxgene"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDenguePaxGeneCandidatosListContainer {...props} />
+                  </Header>
+
+                )}
+              />
+
               <Route path="/envio/muestras"
                 exact
                 render={props =>

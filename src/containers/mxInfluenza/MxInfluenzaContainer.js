@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 //import { Redirect } from "react-router-dom";
-import axios from 'axios';
+//import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import MxInfluenza from '../../components/mxInfluenza/MxInfluenza';
 import DataServices from '../../service/Api';
@@ -84,7 +84,7 @@ const MxInfluenzaContainer = props => {
     const [isMxCv, setIsMxCv] = useState(false);
     const [disableTypeOfTest, setDisableTypeOfTest] = useState(false);
     const [lastRecordMxFlu, setLastRecordMxFlu] = useState({})
-    const [catRecepcionId, setCatRecepcionId] = useState(0);
+    let [catRecepcionId, setCatRecepcionId] = useState(0);
     const [selectedResult, setSelectedResult] = useState('');
     const [dataResult, setDataResult] = useState([]);
     const [dataResultVsr, setDataResultVsr] = useState([]);
@@ -1385,7 +1385,8 @@ const MxInfluenzaContainer = props => {
             const response = await DataServices.getCatRecepcionByCodLabScan(codLabScan);
             if (response.status === 200) {
                 if (response.data !== "") {
-                    setCatRecepcionId(response.data.id);
+                    catRecepcionId = response.data.id
+                    setCatRecepcionId(catRecepcionId);
                 } else {
                     setType("error");
                     setMessageAlert("Código lab scan no valido");
@@ -1402,13 +1403,34 @@ const MxInfluenzaContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 setOpenAlertDialogRecep(true);
                 //console.log(result)
                 return;
             }
+
+            const result2 = await DataServices.mxByCodLab(codeLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
+                return;
+            }
         }
+
+        
 
         let tipoMuestraId = {};
         let usuarioId = {};

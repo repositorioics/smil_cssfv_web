@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
-    //TimePicker,
     MuiPickersUtilsProvider,
     KeyboardDatePicker,
     KeyboardTimePicker
@@ -146,8 +145,11 @@ const RecepcionMx = props => {
                                     name="codeLabScan"
                                     value={props.codeLabScan}
                                     onChange={props.onChangeBarcode}
-                                    //onKeyDown={props.onKeyPressBarcode}
-                                    onKeyPress={props.onKeyPressBarcode}
+                                    inputProps={{
+                                        style: { fontWeight: 'bold' }
+                                    }}
+                                    onKeyDown={props.onKeyPressBarcode}
+                                    //onKeyPress={props.onKeyPressBarcode}
                                     disabled={props.disabledCodeLabScan}
                                     label="Cod-lab scan" />
                             </div>
@@ -621,10 +623,9 @@ const RecepcionMx = props => {
                                     </div>
                                 </Item>
                             </Grid>
-                            <Grid item xs={4}>
+                            {/* <Grid item xs={4}>
                                 <Item>
                                     <div className="col-sm">
-                                        {/* <label>Edad</label> */}
                                         <TextField
                                             id="numMx"
                                             autoComplete="off"
@@ -640,7 +641,7 @@ const RecepcionMx = props => {
                                             label="Num Mx" />
                                     </div>
                                 </Item>
-                            </Grid>
+                            </Grid> */}
                         </Grid>
                         <Item>
                             <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
@@ -687,14 +688,25 @@ const RecepcionMx = props => {
                         </Grid>
                     </Grid>
                 </Grid>
-                <div style={{ marginTop: 50 }}>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={props.saveRecepcion}
-                        className={classes.button}
-                    >Guardar
-                    </Button>
+                <div className="input-group row" style={{ marginTop: 30, marginLeft: 10 }}>
+                    <div className="col-xs">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={props.saveRecepcion}
+                            className={classes.button}
+                        >Guardar
+                        </Button>
+                    </div>
+                    <div className="col-xs">
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            onClick={props.nuevaRecepcion}
+                            className={classes.button}
+                        >Nuevo
+                        </Button>
+                    </div>
                 </div>
             </Paper>
         </>

@@ -27,7 +27,7 @@ const MxTransmisionLnContainer = props => {
     const [tipoMuestra, setTipoMuestra] = useState([]);
     //const [selectedConsulta, setSelectedConsulta] = useState('');
     //const [consultas, setConsultas] = useState([]);
-    const [catRecepcionId, setCatRecepcionId] = useState(0);
+    let [catRecepcionId, setCatRecepcionId] = useState(0);
     const [selectedTipoMx, setSelectedTipoMx] = useState('');
     const [selectedMedico, setSelectedMedico] = useState('');
     const [medicos, setMedicos] = useState([]);
@@ -843,6 +843,7 @@ const MxTransmisionLnContainer = props => {
             const response = await DataServices.getCatRecepcionByCodLabScan(codLabScan);
             if (response.status === 200) {
                 if (response.data !== "") {
+                    catRecepcionId = response.data.id;
                     setCatRecepcionId(response.data.id);
                 } else {
                     setType("error");
@@ -860,10 +861,29 @@ const MxTransmisionLnContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 setOpenAlertDialogRecep(true);
                 //console.log(result)
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
         }
@@ -989,7 +1009,7 @@ const MxTransmisionLnContainer = props => {
                 //handleBack={handleBack}
                 code={code}
                 codLab={codLab}
-
+                codLabScan={codLabScan}
                 selectedTipoPrueba={selectedTipoPrueba}
                 tipoPrueba={tipoPrueba}
                 tipoMuestra={tipoMuestra}

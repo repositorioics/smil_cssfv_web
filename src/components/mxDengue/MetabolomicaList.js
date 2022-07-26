@@ -36,13 +36,19 @@ const MetabolomicaList = props => {
                             {props.titleForm}
                         </div>
                     </div>
-                    <div className="m-top hover">
+                    {/* <div className="m-top hover">
                         <Link to={{pathname:'/muestras/agregar-muestra-metabolomica', state: {mx: 'metabolomica' }}}><OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Agregar</Tooltip>}>
                             <span className="d-inline-block">
                                 <AddCircleIcon style={{ color: blue[500] }} size={20} />
                             </span>
                         </OverlayTrigger></Link>
-                    </div>
+                    </div> */}
+                    <Link to={{pathname:'/muestras/dengue/candidatos-toma/metabolomica', state: {mx: 'pbmc' }}}>
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Ver Candidatos</Tooltip>}>
+                            <span className="d-inline-block">
+                                <AddCircleIcon style={{ color: blue[500] }} size={20} />
+                            </span>
+                        </OverlayTrigger></Link>
                     <div className="input-group row" style={{ marginTop: 15, marginLeft: 10 }}>
                         <div>
                             <TextField

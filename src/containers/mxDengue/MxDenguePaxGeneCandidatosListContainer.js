@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import MxDenguePbmcCandidatosList from '../../components/mxDengue/MxDenguePbmcCandidatosList';
+import MxDenguePaxGeneCandidatosList from '../../components/mxDengue/MxDenguePaxGeneCandidatosList';
 import AnularMx from '../../components/AnularMx';
 import AddCircle from '@material-ui/icons/AddCircle';
 //import CancelIcon from '@material-ui/icons/Cancel';
@@ -12,9 +12,9 @@ import DataServices from '../../service/Api';
 //import ToastContainer from '../../components/toast/Toast';
 import Utils from '../../utils/Utils';
 
-const MxDenguePmbcCandidatosListContainer = props => {
+const MxDenguePaxGeneCandidatosListContainer = props => {
     let history = useHistory();
-    const [titleForm] = useState('Candidatos para toma de muestras Dengue PBMC');
+    const [titleForm] = useState('Candidatos para toma de muestras Dengue PaxGene');
     const [data, setData] = useState([]);
     const [executeLoading, setExecuteLoading] = useState(false);
     const [mounted, setMounted] = useState(true);
@@ -307,7 +307,7 @@ const MxDenguePmbcCandidatosListContainer = props => {
 
     const editMxDengue = (row) => {
         if (row.estado === "Activa") {
-            history.push(`/muestras/agregar-muestra-dengue-candidato/${row.id}/${'pbmc'}`);
+            history.push(`/muestras/agregar-muestra-dengue-candidato/${row.id}/${'paxgene'}`);
         }
     }
 
@@ -346,7 +346,7 @@ const MxDenguePmbcCandidatosListContainer = props => {
                 errorMessageOtroMotivoSelected={errorMessageOtroMotivoSelected}
                 saveData={saveData}
             />
-            <MxDenguePbmcCandidatosList
+            <MxDenguePaxGeneCandidatosList
                 titleForm={titleForm}
                 data={data}
                 columns={columns}
@@ -371,4 +371,4 @@ const MxDenguePmbcCandidatosListContainer = props => {
     );
 }
 
-export default MxDenguePmbcCandidatosListContainer;
+export default MxDenguePaxGeneCandidatosListContainer;

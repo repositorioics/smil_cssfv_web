@@ -129,15 +129,15 @@ const AlertDialogMxDuplicada = (props) => {
                   >
                     <StyledTreeItem nodeId="1" label="Ver Detalle">
                       <StyledTreeItem nodeId="2" label="Cod-Lab">
-                        <StyledTreeItem nodeId="3" label={props.valorDetalle.muestraId.codLab} />
+                        <StyledTreeItem nodeId="3" label={props.valorDetalle.codigoLab} />
                       </StyledTreeItem>
 
                       <StyledTreeItem nodeId="4" label="Cod-Lab-Scan">
-                        <StyledTreeItem nodeId="5" label={props.valorDetalle.muestraId.codLabScan} />
+                        <StyledTreeItem nodeId="5" label={props.valorDetalle.codigoLabScan} />
                       </StyledTreeItem>
 
                       <StyledTreeItem nodeId="6" label="Fecha Toma">
-                        <StyledTreeItem nodeId="7" label={props.valorDetalle.muestraId.fechaToma} />
+                        <StyledTreeItem nodeId="7" label={props.valorDetalle.fechaTomaMx} />
                       </StyledTreeItem>
 
                       {/* <StyledTreeItem nodeId="8" label="Usuario Recepciona">

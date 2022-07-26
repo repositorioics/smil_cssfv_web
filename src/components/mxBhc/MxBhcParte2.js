@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
-    TimePicker,
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -77,13 +77,21 @@ const MxBhcParte2 = props => {
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
                 <div className="col-sm">
-                    <div>
+                    {/* <div>
                         <label>Hora toma</label>
-                    </div>
+                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
+                        {/* <TimePicker
                             id="horaTomaMxUO1"
                             value={props.selectedHoraToma}
+                            onChange={date => props.handleChangeHoraToma(date)}
+                        /> */}
+                        <KeyboardTimePicker
+                            id="horaTomaMxUO1"
+                            label="Hora toma"
+                            mask="__:__ _M"
+                            inputProps={{ autoComplete: 'off' }}
+                            value={props.selectedHoraToma !== null ? props.selectedHoraToma : null}
                             onChange={date => props.handleChangeHoraToma(date)}
                         />
                     </MuiPickersUtilsProvider>

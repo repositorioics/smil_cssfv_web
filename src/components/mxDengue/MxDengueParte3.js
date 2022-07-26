@@ -8,9 +8,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import {
-    TimePicker,
     MuiPickersUtilsProvider,
-    KeyboardDatePicker
+    KeyboardDatePicker,
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 import Grid from '@material-ui/core/Grid';
 import { es } from 'date-fns/locale';
@@ -84,13 +84,21 @@ const MxDengueParte3 = (props) => {
                     </MuiPickersUtilsProvider>
                 </div>
                 <div className="col-sm">
-                    <div>
+                    {/* <div>
                         <label>Hora de separación</label>
-                    </div>
+                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
+                        {/* <TimePicker
                             id="horaSeparacion"
                             value={props.selectedHoraSeparacion}
+                            onChange={date => props.handleChangeHoraSeparacion(date)}
+                        /> */}
+                        <KeyboardTimePicker
+                            id="horaSeparacion"
+                            label="Hora separación"
+                            mask="__:__ _M"
+                            inputProps={{ autoComplete: 'off' }}
+                            value={props.selectedHoraSeparacion !== null ? props.selectedHoraSeparacion : null}
                             onChange={date => props.handleChangeHoraSeparacion(date)}
                         />
                     </MuiPickersUtilsProvider>
@@ -132,13 +140,21 @@ const MxDengueParte3 = (props) => {
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
             <div className="col-sm">
-                    <div>
+                    {/* <div>
                         <label>Hora refrigeración vial</label>
-                    </div>
+                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <TimePicker
+                        {/* <TimePicker
                             id="horaRefVial"
                             value={props.selectedHoraRefVial}
+                            onChange={date => props.handleChangeHoraRefVial(date)}
+                        /> */}
+                        <KeyboardTimePicker
+                            id="horaRefVial"
+                            label="Hora refrigeración vial"
+                            mask="__:__ _M"
+                            inputProps={{ autoComplete: 'off' }}
+                            value={props.selectedHoraRefVial !== null ? props.selectedHoraRefVial : null}
                             onChange={date => props.handleChangeHoraRefVial(date)}
                         />
                     </MuiPickersUtilsProvider>

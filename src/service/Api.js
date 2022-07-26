@@ -629,7 +629,7 @@ const getLastMuestrasTomadas = () => {
 }
 
 const mxByCodLabScan = (codLabScan) => {
-    return instance.get(`muestras/cod_lab_scan`, {
+    return instance.get(`muestras/codLabScan`, {
         params: {
             codLabScan: codLabScan
         }
@@ -637,7 +637,7 @@ const mxByCodLabScan = (codLabScan) => {
 }
 
 const mxByCodLab = (codLab) => {
-    return instance.get(`muestras/cod_lab_scan`, {
+    return instance.get(`muestras/codLab`, {
         params: {
             codLab: codLab
         }
@@ -772,6 +772,11 @@ const muestraDengueByCodLabScan = (codLabScan) => {
 
 const muestraDengueCandidatosPbmc = () => {
     return instance.get("muestras/dengue/candidatos/pbmc");
+}
+
+/**Dengue Detalle */
+const postMuestraDengueDetalle = (id, dengueDetalle) => {
+    return instance.post("muestras/dengue/detalle/"+id, dengueDetalle);
 }
 
 /**----------------------------------- */
@@ -935,7 +940,8 @@ const api = {
     muestraDengueByCodLabScan,
     mxByCodLabScan,
     mxByCodLab,
-    muestraDengueCandidatosPbmc
+    muestraDengueCandidatosPbmc,
+    postMuestraDengueDetalle
 };
 
 export default api;

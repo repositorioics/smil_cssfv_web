@@ -795,6 +795,33 @@ const RecepcionMxContainer = props => {
         return true;
     }
 
+    const nuevaRecepcion = () => {
+        setCodeLabScan('');
+        setCodLab('');
+        setName('');
+        setAge('');
+        setCode('');
+        setStudy('');
+        setSelectedBioanalista('');
+        setSelectedTuboRecep('');
+        setSelectedClassification('');
+        setSelectedConsulta('');
+        setSelectedCategory('');
+        setFis(null);
+        setFif(null);
+        setSelectedHoraToma(null);
+        setSelectedHoraRefrigeracion(null);
+        setVolMedioMl('');
+        setSelectedVisita('');
+        setPlasma(false);
+        setObservations('');
+        setSubTitle1('');
+        setSubTitle2('');
+        setSelectedTypeOfTest('')
+        setSelectedTypeOfMxRecep('');
+        setHouseCode('');
+    }
+
     const saveRecepcion = () => {
         if (validateData()) {
             /**Objeto que contien la informacion para la tabla maestra 'muestras' */
@@ -813,7 +840,7 @@ const RecepcionMxContainer = props => {
                 fechaToma: fechaToma,
                 fif: fif,
                 fis: fis,
-                horaToma: time,
+                horaToma: time, //
                 motivoAnulacion: '',
                 codLab: codLab,
                 codLabScan: codeLabScan,
@@ -869,7 +896,7 @@ const RecepcionMxContainer = props => {
         }
     }
 
-    /**Metodo para validar si el participante pertenece al estudio al que esta asociado el codigo lab scan */
+    /**Metodo para validar si el participante pertenece al estudio al que esta asociado el codigo lab scan 
     const validateStudy = () => {
         let result = false;
         const partes = subTitle2.split(' ');
@@ -880,7 +907,7 @@ const RecepcionMxContainer = props => {
             }
         }
         //const result = subTitle2.indexOf(study.trim());
-    }
+    }*/
 
     const saveDataByStudyFlu = (muestraId) => {
         //if (validateStudy()) {
@@ -952,14 +979,35 @@ const RecepcionMxContainer = props => {
         try {
             /**Verificamos si existe el codigo lab scan */
             const result = await Utils.obtenerMuestraByCodLabScan('Dengue', codeLabScan);
+            
             if (result !== '') {
                 setExecuteLoading(false);
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
                 setOpenAlertDialogRecep(true);
                 //console.log(result)
                 return;
             }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
+                return;
+            }
+
             let categoriaId = {};
             let consultaId = {};
             let tipoPruebaId = {};
@@ -979,11 +1027,11 @@ const RecepcionMxContainer = props => {
                 mxSeparada: false,
                 numViales: '',
                 numeroPruebas: '',
-                pruebaRapida: true,
+                pruebaRapida: false,
                 resultado: '',
                 retoma: false,
                 procInmediato: false,
-                volumenSuero: volMedioMl,
+                volumenSuero: '',
                 observacionMxSeparada: '',
                 observacionPrRapida: '',
                 observacion: observations,
@@ -1049,10 +1097,28 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Influenza', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                //valorDetalle = result
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setOpenAlertDialogRecep(true);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            setExecuteLoading(false);
+            if (result2.data !== '') {
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
 
@@ -1102,10 +1168,28 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Bhc', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                //valorDetalle = result
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setOpenAlertDialogRecep(true);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
 
@@ -1141,10 +1225,28 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                //valorDetalle = result
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setOpenAlertDialogRecep(true);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
 
@@ -1175,7 +1277,7 @@ const RecepcionMxContainer = props => {
             mxId.id = 5;
             tipoPruebaId.id = 1; //PCR
             muestra.muestraId.mxId = mxId;
-            muestra.tipoPruebaId = tipoPruebaId;
+            //muestra.tipoPruebaId = tipoPruebaId;
             const response = await DataServices.postMuestraTransmision(muestra);
             if (response.status === 200) {
                 setExecuteLoading(false);
@@ -1200,10 +1302,28 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                //valorDetalle = result
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setOpenAlertDialogRecep(true);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
 
@@ -1228,7 +1348,7 @@ const RecepcionMxContainer = props => {
             mxId.id = 5;
             tipoPruebaId.id = 1; //PCR
             muestra.muestraId.mxId = mxId;
-            muestra.tipoPruebaId = tipoPruebaId;
+            //muestra.tipoPruebaId = tipoPruebaId;
             if (selectedTypeOfMxRecep !== '' && selectedTypeOfMxRecep !== null && selectedTypeOfMxRecep !== undefined) {
                 if (selectedTypeOfMxRecep > 0) {
                     tipoMuestraId.id = selectedTypeOfMxRecep;
@@ -1258,10 +1378,28 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('Transmision', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                //valorDetalle = result
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setOpenAlertDialogRecep(true);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
 
@@ -1300,7 +1438,7 @@ const RecepcionMxContainer = props => {
             mxId.id = 4;
             tipoPruebaId.id = 1; //PCR
             muestra.muestraId.mxId = mxId;
-            muestra.tipoPruebaId = tipoPruebaId;
+            //muestra.tipoPruebaId = tipoPruebaId;
             muestra.tuboId = tuboId;
             const response = await DataServices.postMuestraTransmision(muestra);
             if (response.status === 200) {
@@ -1325,10 +1463,28 @@ const RecepcionMxContainer = props => {
             const result = await Utils.obtenerMuestraByCodLabScan('UO1', codeLabScan);
             if (result !== '') {
                 setExecuteLoading(false);
-                //valorDetalle = result
-                setValorDetalle(result);
+                const mensaje = {
+                    codigoLab: result.muestraId.codLab,
+                    codigoLabScan: result.muestraId.codLabScan,
+                    fechaTomaMx: result.muestraId.fechaToma
+                };
+                setValorDetalle(mensaje);
                 setOpenAlertDialogRecep(true);
                 setAlertMessageDialogRecep("Ya existe una muestra con el código lab scan ingresado");
+                return;
+            }
+
+            const result2 = await DataServices.mxByCodLab(codLab);
+            if (result2.data !== '') {
+                setExecuteLoading(false);
+                const mensaje = {
+                    codigoLab: result2.data.codLab,
+                    codigoLabScan: result2.data.codLabScan,
+                    fechaTomaMx: result2.data.fechaToma
+                };
+                setValorDetalle(mensaje);
+                setOpenAlertDialogRecep(true);
+                setAlertMessageDialogRecep("Ya existe una muestra con el código lab ingresado");
                 return;
             }
 
@@ -1366,7 +1522,7 @@ const RecepcionMxContainer = props => {
             mxId.id = 3;
             tipoPruebaId.id = 1; //PCR
             muestra.muestraId.mxId = mxId;
-            muestra.tipoPruebaId = tipoPruebaId;
+            //muestra.tipoPruebaId = tipoPruebaId;
             muestra.tuboId = tuboId;
             if (selectedClassification !== '' && selectedClassification !== null && selectedClassification !== undefined) {
                 clasificacionId.id = selectedClassification;
@@ -1488,6 +1644,7 @@ const RecepcionMxContainer = props => {
                 onChangeBarcode={onChangeBarcode}
                 onKeyPressBarcode={onKeyPressBarcode}
                 saveRecepcion={saveRecepcion}
+                nuevaRecepcion={nuevaRecepcion}
 
                 errorFis={errorFis}
                 errorFif={errorFif}

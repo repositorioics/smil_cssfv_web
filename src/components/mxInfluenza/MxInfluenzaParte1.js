@@ -139,8 +139,11 @@ const MxInfluenzaParte1 = props => {
                         name="codeLabScan"
                         value={props.codeLabScan}
                         disabled={props.disabledCodeLabScan}
-                        onChange={props.onChangeBarcode}
-                        onKeyDown={props.onKeyPressBarcode}
+                        inputProps={{
+                            style: { fontWeight: 'bold' }
+                        }}
+                        //onChange={props.onChangeBarcode}
+                        //onKeyDown={props.onKeyPressBarcode}
                         label="Cod-lab scan" />
                 </div>
             </div>

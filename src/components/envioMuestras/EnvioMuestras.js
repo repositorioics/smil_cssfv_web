@@ -13,8 +13,8 @@ import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
-    TimePicker,
     KeyboardDatePicker,
+    KeyboardTimePicker
 } from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
 import "./EnvioMuestras.css";
@@ -114,10 +114,18 @@ const EnvioMuestras = props => {
                             <label>Hora</label>
                         </div> */}
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <TimePicker
+                            {/* <TimePicker
                                 id="hora"
                                 label="Hora"
                                 value={props.selectedHora}
+                                onChange={date => props.handleChangeHora(date)}
+                            /> */}
+                            <KeyboardTimePicker
+                                id="hora"
+                                label="Hora"
+                                mask="__:__ _M"
+                                inputProps={{ autoComplete: 'off' }}
+                                value={props.selectedHora !== null ? props.selectedHora : null}
                                 onChange={date => props.handleChangeHora(date)}
                             />
                         </MuiPickersUtilsProvider>
