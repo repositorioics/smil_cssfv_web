@@ -22,7 +22,7 @@ import { es } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
-        minWidth: 300,
+        minWidth: 330,
         marginTop: 15
     },
     selectEmpty: {
@@ -46,7 +46,7 @@ const EnvioMuestras = props => {
             <Paper className="container" elevation={3} >
                 <div className="title">{props.titleForm}</div>
                 <div className="input-group row">
-                    <div className="col-sm">
+                    {/* <div className="col-sm">
                         <FormControl className={classes.formControl}>
                             <InputLabel id="perfil-input-label">Seleccione la muestra</InputLabel>
                             <Select
@@ -59,6 +59,25 @@ const EnvioMuestras = props => {
                                     <em>Seleccione</em>
                                 </MenuItem>
                                 {props.muestrasData.map((e, keyIndex) => {
+                                    return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                })
+                                }
+                            </Select>
+                        </FormControl>
+                    </div> */}
+                    <div className="col-sm">
+                        <FormControl className={classes.formControl}>
+                            <InputLabel id="perfil-input-label">Seleccione el tipo de muestra a enviar</InputLabel>
+                            <Select
+                                labelId="perfil-por-label"
+                                id="perfil-por-select"
+                                value={props.selectedEnvioMuestra}
+                                onChange={props.handleChangeEnvioMuestra}
+                            >
+                                <MenuItem value="0">
+                                    <em>Seleccione</em>
+                                </MenuItem>
+                                {props.envioMuestraData.map((e, keyIndex) => {
                                     return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                                 })
                                 }
@@ -167,8 +186,16 @@ const EnvioMuestras = props => {
                             className={classes.textField}
                             helperText={props.errorViaje} />
                     </div>
-                    
                 </div>
+                {/* <div className='app-container'>
+                    <div className='temperature-display-container'>
+                        <div className='temperature-display'>{props.temperatureValue}°C</div>
+                    </div>
+                    <div className='button-container'>
+                        <button onClick={props.more}>+</button>
+                        <button onClick={props.minos}>-</button>
+                    </div>
+                </div> */}
                 <div className='envioMuestra'>
                     <div></div>
                     <div className='envioMuestra2'>
@@ -188,12 +215,12 @@ const EnvioMuestras = props => {
                                                             checked={props.masterChecked}
                                                             onChange={(e) => props.onMasterCheck(e)}
                                                             id="mastercheck"
-
                                                         />
                                                     </th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Muestra</th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Código Lab</th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Fecha Toma</th>
+                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Código</th>
+                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Estudio</th>
+                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Cod Lab</th>
+                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">F. Toma</th>
                                                 </tr>
                                             </thead>
                                             <tbody className='theadTbody cTbody'>
@@ -206,13 +233,12 @@ const EnvioMuestras = props => {
                                                                 className="custom-checkbox"
                                                                 id="rowcheck{mx.muestraId}"
                                                                 onChange={(e) => props.onItemCheck(e, mx)}
-
                                                             />
                                                         </th>
-                                                        <td style={{ width: 140 }}>{mx.muestra}</td>
+                                                        <td style={{ width: 140 }}>{mx.codigo}</td>
+                                                        <td style={{ width: 140 }}>{mx.estudio}</td>
                                                         <td style={{ width: 140 }}>{mx.codLab}</td>
                                                         <td style={{ width: 140 }}>{mx.fechaToma}</td>
-
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -229,9 +255,10 @@ const EnvioMuestras = props => {
                                         <table className="table">
                                             <thead className='theadTbody'>
                                                 <tr>
-                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Muestra</th>
-                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Código Lab</th>
-                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Fecha Toma</th>
+                                                    <th style={{ width: 140, paddingLeft: 35 }} scope="col">Codigo</th>
+                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Estudio</th>
+                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Cod Lab</th>
+                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">F. Toma</th>
                                                 </tr>
                                             </thead>
                                             <tbody className='theadTbody cTbody'>
@@ -244,13 +271,12 @@ const EnvioMuestras = props => {
                                                                 className="custom-checkbox"
                                                                 id="rowcheck{mx.muestraId}"
                                                                 onChange={(e) => props.onItemCheckRemove(e, mx)}
-
                                                             />
                                                         </th>
-                                                        <td style={{ width: 140 }}>{mx.muestra}</td>
+                                                        <td style={{ width: 140, paddingLeft: 0 }}>{mx.codigo}</td>
+                                                        <td style={{ width: 140 }}>{mx.estudio}</td>
                                                         <td style={{ width: 140 }}>{mx.codLab}</td>
                                                         <td style={{ width: 140 }}>{mx.fechaToma}</td>
-
                                                     </tr>
                                                 ))}
                                             </tbody>
@@ -269,7 +295,6 @@ const EnvioMuestras = props => {
                         </OverlayTrigger>
                     </div>
                 </div>
-                {/*  */}
             </Paper>
         </>
     );

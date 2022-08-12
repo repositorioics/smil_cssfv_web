@@ -72,6 +72,7 @@ import MxDengueBhcCandidatosListContainer from "./containers/mxDengue/MxDengueBh
 import EnvioMxContainer from "./containers/envioMx/EnvioMxContainer";
 
 import MxTomadasDengueContainer from "./containers/reportDengue/MxTomadasDengueContainer";
+import RptEnvioMuestrasContainer from "./containers/reportes/RptEnvioMuestrasContainer";
 
 const App = () => {
   const [isTimeout, setIsTimeout] = useState(false);
@@ -740,6 +741,16 @@ const App = () => {
                   </Header>
                 )}
               />
+              <Route path="/reporte/envio/muestras"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <RptEnvioMuestrasContainer {...props} />
+                  </Header>
+                )}
+              />
+              
               <Route path="/catalogo/recepcion"
                 exact
                 render={props =>

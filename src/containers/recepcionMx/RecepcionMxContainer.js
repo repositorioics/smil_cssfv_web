@@ -911,62 +911,62 @@ const RecepcionMxContainer = props => {
 
     const saveDataByStudyFlu = (muestraId) => {
         //if (validateStudy()) {
-            //console.log(codeLabScan);
-            const isMxBHC = codeLabScan.includes('BHC');
-            const isTransLN = codeLabScan.includes('TL1') || codeLabScan.includes('TL2');
+        //console.log(codeLabScan);
+        const isMxBHC = codeLabScan.includes('BHC');
+        const isTransLN = codeLabScan.includes('TL1') || codeLabScan.includes('TL2');
 
-            const isTransResp = codeLabScan.includes('TR1') || codeLabScan.includes('TR2') ||
-                codeLabScan.includes('TR3') || codeLabScan.includes('TR4') || codeLabScan.includes('TR5') || codeLabScan.includes('TR6');
+        const isTransResp = codeLabScan.includes('TR1') || codeLabScan.includes('TR2') ||
+            codeLabScan.includes('TR3') || codeLabScan.includes('TR4') || codeLabScan.includes('TR5') || codeLabScan.includes('TR6');
 
-            const isTransSerologia = codeLabScan.includes('TRI') || codeLabScan.includes('TRF') ||
-                codeLabScan.includes('TPI') || codeLabScan.includes('TPF');
+        const isTransSerologia = codeLabScan.includes('TRI') || codeLabScan.includes('TRF') ||
+            codeLabScan.includes('TPI') || codeLabScan.includes('TPF');
 
-            const isCVInfluenza = codeLabScan.includes('IPI') || codeLabScan.includes('IPF') ||
-                codeLabScan.includes('IRI') || codeLabScan.includes('IRF');
+        const isCVInfluenza = codeLabScan.includes('IPI') || codeLabScan.includes('IPF') ||
+            codeLabScan.includes('IRI') || codeLabScan.includes('IRF');
 
-            const isCVUO1 = codeLabScan.includes('CPI') || codeLabScan.includes('CPF') ||
-                codeLabScan.includes('CRI') || codeLabScan.includes('CRF');
+        const isCVUO1 = codeLabScan.includes('CPI') || codeLabScan.includes('CPF') ||
+            codeLabScan.includes('CRI') || codeLabScan.includes('CRF');
 
-            const isCHFMxResp = codeLabScan.includes('SR1') || codeLabScan.includes('SR2') ||
-                codeLabScan.includes('SR3') || codeLabScan.includes('SR4') || codeLabScan.includes('SR5') || codeLabScan.includes('SR6');
+        const isCHFMxResp = codeLabScan.includes('SR1') || codeLabScan.includes('SR2') ||
+            codeLabScan.includes('SR3') || codeLabScan.includes('SR4') || codeLabScan.includes('SR5') || codeLabScan.includes('SR6');
 
-            const isCHFMxSerologia = codeLabScan.includes('SPI') || codeLabScan.includes('SPF') ||
-                codeLabScan.includes('SRI') || codeLabScan.includes('SRF');
+        const isCHFMxSerologia = codeLabScan.includes('SPI') || codeLabScan.includes('SPF') ||
+            codeLabScan.includes('SRI') || codeLabScan.includes('SRF');
 
-            const isPostivoInfluenzaUO1 = codeLabScan.includes('UPI') || codeLabScan.includes('UPF') ||
-                codeLabScan.includes('URI') || codeLabScan.includes('URF');
+        const isPostivoInfluenzaUO1 = codeLabScan.includes('UPI') || codeLabScan.includes('UPF') ||
+            codeLabScan.includes('URI') || codeLabScan.includes('URF');
 
-            const isPostInfluenzaUO1PrePostVacuna = codeLabScan.includes('VPI') || codeLabScan.includes('VPF') ||
-                codeLabScan.includes('VRI') || codeLabScan.includes('VRF');
+        const isPostInfluenzaUO1PrePostVacuna = codeLabScan.includes('VPI') || codeLabScan.includes('VPF') ||
+            codeLabScan.includes('VRI') || codeLabScan.includes('VRF');
 
-            if (isMxBHC) {
-                postMxBhc(muestraId);
-            }
+        if (isMxBHC) {
+            postMxBhc(muestraId);
+        }
 
-            if (isTransLN) {
-                postMxTransmisionLn(muestraId);
-            }
+        if (isTransLN) {
+            postMxTransmisionLn(muestraId);
+        }
 
-            if (isTransResp || isCHFMxResp) {
-                postMxTransmisionResp(muestraId);
-            }
+        if (isTransResp || isCHFMxResp) {
+            postMxTransmisionResp(muestraId);
+        }
 
-            if (isTransSerologia || isCHFMxSerologia || isCVInfluenza) {
-                postMxTransmisionSerologia(muestraId);
-            }
+        if (isTransSerologia || isCHFMxSerologia || isCVInfluenza) {
+            postMxTransmisionSerologia(muestraId);
+        }
 
-            if (isCVUO1 || isPostivoInfluenzaUO1 || isPostInfluenzaUO1PrePostVacuna) {
-                postMxUO1(muestraId);
-            } 
+        if (isCVUO1 || isPostivoInfluenzaUO1 || isPostInfluenzaUO1PrePostVacuna) {
+            postMxUO1(muestraId);
+        }
 
-            if (!isMxBHC && !isTransLN && !isTransResp && !isCHFMxResp &&
-                !isTransSerologia && !isCHFMxSerologia && !isCVInfluenza &&
-                !isCVUO1 && !isPostivoInfluenzaUO1 && !isPostInfluenzaUO1PrePostVacuna) {
-                    postMxInfluenza(muestraId);
-                }
+        if (!isMxBHC && !isTransLN && !isTransResp && !isCHFMxResp &&
+            !isTransSerologia && !isCHFMxSerologia && !isCVInfluenza &&
+            !isCVUO1 && !isPostivoInfluenzaUO1 && !isPostInfluenzaUO1PrePostVacuna) {
+            postMxInfluenza(muestraId);
+        }
         //} else {
-           // setOpenAlertDialog(true);
-           // setAlertMessageDialog('Los estudios del participante no coinciden con el estudio requerido para la muertra');
+        // setOpenAlertDialog(true);
+        // setAlertMessageDialog('Los estudios del participante no coinciden con el estudio requerido para la muertra');
         //}
         //console.log('Muestra', muestra);
         //postMxInfluenza(muestra);

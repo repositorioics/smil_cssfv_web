@@ -8,10 +8,12 @@ import '../../components/envioMuestras/EnvioMuestras.css';
 const EnvioMxContainer = props => {
     const [titleForm] = useState('Envio de muestras');
     const [envioMuestra, setEnvioMuestra] = useState('');
-    const [bioanalistas, setBioanalistas] = useState([]);
+    let [bioanalistas, setBioanalistas] = useState([]);
     const [data, setData] = useState([]);
     let [listToSave, setListToSave] = useState([]);
     const [muestrasData, setMuestrasData] = useState([]);
+    const [envioMuestraData, setEnvioMuestraData] = useState([]);
+    const [selectedEnvioMuestra, setSelectedEnvioMuestra] = useState('');
     const [selectedMuestra, setSelectedMuestra] = useState('');
     const [selectedBioanalista, setSelectedBioanalista] = useState('');
     const [executeLoading, setExecuteLoading] = useState(false);
@@ -19,7 +21,6 @@ const EnvioMxContainer = props => {
     const [selectedHora, setSelectedHora] = useState(new Date());
     const [temp, setTemp] = useState('');
     const [viaje, setViaje] = useState('');
-    const [mounted, setMounted] = useState(true);
 
     const [errorBioanlista, setErrorBioanlista] = useState('');
     const [errorTemp, setErrorTemp] = useState('');
@@ -31,63 +32,60 @@ const EnvioMxContainer = props => {
     let [list, setList] = useState([]);
     const [masterChecked, setMasterChecked] = useState(false);
 
+    //let [temperatureValue, setTemperatureValue] = useState(0);
+
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            if (mounted) {
-                getAllMuestras();
-                getBionalistas();
-            }
+            getAllMuestras();
+            getBionalistas();
+            getAllEnvioMuestras();
         } else {
             props.history.push('/');
         }
-        return () => setMounted(false);
-    }, [mounted, props]);
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props]);
 
     const getMuestrasPendientesByIdMuestra = async (id) => {
         setExecuteLoading(true);
         try {
             let response = null;
-            /**Influenza */
-            if (id === 1) {
-                response = await DataServices.muestrasPendientesInfluenza(id);
+            /**DENGUE */
+            /**BHC */
+            if (id === 7) {
+                response = await DataServices.muestrasPendientesBHC(id);
             }
-
-            /**Dengue */
-            if (id === 2) {
-                response = await DataServices.muestrasPendientesDengue(id);
-            }
-
             /**UO1 */
-            if (id === 3) {
+            if (id === 1 || id === 2) {
                 response = await DataServices.muestrasPendientesUO1(id);
             }
-
-            /**Transmision y Transmisión lavado nasal */
-            if (id === 4 || id === 5) {
+            /**TRANSMISION */
+            if (id === 3 || id === 4 || id === 5 || id === 6 || id === 8 || id === 9) {
                 response = await DataServices.muestrasPendientesTransmision(id);
             }
 
-            /**Bhc */
-            if (id === 6) {
-                response = await DataServices.muestrasPendientesBHC(id);
-            }
-
-            if (response.status === 200) {
-                setExecuteLoading(false);
-                const getData = [];
-                for (var i = 0; i < response.data.length; i++) {
-                    getData.push({
-                        //"id": response.data[i].id,
-                        "muestraId": response.data[i].muestraId.id,
-                        "muestra": response.data[i].muestraId.mxId.nombre,
-                        "codLab": response.data[i].codLab,
-                        "fechaToma": response.data[i].muestraId.fechaToma,
-                        "estado": false
-                    });
+            if (response !== null) {
+                if (response.status === 200) {
+                    setExecuteLoading(false);
+                    const getData = [];
+                    console.log(response.data);
+                    for (var i = 0; i < response.data.length; i++) {
+                        getData.push({
+                            //"id": response.data[i].id,
+                            "muestraId": response.data[i].muestraId.id,
+                            "codigo": response.data[i].muestraId.codigoParticipante,
+                            "estudio": response.data[i].muestraId.estudiosParticipante,
+                            "codLab": response.data[i].muestraId.codLab,
+                            "fechaToma": response.data[i].muestraId.fechaToma,
+                            "estado": false
+                        });
+                    }
+                    setData([...getData]);
+                    setMasterChecked(false);
                 }
-                setData([...getData]);
-                setMasterChecked(false);
+            } else {
+                setExecuteLoading(false);
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -110,6 +108,86 @@ const EnvioMxContainer = props => {
         }
     }
 
+    const getAllEnvioMuestras = async() => {
+        setExecuteLoading(true);
+        try {
+            const response = await DataServices.getAllCatEnvioMuestras();
+            if (response.status === 200) {
+                setEnvioMuestraData(response.data);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error);
+        }
+    }
+
+    /**Metodo para obtener todas las muestras pendientes de Dengue 
+    const getAllMxDenguePendientesEnvio = async(id) => {
+        try {
+            const response = await DataServices.muestrasPendientesDengue(id);
+            if (response.status === 200) {
+                console.log('Dengue', response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    }*/
+    /**Metodo para obtener todas las muestras pendientes de BHC 
+    const getAllMxBHCPendientesEnvio = async(id) => {
+        try {
+            const response = await DataServices.muestrasPendientesBHC(id);
+            if (response.status === 200) {
+                console.log('BHC', response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    }*/
+    /**Metodo para obtener todas las muestras pendientes de UO1 
+    const getAllMxUO1PendientesEnvio = async(id) => {
+        try {
+            const response = await DataServices.muestrasPendientesUO1(id);
+            if (response.status === 200) {
+                console.log('UO1', response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    }*/
+    /**Metodo para obtener todas las muestras pendientes de Vacunas
+    const getAllMxUO1VacunasPendientesEnvio = async() =>{
+        try {
+            const response = await DataServices.muestrasVacunasPendientesUO1();
+            if (response.status === 200) {
+                console.log('UO1 Vacunas', response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    } */
+    /**Metodo para obtener todas las muestras pendientes de Monitoreo Intensivo PBMC 
+    const getAllMxMonitoreoIntensivoPBMC = async() => {
+        try {
+            const response = await DataServices.muestrasPendientesTransmisionMonitoreoIntensivoPbmc();
+            if (response.status === 200) {
+                console.log('Monitoreo Intensivo PBMC', response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    }*/
+    /**Metodo para obtener todas las muestras transmision pendientes de envio filtrado por id 
+    const getAllMxTransmisionByIdMxEnvio = async(id) => {
+        try {
+            const response = await DataServices.muestrasPendientesTransmision(id);
+            if (response.status === 200) {
+                console.log('Transmision', response.data);
+            }
+        } catch (error) {
+            console.log('error', error);
+        }
+    }*/
+
     /**Funcion para obtener los bioanalistas */
     const getBionalistas = async () => {
         setExecuteLoading(true);
@@ -127,7 +205,15 @@ const EnvioMxContainer = props => {
                         multiSelectData.push(newObject);
                     }
                 }
-                setBioanalistas(multiSelectData);
+                bioanalistas = multiSelectData;
+                setBioanalistas(bioanalistas);
+                const accountData = JSON.parse(localStorage.getItem('accountData'));
+                if (accountData !== null) {
+                    let result = bioanalistas.filter(item => item.id === accountData.usuarioId);
+                    if (result.length > 0) {
+                        setSelectedBioanalista(result[0].id);
+                    }
+                }
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -140,16 +226,24 @@ const EnvioMxContainer = props => {
         setMessageAlert(null);
     }
 
-    const onSelect = (e) => {
+    /* const onSelect = (e) => {
         setSelectedMuestra(e.target.value);
         const id = e.target.value;
         getMuestrasPendientesByIdMuestra(id);
         initialStateToast();
-    }
+    } */
 
     const handleChangeBionalista = (e) => {
         setSelectedBioanalista(e.target.value);
         setErrorBioanlista('');
+    }
+
+    const handleChangeEnvioMuestra = (e) => {
+        setSelectedEnvioMuestra(e.target.value);
+        const id = e.target.value;
+        getMuestrasPendientesByIdMuestra(id);
+        initialStateToast();
+        //console.log(e.target.value)
     }
 
     const handleChangeDate = (e) => {
@@ -251,12 +345,12 @@ const EnvioMxContainer = props => {
         setData(arrayData);
     }
 
-    const saveData = () => {
+    const saveData = ()=> {
         if (validateData()) {
-            if (validateTemp() === null) {
+            /* if (validateTemp() === null) {
                 setErrorTemp('Formato invalido');
                 return;
-            }
+            } */
             if (listToSave.length <= 0) {
                 setType("info");
                 setMessageAlert("No existen datos seleccionados para guardar");
@@ -265,6 +359,9 @@ const EnvioMxContainer = props => {
                 }, 100);
                 return;
             }
+
+
+
             const bioanalistaEnvia = {};
             let time = null;
             bioanalistaEnvia.id = selectedBioanalista;
@@ -289,6 +386,18 @@ const EnvioMxContainer = props => {
     const putMuestras = async (muestra) => {
         setExecuteLoading(true);
         try {
+            let result = await DataServices.verificarEnvioSeleccionado(viaje);
+            if (result.status === 200) {
+                if (result.data > 0) {
+                    setExecuteLoading(false);
+                    setType("info");
+                    setMessageAlert("Ya se realizo el viaje " + viaje + " para dia de hoy");
+                    setTimeout(function () {
+                        initialStateToast();
+                    }, 100);
+                    return;
+                } 
+            }
             const response = await DataServices.enviarMuestras(muestra);
             if (response.status === 200) {
                 setEnvioMuestra('');
@@ -314,16 +423,26 @@ const EnvioMxContainer = props => {
     /**Metodo para validar la temperatura que debe de ser 
      * Uno o dos enteros con dos decimales o cero decimales
      * Ejemplo: 0.00*/
-    const validateTemp = () => {
+    /* const validateTemp = () => {
         if (temp !== null && temp !== '' && temp !== undefined) {
             const pattern = "(?<![\\d.])(\\d{1,2}|\\d{0,2}\\.\\d{1,2})?(?![\\d.])"
             const result = temp.match(pattern);
             return result;
             //console.log('resultdo', result);
         }
-    }
+    } */
 
     const validateData = () => {
+        if (selectedEnvioMuestra === '' || selectedEnvioMuestra === null || selectedEnvioMuestra === undefined
+            || selectedEnvioMuestra === '0') {
+            setType('error');
+            setMessageAlert('Debe seleccionar el tipo de muestra a enviar');
+            setTimeout(function () {
+                initialStateToast();
+            }, 100);
+            return false;
+
+        }
         if (selectedBioanalista === '' || selectedBioanalista === null || selectedBioanalista === undefined
             || selectedBioanalista === '0') {
             setType('error');
@@ -372,16 +491,27 @@ const EnvioMxContainer = props => {
         return true;
     }
 
+    /*const more = (e) => {
+        temperatureValue = temperatureValue + 1;
+        setTemperatureValue(temperatureValue);
+    }
+    const minos = () => {
+        temperatureValue = temperatureValue - 1;
+        setTemperatureValue(temperatureValue);
+    }*/
+
     return (
         <>
             <EnvioMuestras
                 titleForm={titleForm}
                 envioMuestra={envioMuestra}
                 muestrasData={muestrasData}
+                envioMuestraData={envioMuestraData}
                 bioanalistas={bioanalistas}
-                onSelect={onSelect}
+                //onSelect={onSelect}
                 selectedMuestra={selectedMuestra}
                 selectedBioanalista={selectedBioanalista}
+                selectedEnvioMuestra={selectedEnvioMuestra}
                 data={data}
                 listToSave={listToSave}
                 executeLoading={executeLoading}
@@ -389,8 +519,12 @@ const EnvioMxContainer = props => {
                 selectedHora={selectedHora}
                 temp={temp}
                 viaje={viaje}
+                /*temperatureValue={temperatureValue}
+                more={more}
+                minos={minos}*/
                 saveData={saveData}
                 handleChangeBionalista={handleChangeBionalista}
+                handleChangeEnvioMuestra={handleChangeEnvioMuestra}
                 handleChangeDate={handleChangeDate}
                 handleChangeHora={handleChangeHora}
                 handleChangeTemp={handleChangeTemp}

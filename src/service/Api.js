@@ -286,6 +286,11 @@ const getLastAnioEstudio = () => {
     return instance.get("catalogos/catAnioEstudio/ultimo-anio-estudio");
 }
 
+/**Api para el catalogo envio muestras */
+const getAllCatEnvioMuestras = () => {
+    return instance.get("catalogos/envio-muestras/activas");
+}
+
 /**----------------------------------- */
 /**Api para la seguridad usuarios*/
 const postUser = usuario => {
@@ -458,12 +463,6 @@ const getUltimoRegistroMuestraInfluenza = (code) => {
     }});
 }
 
-const muestrasPendientesInfluenza = (id) => {
-    return instance.get(`/muestras/influenza/pendientes/envio`, { params: {
-        id: id
-    }});
-}
-
 const muestraInfluenzaByCodLabScan = (codLabScan) => {
     return instance.get(`muestras/influenza/cod_lab_scan`, { params: {
         codLabScan: codLabScan
@@ -489,12 +488,6 @@ const postMuestraBhc = (muestra) => {
 
 const putMuestraBhc = (muestra) => {
     return instance.put('muestras/bhc', muestra);
-}
-
-const muestrasPendientesBHC = (id) => {
-    return instance.get(`muestras/bhc/pendientes/envio`, { params: {
-        id: id
-    }});
 }
 
 const muestrasBhcById = (id) => {
@@ -536,12 +529,6 @@ const postMuestraU01 = (muestra) => {
 
 const putMuestraU01 = (muestra) => {
     return instance.put("muestras/u01", muestra);
-}
-
-const muestrasPendientesUO1 = (id) => {
-    return instance.get(`muestras/u01/pendientes/envio`, { params: {
-        id: id
-    }});
 }
 
 const codigoLabUltimaMxUO1IngresadaPorCodigo = (codigo) => {
@@ -589,12 +576,6 @@ const postMuestraTransmision = (muestra) => {
 
 const putMuestraTransmision = (muestra) => {
     return instance.put("muestras/transmision", muestra);
-}
-
-const muestrasPendientesTransmision = (id) => {
-    return instance.get(`muestras/transmision/pendientes/envio`, { params: {
-        id: id
-    }});
 }
 
 const codigoLabUltimaMxTransmisionPorCodigo = (codigo) => {
@@ -678,10 +659,101 @@ const getMuestraDengueById = id => {
     return instance.get("muestras/dengue/"+id);
 }
 
+/**Muestras pendientes de envio */
 const muestrasPendientesDengue = (id) => {
-    return instance.get(`muestras/dengue/pendientes/envio`, { params: {
+    return instance.get(`muestras/dengue/pendientes/envio`, {
+        params: {
+            id: id
+        }
+    });
+}
+
+const muestrasPendientesTransmision = (id) => {
+    return instance.get(`muestras/transmision/pendientes/envio`, {
+        params: {
+            id: id
+        }
+    });
+}
+
+const muestrasPendientesBHC = (id) => {
+    return instance.get(`muestras/bhc/pendientes/envio`, {
+        params: {
+            id: id
+        }
+    });
+}
+
+const muestrasPendientesUO1 = (id) => {
+    return instance.get(`muestras/u01/pendientes/envio`, {
+        params: {
+            id: id
+        }
+    });
+}
+
+const muestrasEnviadasTransmision = (id, viaje) => {
+    return instance.get(`muestras/transmision/enviadas`, {
+        params: {
+            id: id,
+            viaje: viaje
+        }
+    });
+}
+
+const muestrasEnviadasBHC = (id, viaje) => {
+    return instance.get(`muestras/bhc/enviadas`, {
+        params: {
+            id: id,
+            viaje: viaje
+        }
+    });
+}
+
+const muestrasEnviadasUO1 = (id, viaje) => {
+    return instance.get(`muestras/u01/enviadas`, {
+        params: {
+            id: id,
+            viaje: viaje
+        }
+    });
+}
+/*const muestrasVacunasPendientesUO1 = (id) => {
+    return instance.get(`muestras/u01/vacunas/pendientes/envio`);
+}*/
+
+/*const muestrasPendientesTransmisionMonitoreoIntensivoPbmc = () => {
+    return instance.get(`muestras/transmision/monitoreo/intensivo/pbmc/pendientes/envio`);
+}
+const muestrasPendientesTransmisionMonitoreoIntensivoRojo = () => {
+    return instance.get(`muestras/transmision/monitoreo/intensivo/rojo/pendientes/envio`);
+}
+const muestrasPendientesTransmisionCovidPbmc = () => {
+    return instance.get(`muestras/transmision/covid/pbmc/pendientes/envio`);
+}
+const muestrasPendientesTransmisionCovidRojo = () => {
+    return instance.get(`muestras/transmision/covid/rojo/pendientes/envio`);
+}
+const muestrasPendientesTransmisionHisopadosCovid = () => {
+    return instance.get(`muestras/transmision/hisopados/covid/pendientes/envio`);
+}
+const muestrasPendientesTransmisionHisopadosMonitoreIntensivo = () => {
+    return instance.get(`muestras/transmision/hisopado/monitoreo/intensivo/pendientes/envio`);
+}*/
+
+const muestrasPendientesInfluenza = (id) => {
+    return instance.get(`/muestras/influenza/pendientes/envio`, { params: {
         id: id
     }});
+}
+
+/** */
+const verificarEnvioSeleccionado = (viaje) => {
+    return instance.get(`muestras/existe/envio-seleccionado`, {
+        params: {
+            viaje: viaje
+        }
+    });
 }
 
 const muestrasDengueMetabolomicas = () => {
@@ -894,11 +966,24 @@ const api = {
     postMuestraDengue,
     putMuestraDengue,
     getMuestraDengueById,
+    /** */
+    muestrasPendientesTransmision,
     muestrasPendientesInfluenza,
     muestrasPendientesBHC,
     muestrasPendientesUO1,
-    muestrasPendientesTransmision,
+    //muestrasVacunasPendientesUO1,
     muestrasPendientesDengue,
+    /*muestrasPendientesTransmisionMonitoreoIntensivoPbmc,
+    muestrasPendientesTransmisionMonitoreoIntensivoRojo,
+    muestrasPendientesTransmisionCovidPbmc,
+    muestrasPendientesTransmisionCovidRojo,
+    muestrasPendientesTransmisionHisopadosCovid,
+    muestrasPendientesTransmisionHisopadosMonitoreIntensivo,*/
+
+    muestrasEnviadasTransmision,
+    muestrasEnviadasUO1,
+    muestrasEnviadasBHC,
+    /** */
     muestrasDengueMetabolomicas,
     muestrasDengueBhc,
     muestrasDenguePbmc,
@@ -941,7 +1026,9 @@ const api = {
     mxByCodLabScan,
     mxByCodLab,
     muestraDengueCandidatosPbmc,
-    postMuestraDengueDetalle
+    postMuestraDengueDetalle,
+    getAllCatEnvioMuestras,
+    verificarEnvioSeleccionado
 };
 
 export default api;
