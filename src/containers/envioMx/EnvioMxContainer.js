@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import DataServices from '../../service/Api';
 import ToastContainer from '../../components/toast/Toast';
+import GeneratePDFMxEnviadas from "../reportes/RptGeneradorMxEnviadas";
 import EnvioMuestras from '../../components/envioMuestras/EnvioMuestras';
 import '../../components/envioMuestras/EnvioMuestras.css';
 
 const EnvioMxContainer = props => {
     const [titleForm] = useState('Envio de muestras');
+    let [rptTitle, setRptTitle] = useState('');
     const [envioMuestra, setEnvioMuestra] = useState('');
     let [bioanalistas, setBioanalistas] = useState([]);
     const [data, setData] = useState([]);
@@ -21,6 +23,7 @@ const EnvioMxContainer = props => {
     const [selectedHora, setSelectedHora] = useState(new Date());
     const [temp, setTemp] = useState('');
     const [viaje, setViaje] = useState('');
+    const [disabledPrintDocument, setDisabledPrintDocument] = useState(true);
 
     const [errorBioanlista, setErrorBioanlista] = useState('');
     const [errorTemp, setErrorTemp] = useState('');
@@ -240,6 +243,7 @@ const EnvioMxContainer = props => {
 
     const handleChangeEnvioMuestra = (e) => {
         setSelectedEnvioMuestra(e.target.value);
+        setDisabledPrintDocument(true);
         const id = e.target.value;
         getMuestrasPendientesByIdMuestra(id);
         initialStateToast();
@@ -359,9 +363,6 @@ const EnvioMxContainer = props => {
                 }, 100);
                 return;
             }
-
-
-
             const bioanalistaEnvia = {};
             let time = null;
             bioanalistaEnvia.id = selectedBioanalista;
@@ -383,6 +384,77 @@ const EnvioMxContainer = props => {
         }
     }
 
+    const printDocument = async() => {
+        setExecuteLoading(true);
+        try {
+            let response = null;
+            /**BHC */
+            if (selectedEnvioMuestra === 7) {
+                rptTitle = "BHC";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasBHC(selectedEnvioMuestra, viaje, "", "");
+            }
+            /**UO1 */
+            else if (selectedEnvioMuestra === 1) {
+                rptTitle = "Influenza UO1";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasUO1(selectedEnvioMuestra, viaje,  "", "");
+            }
+            else if (selectedEnvioMuestra === 2) {
+                rptTitle = "Influenza UO1 Vacunas";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasUO1(selectedEnvioMuestra, viaje, "", "");
+            }
+            /**TRANSMISION */
+            else if (selectedEnvioMuestra === 3) {
+                rptTitle = "Monitoreo Intensivo PBMC";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
+            }
+            else if (selectedEnvioMuestra === 4) {
+                rptTitle = "Monitoreo Intensivo ROJO";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
+            }
+            else if (selectedEnvioMuestra === 5) {
+                rptTitle = "Covid-19 PBMC";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
+            }
+            else if (selectedEnvioMuestra === 6) {
+                rptTitle = "Covid-19 ROJO";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
+            }
+            else if (selectedEnvioMuestra === 8) {
+                rptTitle = "Hisopados Covid-19";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
+            }
+            else if (selectedEnvioMuestra === 9) {
+                rptTitle = "Hisopados Monitoreo Intensivo";
+                setRptTitle(rptTitle);
+                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
+            } else {
+                return;
+            }
+            if (response !== null) {
+                if (response.status === 200) {
+                    setExecuteLoading(false);
+                    if (response.data !== null && response.data.length > 0 ) {
+                        GeneratePDFMxEnviadas(rptTitle, response.data, viaje);
+                    }
+                }
+            } else {
+                setExecuteLoading(false);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error);
+        }
+        
+    }
+
     const putMuestras = async (muestra) => {
         setExecuteLoading(true);
         try {
@@ -400,14 +472,17 @@ const EnvioMxContainer = props => {
             }
             const response = await DataServices.enviarMuestras(muestra);
             if (response.status === 200) {
-                setEnvioMuestra('');
+                printDocument();
                 setExecuteLoading(false);
+                setEnvioMuestra('');
                 setData([]);
                 setListToSave([]);
                 setSelectedMuestra('');
+                //setSelectedEnvioMuestra('');
                 setSelectedBioanalista('');
                 setTemp('');
-                setViaje('');
+                //setViaje('');
+                setDisabledPrintDocument(false);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
                 setTimeout(function () {
@@ -488,6 +563,14 @@ const EnvioMxContainer = props => {
             }, 100);
             return false;
         }
+        if (viaje <= 0) {
+            setType('error');
+            setMessageAlert('No pueder realizar un envio con valor 0');
+            setTimeout(function () {
+                initialStateToast();
+            }, 100);
+            return false;
+        }
         return true;
     }
 
@@ -523,6 +606,7 @@ const EnvioMxContainer = props => {
                 more={more}
                 minos={minos}*/
                 saveData={saveData}
+                printDocument={printDocument}
                 handleChangeBionalista={handleChangeBionalista}
                 handleChangeEnvioMuestra={handleChangeEnvioMuestra}
                 handleChangeDate={handleChangeDate}
@@ -533,6 +617,7 @@ const EnvioMxContainer = props => {
                 masterChecked={masterChecked}
                 onItemCheck={onItemCheck}
                 onItemCheckRemove={onItemCheckRemove}
+                disabledPrintDocument={disabledPrintDocument}
                 errorBioanlista={errorBioanlista}
                 errorTemp={errorTemp}
             />

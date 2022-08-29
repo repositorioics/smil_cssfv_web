@@ -287,12 +287,25 @@ const EnvioMuestras = props => {
                             </div>
                         </div>
                     </div>
-                    <div hidden={false}>
-                        <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Guardar</Tooltip>}>
-                            <button className="btn-cricle" onClick={props.saveData}>
-                                <SaveIcon />
-                            </button>
-                        </OverlayTrigger>
+                    <div className="row">
+                        <div className="col-sm" style={{ marginTop: 2 }}>
+                            <div hidden={false}>
+                                <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Guardar</Tooltip>}>
+                                    <button className="btn-cricle" onClick={props.saveData}>
+                                        <SaveIcon />
+                                    </button>
+                                </OverlayTrigger>
+                            </div>
+                        </div>
+                        {/* <div className="col-sm" style={{ marginTop: 2 }}>
+                            <div hidden={false}>
+                                <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Imprimir</Tooltip>}>
+                                    <button className="btn-criclePdf" onClick={props.printDocument} disabled={props.disabledPrintDocument}>
+                                        <PrintIcon />
+                                    </button>
+                                </OverlayTrigger>
+                            </div>
+                        </div> */}
                     </div>
                 </div>
             </Paper>

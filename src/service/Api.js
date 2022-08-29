@@ -692,29 +692,35 @@ const muestrasPendientesUO1 = (id) => {
     });
 }
 
-const muestrasEnviadasTransmision = (id, viaje) => {
+const muestrasEnviadasTransmision = (id, viaje, startDate, endDate) => {
     return instance.get(`muestras/transmision/enviadas`, {
         params: {
             id: id,
-            viaje: viaje
+            viaje: viaje,
+            startDate: startDate,
+            endDate: endDate
         }
     });
 }
 
-const muestrasEnviadasBHC = (id, viaje) => {
+const muestrasEnviadasBHC = (id, viaje, startDate, endDate) => {
     return instance.get(`muestras/bhc/enviadas`, {
         params: {
             id: id,
-            viaje: viaje
+            viaje: viaje,
+            startDate: startDate,
+            endDate: endDate
         }
     });
 }
 
-const muestrasEnviadasUO1 = (id, viaje) => {
+const muestrasEnviadasUO1 = (id, viaje, startDate, endDate) => {
     return instance.get(`muestras/u01/enviadas`, {
         params: {
             id: id,
-            viaje: viaje
+            viaje: viaje,
+            startDate: startDate,
+            endDate: endDate
         }
     });
 }

@@ -85,6 +85,40 @@ const RptEnvioMuestras = props => {
                         </OverlayTrigger>
                     </div>
                 </div>
+                <div className="row" style={{ marginTop: 15, marginLeft: 5 }}>
+                    <div>
+                        <TextField
+                            id="startDate"
+                            label="Fecha inicio"
+                            type="date"
+                            value={props.startDate}
+                            onChange={props.handleChangeStartDate}
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <div>
+                            <label className="messageError">{props.errorStartDate}</label>
+                        </div>
+                    </div>
+                    <div style={{ marginLeft: 30 }}>
+                        <TextField
+                            id="endDate"
+                            label="Fecha fin"
+                            type="date"
+                            value={props.endDate}
+                            onChange={props.handleChangeEndDate}
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <div>
+                            <label className="messageError">{props.errorEndDate}</label>
+                        </div>
+                    </div>
+                </div>
                 <div style={{ marginTop: 20 }}>
                     {props.data.length === 0 ? (
                         "No hay datos que mostrar"
