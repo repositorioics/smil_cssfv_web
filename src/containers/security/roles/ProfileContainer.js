@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import Header from '../../../components/header/Header';
 import Profile from '../../../components/security/roles/Profile';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 import ToastContainer from '../../../components/toast/Toast';
 
 const ProfileContainer = props => {

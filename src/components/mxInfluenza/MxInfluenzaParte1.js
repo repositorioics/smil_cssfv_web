@@ -36,10 +36,9 @@ const useStyles = makeStyles((theme) => ({
 const MxInfluenzaParte1 = props => {
     const classes = useStyles();
     return (
-        <>
+        <form>
             <div className="input-group row" style={{ marginTop: 5 }}>
                 <div className="col" style={{ width: 150 }}>
-                    {/* <label>Código</label> */}
                     <TextField
                         id="code"
                         autoFocus
@@ -73,18 +72,6 @@ const MxInfluenzaParte1 = props => {
                         /> Mx Covid
                     </label>
                 </div>
-                <div className="checkbox mleft-20 col">
-                    <label>
-                        <input
-                            className="custom-checkbox"
-                            id="positivoMi"
-                            type="checkbox"
-                            name="positivoMi"
-                            checked={props.positivoMi}
-                            onChange={props.handleChangepositivoMi}
-                        /> Positivo MI
-                    </label>
-                </div>
                 <div className="col col-lg-2">
                     <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Imprimir código</Tooltip>}>
                         <span className="d-inline-block">
@@ -113,22 +100,8 @@ const MxInfluenzaParte1 = props => {
                         </Select>
                         <label className="messageError">{props.errorMedico}</label>
                     </FormControl>
-                    {/* <label>Solicitado por</label>
-                    <Multiselect
-                        id="medicos"
-                        showArrow={true}
-                        placeholder="Seleccione..."
-                        singleSelect={true}
-                        options={props.medicos} // Options to display in the dropdown
-                        selectedValues={props.selectedMedico} // Preselected value to persist in dropdown
-                        onSelect={props.onSelectRequestBy} // Function will trigger on select event
-                        onRemove={props.onRemove} // Function will trigger on remove event
-                        displayValue="name" // Property name to display in the dropdown options
-                    />
-                    <label style={{ marginTop: 3 }} className="messageError">{props.errorMedico}</label> */}
                 </div>
                 <div className="col-sm">
-                    {/* <label>Cod-lab scan</label> */}
                     <TextField
                         id="codeLabScan"
                         autoComplete="off"
@@ -142,8 +115,6 @@ const MxInfluenzaParte1 = props => {
                         inputProps={{
                             style: { fontWeight: 'bold' }
                         }}
-                        //onChange={props.onChangeBarcode}
-                        //onKeyDown={props.onKeyPressBarcode}
                         label="Cod-lab scan" />
                 </div>
             </div>
@@ -158,6 +129,7 @@ const MxInfluenzaParte1 = props => {
                             autoOk={true}
                             value={props.fif !== null ? props.fif : null}
                             onChange={props.handleChangeFif}
+                            onKeyDown={props.onKeyPressFif}
                             inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
@@ -174,6 +146,7 @@ const MxInfluenzaParte1 = props => {
                             autoOk={true}
                             value={props.fis !== null ? props.fis : null}
                             onChange={props.handleChangeFis}
+                            //onKeyPress={props.onKeyPressFis}
                             inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
@@ -214,28 +187,14 @@ const MxInfluenzaParte1 = props => {
                                 <em>Seleccione</em>
                             </MenuItem>
                             {props.dataTypeOfTest.map((e, keyIndex) => {
-                                return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
                             })
                             }
                         </Select>
                         <label className="messageError">{props.errorTypeOfTest}</label>
                     </FormControl>
-                    {/* <label>Tipo de prueba</label>
-                    <Multiselect
-                        id="typeOfTest"
-                        showArrow={true}
-                        placeholder="Seleccione..."
-                        singleSelect={true}
-                        options={props.dataTypeOfTest} // Options to display in the dropdown
-                        selectedValues={props.selectedTypeOfTest} // Preselected value to persist in dropdown
-                        onSelect={props.onSelectTypeOfTest} // Function will trigger on select event
-                        onRemove={props.onRemoveTypeOfTest} // Function will trigger on remove event
-                        displayValue="name" // Property name to display in the dropdown options
-                    />
-                    <label style={{ marginTop: 3 }} className="messageError">{props.errorTypeOfTest}</label> */}
                 </div>
                 <div className="col-sm">
-                    {/* <label>Código de lab</label> */}
                     <TextField
                         id="codeLab"
                         autoComplete="off"
@@ -249,13 +208,11 @@ const MxInfluenzaParte1 = props => {
                         inputProps={{
                             style: { fontWeight: 'bold' }
                         }}
-                        /* onChange={props.handleChangeCodeLab} */
                         label="Código de lab" />
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-5">
-                    {/* <label>Nombre del participante</label> */}
                     <TextField
                         id="name"
                         autoComplete="off"
@@ -272,7 +229,6 @@ const MxInfluenzaParte1 = props => {
                         label="Nombre del participante" />
                 </div>
                 <div className="col-sm">
-                    {/* <label>Estudio</label> */}
                     <TextField
                         id="study"
                         autoComplete="off"
@@ -289,7 +245,6 @@ const MxInfluenzaParte1 = props => {
                         label="Estudio" />
                 </div>
                 <div className="col-sm">
-                    {/* <label>Edad</label> */}
                     <TextField
                         id="age"
                         autoComplete="off"
@@ -306,7 +261,7 @@ const MxInfluenzaParte1 = props => {
                         label="Edad" />
                 </div>
             </div>
-        </>
+        </form>
     );
 }
 export default MxInfluenzaParte1;

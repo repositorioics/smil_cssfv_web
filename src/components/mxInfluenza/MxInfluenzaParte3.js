@@ -37,7 +37,6 @@ const MxInfluenzaParte3 = (props) => {
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
                 <div className="col-sm">
-                    {/* <label>Número de prueba</label> */}
                     <TextField
                         id="testNumberFlu"
                         autoComplete="off"
@@ -53,18 +52,6 @@ const MxInfluenzaParte3 = (props) => {
                     <label style={{marginTop: 10}} className="messageError">{props.errorTestNumberFlu}</label>
                 </div>
                 <div className="col-sm">
-                    {/* <label>Resultado</label> */}
-                    {/* <TextField
-                        id="testResultFlu"
-                        autoComplete="off"
-                        type="text"
-                        maxLength={50}
-                        className="form-control"
-                        name="testResultFlu"
-                        value={props.testResultFlu}
-                        onChange={props.handleChangeTesResultFlu}
-                        disabled={props.isMxCv}
-                        label="Resultado" /> */}
                     <FormControl className={classes.formControl}>
                         <InputLabel id="test-input-label">Seleccione el resultado</InputLabel>
                         <Select
@@ -87,7 +74,6 @@ const MxInfluenzaParte3 = (props) => {
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-lg">
-                    {/* <label>Observaciones</label> */}
                     <TextField
                         id="observationsPr"
                         autoComplete="off"

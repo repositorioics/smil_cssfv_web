@@ -12,15 +12,15 @@ import {
 } from '@material-ui/pickers';
 import { es } from 'date-fns/locale';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { red } from '@material-ui/core/colors';
 import Loading from '../loading/Loading';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Button from '@material-ui/core/Button';
+import MenuItem from '@mui/material/MenuItem';
 import '../recepcionMx/RecepcionMx.css';
+import RecepcionEventos from './RecepcionEventos';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
     title: {
         fontSize: '2rem',
         marginLeft: '10px',
-        paddingBottom: '5px',
+        //paddingBottom: '5px',
         paddingTop: '10px',
         fontWeight: 'bold',
     },
@@ -74,9 +74,16 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 0
     },
     formControl2: {
-        minWidth: '48%',
+        minWidth: '50%',
         marginTop: 0
-    }
+    },
+    MuiPaperRoot: {
+        backgroundColor: '#fff0'
+    },
+    /* MuiFormControlRoot: {
+        display: 'inline-flex !important',
+        flexDirection: 'column !important'
+      } */
 }));
 
 function Item(props) {
@@ -113,7 +120,7 @@ Item.propTypes = {
 const RecepcionMx = props => {
     const classes = useStyles();
     return (
-        <>
+        <form>
             <Loading
                 executeLoading={props.executeLoading}
             />
@@ -133,7 +140,7 @@ const RecepcionMx = props => {
                 </div>
                 <Grid container spacing={2} style={{ paddingTop: 0 }}>
                     <Grid item xs={8}>
-                        <Item>
+                        <Item style={{marginTop: -5}}>
                             <div className="col-sm">
                                 <TextField
                                     id="codeLabScan"
@@ -143,6 +150,7 @@ const RecepcionMx = props => {
                                     maxLength={50}
                                     className="form-control"
                                     name="codeLabScan"
+                                    autoFocus
                                     value={props.codeLabScan}
                                     onChange={props.onChangeBarcode}
                                     inputProps={{
@@ -154,7 +162,7 @@ const RecepcionMx = props => {
                                     label="Cod-lab scan" />
                             </div>
                         </Item>
-                        <Item>
+                        <Item style={{ marginTop: -5 }}>
                             <div className="col-sm">
                                 {/* <label>Nombre del participante</label> */}
                                 <TextField
@@ -173,7 +181,7 @@ const RecepcionMx = props => {
                                     label="Nombre del participante" />
                             </div>
                         </Item>
-                        <Item>
+                        <Item style={{ marginTop: -5 }}>
                             <div className="col-5">
                                 <TextField
                                     id="codeRecep"
@@ -235,10 +243,10 @@ const RecepcionMx = props => {
                                 </div>
                             </Grid>
                         </Item>
-                        <Item>
+                        <Item style={{marginTop: -15}}>
                             <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
                                 <Grid container justify="space-between">
-                                    <div className="col-sm">
+                                    {/* <div className="col-sm">
                                         <KeyboardDatePicker
                                             margin="normal"
                                             id="date-picker-dialog-fis"
@@ -247,14 +255,32 @@ const RecepcionMx = props => {
                                             autoOk={true}
                                             value={props.fis !== null ? props.fis : null}
                                             onChange={props.handleChangeFis}
+                                            onKeyDown={props.onKeyFis}
                                             inputProps={{ autoComplete: 'off' }}
                                             KeyboardButtonProps={{
                                                 'aria-label': 'change date',
                                             }}
                                         />
                                         <label className="messageError row">{props.errorFis}</label>
-                                    </div>
-                                    <div className="col-sm" style={{ marginRight: 36 }}>
+                                    </div> */}
+                                    <div className="col-sm">
+                                                <KeyboardDatePicker
+                                                    margin="normal"
+                                                    id="date-picker-dialog-fif"
+                                                    label="FIF"
+                                                    format="dd/MM/yyyy"
+                                                    autoOk={true}
+                                                    value={props.fif !== null ? props.fif : null}
+                                                    onChange={props.handleChangeFif}
+                                                    disabled={props.disableFIF}
+                                                    inputProps={{ autoComplete: 'off' }}
+                                                    KeyboardButtonProps={{
+                                                        'aria-label': 'change date',
+                                                    }}
+                                                />
+                                                <label className="messageError row">{props.errorFif}</label>
+                                            </div>
+                                    <div className="col-sm" >
                                         <KeyboardDatePicker
                                             margin="normal"
                                             id="date-picker-dialog-fToma"
@@ -273,7 +299,7 @@ const RecepcionMx = props => {
                                 </Grid>
                             </MuiPickersUtilsProvider>
                         </Item>
-                        <Item>
+                        <Item style={{marginTop: -20}}>
                             <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
                                 <Grid container justify="space-between">
                                     <div className="col-sm" style={{ marginTop: 15, marginLeft: 10 }}>
@@ -284,6 +310,7 @@ const RecepcionMx = props => {
                                             inputProps={{ autoComplete: 'off' }}
                                             value={props.selectedHoraToma !== null ? props.selectedHoraToma : null}
                                             onChange={date => props.handleChangeHoraToma(date)}
+                                            onKeyDown={props.onKeyHoraToma}
                                         />
                                         <div>
                                             <label className="messageError">{props.errorHoraToma}</label>
@@ -297,6 +324,7 @@ const RecepcionMx = props => {
                                             inputProps={{ autoComplete: 'off' }}
                                             value={props.selectedHoraRefrigeracion !== null ? props.selectedHoraRefrigeracion : null}
                                             onChange={date => props.handleChangeHoraRefrigeracion(date)}
+                                            onKeyDown={props.onKeyHoraRefrigeracion}
                                         />
                                         <div>
                                             <label className="messageError">{props.errorHoraRefrigeracion}</label>
@@ -312,7 +340,8 @@ const RecepcionMx = props => {
                                             name="volMedioMl"
                                             value={props.volMedioMl}
                                             onChange={props.handleChangeVolMedioMl}
-                                            label="Vol. del medio(ml)"
+                                            onKeyDown={props.onKeyVolumen}
+                                            label={props.volumenLabel}
                                         />
                                         <div>
                                             <label className="messageError">{props.errorVolMedio}</label>
@@ -322,29 +351,61 @@ const RecepcionMx = props => {
                                 </Grid>
                             </MuiPickersUtilsProvider>
                         </Item>
-                        <Item>
-                            <div className="col-sm">
-                                <FormControl className={classes.formControl2}>
-                                    <InputLabel id="recepciona-input-label">Recepciona</InputLabel>
-                                    <Select
-                                        labelId="recepciona-label"
-                                        id="recepciona-select"
-                                        value={props.selectedBioanalistaRecepciona}
-                                        onChange={props.handleChangeBionalistaRecepciona}
-                                    >
-                                        <MenuItem value="0">
-                                            <em>Seleccione</em>
-                                        </MenuItem>
-                                        {props.bioanalistas.map((e, keyIndex) => {
-                                            return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
-                                        })
-                                        }
-                                    </Select>
-                                    <label className="messageError">{props.errorBioanlistaRecepciona}</label>
-                                </FormControl>
-                            </div>
+                        <Item style={{ marginTop: -15 }}>
+                            <Grid container justify="space-between">
+                                <div className="col-md">
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="recepciona-input-label">Recepciona</InputLabel>
+                                        <Select
+                                            labelId="recepciona-label"
+                                            id="recepciona-select"
+                                            value={props.selectedBioanalistaRecepciona}
+                                            onChange={props.handleChangeBionalistaRecepciona}
+                                        >
+                                            <MenuItem value="0">
+                                                <em>Seleccione</em>
+                                            </MenuItem>
+                                            {props.bioanalistas.map((e, keyIndex) => {
+                                                return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                            })
+                                            }
+                                        </Select>
+                                        <label className="messageError">{props.errorBioanlistaRecepciona}</label>
+                                    </FormControl>
+                                </div>
+                                <div className="col-sm">
+                                    <TextField
+                                        id="tempRecepcion"
+                                        autoComplete="off"
+                                        type="text"
+                                        maxLength={50}
+                                        name="tempRecepcion"
+                                        value={props.tempRecepcion}
+                                        onChange={props.handleChangeTempRecep}
+                                        label="Temp. Recepción °C"
+                                    />
+                                    <div>
+                                        <label className="messageError">{props.errorTempRecepcion}</label>
+                                    </div>
+                                </div>
+                                <div className="col-sm">
+                                    <TextField
+                                        id="tempAlmacen"
+                                        autoComplete="off"
+                                        type="text"
+                                        maxLength={50}
+                                        name="tempAlmacen"
+                                        value={props.tempAlmacen}
+                                        onChange={props.handleChangeTempAlmacen}
+                                        label="Temp. Almacén °C"
+                                    />
+                                    <div>
+                                        <label className="messageError">{props.errorTempAlmacen}</label>
+                                    </div>
+                                </div>
+                            </Grid>
                         </Item>
-                        <Item>
+                        <Item style={{marginTop: -20}}>
                             <div className="col-lg">
                                 <TextField
                                     id="observations"
@@ -361,7 +422,7 @@ const RecepcionMx = props => {
                             </div>
                         </Item>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={4} style={{marginTop: -20}}>
                         <Item>
                             <div className="col-sm">
                                 <TextField
@@ -380,7 +441,7 @@ const RecepcionMx = props => {
                                     label="Código Lab" />
                             </div>
                         </Item>
-                        <Item>
+                        <Item style={{marginTop: -5}}>
                             <div className="col-sm">
                                 {/* <label>Edad</label> */}
                                 <TextField
@@ -399,7 +460,7 @@ const RecepcionMx = props => {
                                     label="Edad" />
                             </div>
                         </Item>
-                        <Item>
+                        <Item style={{marginTop: -5}}>
                             <div className="col-sm">
                                 {/* <label>Estudio</label> */}
                                 <TextField
@@ -418,10 +479,10 @@ const RecepcionMx = props => {
                                     label="Estudios" />
                             </div>
                         </Item>
-                        <Grid container spacing={2}>
-                            <Grid item xs={4} hidden={props.hideHouseCHF}>
+                        <Grid item xs={10}>
+                            <Grid container justify="space-between">
                                 <div className="col-sm">
-                                    <Item>
+                                    <Item style={{marginTop: -5}}>
                                         <TextField
                                             id="houseRecep"
                                             autoComplete="off"
@@ -432,6 +493,25 @@ const RecepcionMx = props => {
                                             name="houseRecep"
                                             value={props.houseCode}
                                             readOnly={true}
+                                            //hidden={props.hideHouseCHF}
+                                            inputProps={{
+                                                style: { fontWeight: 'bold', backgroundColor: 'none' }
+                                            }}
+                                            label="Codigo Casa" />
+                                    </Item>
+                                </div>
+                                <div className="col-sm">
+                                    <Item style={{marginTop: -5}}>
+                                        <TextField
+                                            id="houseChfRecep"
+                                            autoComplete="off"
+                                            type="text"
+                                            maxLength={50}
+                                            style={{ height: 'auto' }}
+                                            className="form-control"
+                                            name="houseRecep"
+                                            value={props.houseCodeChf}
+                                            readOnly={true}
                                             hidden={props.hideHouseCHF}
                                             inputProps={{
                                                 style: { fontWeight: 'bold', backgroundColor: 'none' }
@@ -439,96 +519,106 @@ const RecepcionMx = props => {
                                             label="Casa CHF" />
                                     </Item>
                                 </div>
-                                
                             </Grid>
-                            <Grid item xs={4}>
-                                <div className="col-sm">
-                                    <Item>
-                                        <FormControl className={classes.formControl} hidden={props.hideConsulta} disabled={true}>
-                                            <InputLabel id="consulta-input-recep-label">Consulta</InputLabel>
-                                            <Select
-                                                labelId="consulta-recep-label"
-                                                id="consulta-recep-select"
-                                                value={props.selectedConsulta}
-                                                style={{ fontWeight: "bold", color: "red" }}
-                                                onChange={props.handleChangeConsulta}
-                                            >
-                                                <MenuItem value="0">
-                                                    <em>Seleccione</em>
-                                                </MenuItem>
-                                                {props.consultas.map((e, keyIndex) => {
-                                                    return (<MenuItem key={keyIndex} value={e.id}>{e.consulta}</MenuItem>)
-                                                })
-                                                }
-                                            </Select>
-                                        </FormControl>
-                                    </Item>
-                                </div>
+                            <Grid item xs={10}>
+                                <Grid container justify="space-between">
+                                    <div className="col-sm">
+                                        <Item>
+                                            <FormControl className={classes.formControl} hidden={props.hideConsulta} disabled={true}>
+                                                <InputLabel id="consulta-input-recep-label">Consulta</InputLabel>
+                                                <Select
+                                                    labelId="consulta-recep-label"
+                                                    id="consulta-recep-select"
+                                                    value={props.selectedConsulta}
+                                                    style={{ fontWeight: "bold", color: "red" }}
+                                                    onChange={props.handleChangeConsulta}
+                                                >
+                                                    <MenuItem value="0">
+                                                        <em>Seleccione</em>
+                                                    </MenuItem>
+                                                    {props.consultas.map((e, keyIndex) => {
+                                                        return (<MenuItem key={keyIndex} value={e.id}>{e.consulta}</MenuItem>)
+                                                    })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Item>
+                                    </div>
+                                    <div className="col-sm">
+                                        <Item>
+                                            <FormControl className={classes.formControl} hidden={props.hideCategoria} disabled={true}>
+                                                <InputLabel id="categoria-input-recep-label">Categoría</InputLabel>
+                                                <Select
+                                                    labelId="categoria-recep-label"
+                                                    id="categoria-recep-select"
+                                                    value={props.selectedCategory}
+                                                    onChange={props.handleChangeCategory}
+                                                    style={{ fontWeight: "bold", color: "red" }}
+                                                >
+                                                    <MenuItem value="0">
+                                                        <em>Seleccione</em>
+                                                    </MenuItem>
+                                                    {props.category.map((e, keyIndex) => {
+                                                        return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                                    })
+                                                    }
+                                                </Select>
+                                            </FormControl>
+                                        </Item>
+                                    </div>
+                                </Grid>
+
                             </Grid>
-                            <Grid item xs={4}>
-                                <Item>
-                                    <FormControl className={classes.formControl} hidden={props.hideCategoria} disabled={true}>
-                                        <InputLabel id="categoria-input-recep-label">Categoría</InputLabel>
+                        </Grid>
+                        <Item>
+                            <Grid container justify="space-between"> {/* style={{marginTop: -16}} */}
+                                <div className="col-sm" hidden={props.hideTypeOfMx}>
+                                    <FormControl className={classes.formControl}>
+                                        <InputLabel id="tipo-muestra-input-recep-label">Tipo de muestra</InputLabel>
                                         <Select
-                                            labelId="categoria-recep-label"
-                                            id="categoria-recep-select"
-                                            value={props.selectedCategory}
-                                            onChange={props.handleChangeCategory}
-                                            style={{ fontWeight: "bold", color: "red" }}
+                                            labelId="tipo-muestra-recep-label"
+                                            id="tipo-muestra-recep-select"
+                                            value={props.selectedTypeOfMxRecep}
+                                            onChange={props.handleChangeSelectTypeOfMxRecep}
                                         >
                                             <MenuItem value="0">
                                                 <em>Seleccione</em>
                                             </MenuItem>
-                                            {props.category.map((e, keyIndex) => {
+                                            {props.typeMx.map((e, keyIndex) => {
                                                 return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
                                             })
                                             }
                                         </Select>
+                                        <label className="messageError">{props.errorTypeOfMx}</label>
                                     </FormControl>
+                                </div>
+                            </Grid>
+                        </Item>
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <Item>
+                                    <div className="col-sm">
+                                        <FormControl className={classes.formControl} hidden={props.hideTypeOfTest}>
+                                            <InputLabel id="test-input-label">Tipo de prueba</InputLabel>
+                                            <Select
+                                                labelId="test-label"
+                                                id="test-select"
+                                                value={props.selectedTypeOfTest}
+                                                onChange={props.handleChangeTypeOfTest}>
+                                                <MenuItem value="0">
+                                                    <em>Seleccione</em>
+                                                </MenuItem>
+                                                {props.dataTypeOfTest.map((e, keyIndex) => {
+                                                    return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                                })
+                                                }
+                                            </Select>
+                                            <label className="messageError">{props.errorTypeOfTest}</label>
+                                        </FormControl>
+                                    </div>
                                 </Item>
                             </Grid>
                         </Grid>
-                        <Item>
-                            <div className="col-sm">
-                                <FormControl className={classes.formControl} hidden={props.hideTypeOfMx}>
-                                    <InputLabel id="tipo-muestra-input-recep-label">Tipo de muestra</InputLabel>
-                                    <Select
-                                        labelId="tipo-muestra-recep-label"
-                                        id="tipo-muestra-recep-select"
-                                        value={props.selectedTypeOfMxRecep}
-                                        onChange={props.handleChangeSelectTypeOfMxRecep}
-                                    >
-                                        <MenuItem value="0">
-                                            <em>Seleccione</em>
-                                        </MenuItem>
-                                        {props.typeMx.map((e, keyIndex) => {
-                                            return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
-                                        })
-                                        }
-                                    </Select>
-                                    <label className="messageError">{props.errorTypeOfMx}</label>
-                                </FormControl>
-                            </div>
-                            <div className="col-sm">
-                                <FormControl className={classes.formControl} hidden={props.hideTypeOfTest}>
-                                    <InputLabel id="test-input-label">Tipo de prueba</InputLabel>
-                                    <Select
-                                        labelId="test-label"
-                                        id="test-select"
-                                        value={props.selectedTypeOfTest}
-                                        onChange={props.handleChangeTypeOfTest}>
-                                        <MenuItem value="0">
-                                            <em>Seleccione</em>
-                                        </MenuItem>
-                                        {props.dataTypeOfTest.map((e, keyIndex) => {
-                                            return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
-                                        })
-                                        }
-                                    </Select>
-                                    <label className="messageError">{props.errorTypeOfTest}</label>
-                                </FormControl>
-                            </div>
-                        </Item>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <Item>
@@ -541,7 +631,7 @@ const RecepcionMx = props => {
                                                 value={props.selectedTuboRecep}
                                                 onChange={props.handleChangeTipoTuboRecep}
                                                 disabled={true}
-                                                style={{color: 'red'}}
+                                                style={{ color: 'red' }}
                                             >
                                                 <MenuItem value="0">
                                                     <em>Seleccione</em>
@@ -559,7 +649,7 @@ const RecepcionMx = props => {
                             <Grid item xs={6}>
                                 <Item>
                                     <div className="col-sm">
-                                        <FormControl className={classes.formControl}>
+                                        <FormControl className={classes.formControl} hidden={props.hideClasificacion}>
                                             <InputLabel id="test-clasificación-recep">Clasificación</InputLabel>
                                             <Select
                                                 labelId="request-label-clasificación"
@@ -582,9 +672,34 @@ const RecepcionMx = props => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={2}>
-                            <Grid item xs={4}>
+                            {/*<Grid item xs={7}>
                                 <Item>
-                                    <div className="col-sm">
+                                    <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
+                                        <Grid container justify="space-between">
+                                             <div className="col-sm">
+                                                <KeyboardDatePicker
+                                                    margin="normal"
+                                                    id="date-picker-dialog-fif"
+                                                    label="FIF"
+                                                    format="dd/MM/yyyy"
+                                                    autoOk={true}
+                                                    value={props.fif !== null ? props.fif : null}
+                                                    onChange={props.handleChangeFif}
+                                                    disabled={true}
+                                                    inputProps={{ autoComplete: 'off' }}
+                                                    KeyboardButtonProps={{
+                                                        'aria-label': 'change date',
+                                                    }}
+                                                />
+                                                <label className="messageError row">{props.errorFif}</label>
+                                            </div>
+                                        </Grid>
+                                    </MuiPickersUtilsProvider>
+                                </Item>
+                            </Grid> */}
+                            <Grid item xs={4}>
+                                <Item style={{ marginTop: -20 }}>
+                                    <div className="col-sm" style={{ marginTop: 15 }}>
                                         <FormControl className={classes.formControl}>
                                             <InputLabel id="test-visita-recep">Visita</InputLabel>
                                             <Select
@@ -593,7 +708,7 @@ const RecepcionMx = props => {
                                                 value={props.selectedVisita}
                                                 onChange={props.handleChangeVisita}
                                                 disabled={true}
-                                                style={{color: 'red'}}
+                                                style={{ color: 'red' }}
                                             >
                                                 <MenuItem value="0">
                                                     <em>Seleccione</em>
@@ -605,111 +720,44 @@ const RecepcionMx = props => {
                                             </Select>
                                             <label className="messageError">{props.errorVisita}</label>
                                         </FormControl>
-                                        {/* <label>Edad</label> */}
-                                        {/* <TextField
-                                            id="visita"
-                                            autoComplete="off"
-                                            type="text"
-                                            maxLength={50}
-                                            style={{ height: 'auto' }}
-                                            className="form-control"
-                                            name="visita"
-                                            value={props.visita}
-                                            readOnly={true}
-                                            inputProps={{
-                                                style: { fontWeight: 'bold', backgroundColor: 'none', color: "red" }
-                                            }}
-                                            label="Visita" /> */}
                                     </div>
                                 </Item>
                             </Grid>
-                            {/* <Grid item xs={4}>
-                                <Item>
-                                    <div className="col-sm">
-                                        <TextField
-                                            id="numMx"
-                                            autoComplete="off"
-                                            type="text"
-                                            maxLength={50}
-                                            style={{ height: 'auto' }}
-                                            className="form-control"
-                                            name="numMx"
-                                            value={props.numMx}
-                                            inputProps={{
-                                                style: { fontWeight: 'bold', backgroundColor: 'none' }
-                                            }}
-                                            label="Num Mx" />
-                                    </div>
-                                </Item>
-                            </Grid> */}
                         </Grid>
-                        <Item>
-                            <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
-                                <Grid container justify="space-between">
-                                    <div className="col-sm">
-                                        <KeyboardDatePicker
-                                            margin="normal"
-                                            id="date-picker-dialog-fif"
-                                            label="FIF"
-                                            format="dd/MM/yyyy"
-                                            autoOk={true}
-                                            value={props.fif !== null ? props.fif : null}
-                                            onChange={props.handleChangeFif}
-                                            disabled={true}
-                                            inputProps={{ autoComplete: 'off' }}
-                                            KeyboardButtonProps={{
-                                                'aria-label': 'change date',
-                                            }}
-                                        />
-                                        <label className="messageError row">{props.errorFif}</label>
-                                    </div>
-                                </Grid>
-                            </MuiPickersUtilsProvider>
-                        </Item>
                         <Grid container spacing={2} >
                             <Grid item xs={4} >
-                            <Item>
-                                <div className="checkbox mleft-20">
-                                    <label style={{ color: 'black'}}>Plasma
-                                        <input
-                                            className="custom-checkbox"
-                                            id="state"
-                                            type="checkbox"
-                                            name="state"
-                                            style={{marginLeft: 10}}
-                                            disabled={false}
-                                            checked={props.plasma}
-                                            onChange={props.handleChangePlasma}
-                                        />
-                                    </label>
-                                </div>
-                            </Item>
+                                <Item>
+                                    {/* <div className="checkbox mleft-20">
+                                        <label style={{ color: 'black' }}>Plasma
+                                            <input
+                                                className="custom-checkbox"
+                                                id="state"
+                                                type="checkbox"
+                                                name="state"
+                                                style={{ marginLeft: 10 }}
+                                                disabled={false}
+                                                checked={props.plasma}
+                                                onChange={props.handleChangePlasma}
+                                            />
+                                        </label>
+                                    </div> */}
+                                </Item>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
-                <div className="input-group row" style={{ marginTop: 30, marginLeft: 10 }}>
-                    <div className="col-xs">
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={props.saveRecepcion}
-                            className={classes.button}
-                        >Guardar
-                        </Button>
-                    </div>
-                    <div className="col-xs">
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={props.nuevaRecepcion}
-                            className={classes.button}
-                        >Nuevo
-                        </Button>
-                    </div>
+                <div>
+                    {props.title !== "" ?
+                        <RecepcionEventos
+                            saveRecepcion={props.saveRecepcion}
+                            search={props.search}
+                            nuevaRecepcion={props.nuevaRecepcion}
+                            openEventButtons={props.openEventButtons}
+                            onClickEventButtons={props.onClickEventButtons}
+                        /> : null}
                 </div>
             </Paper>
-        </>
+        </form>
     );
 }
 

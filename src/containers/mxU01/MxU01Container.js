@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import MxU01 from '../../components/mxU01/MxU01';
 import DataServices from '../../service/Api';
+import DataServiceCatalogos from '../../service/ApiCatalogos';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
 import AlertDialogText from '../../components/alertDialog/AlertDialogText';
@@ -211,7 +213,7 @@ const MxU01Container = props => {
     const getListTubosActivos = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTubosActivos();
+            const response = await DataServiceCatalogos.getAllTubosActivos();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setTipoTubo(response.data);
@@ -226,7 +228,7 @@ const MxU01Container = props => {
     const getListVisitasActivos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllVisitasActivas();
+            const response = await DataServiceCatalogos.getAllVisitasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setConsultas(response.data);
@@ -241,7 +243,7 @@ const MxU01Container = props => {
     const getListClasificacionesActivas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllClasificacionesActivas();
+            const response = await DataServiceCatalogos.getAllClasificacionesActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setClasificacion(response.data);
@@ -256,7 +258,7 @@ const MxU01Container = props => {
     const getMedicos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Medico');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -281,7 +283,7 @@ const MxU01Container = props => {
     const getBionalistas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -396,7 +398,7 @@ const MxU01Container = props => {
     const medicoById = async (id) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getUserById(id);
+            const response = await DataServiceSeguridad.getUserById(id);
             if (response.status === 200) {
                 setSelectedMedico(response.data.id);
             }
@@ -931,8 +933,8 @@ const MxU01Container = props => {
 
         const muestra = {
             codLabM: '',
-            fechaEnvio: '',
-            horaEnvio: '',
+            //fechaEnvio: '',
+            //horaEnvio: '',
             horaRefrigeracion: timeRefrigeracion,
             //"id": 0,
             motivoSinFif: motivoNoFif,
@@ -961,7 +963,7 @@ const MxU01Container = props => {
                 }, */
                 motivoNoMx: motivoNoMx,
                 mxCompartida: false, //
-                mxEnviada: false, //
+                //mxEnviada: false, //
                 mxId: {
                     id: mxU01Id,
                 },
@@ -973,8 +975,8 @@ const MxU01Container = props => {
                 volumen: volSangre
             },
             mxFinalInicial: false,
-            mxNoTomada: mxNoTomada,
-            viaje: ''
+            //mxNoTomada: mxNoTomada,
+            //viaje: ''
         }
 
         if (idMx > 0 && idMx !== undefined) {

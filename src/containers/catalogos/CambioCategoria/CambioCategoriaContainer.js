@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import CambioCategoria from '../../../components/catalogo/cambio-categoria/CambioCategoria';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiCatalogos';
 import ToastContainer from '../../../components/toast/Toast';
 //import { useAuth } from '../../../context/Auth';
 
@@ -91,12 +91,6 @@ const CambioCategoriaContainer = props => {
             console.log('error', error)
         }
     }
-
-    /* const data = [
-        { id: 1, nombre: 'A', descripcion: 'Indica que es categoria A', estado: 'Activo' },
-        { id: 2, nombre: 'B', descripcion: 'Indica que es categoria B', estado: 'Activo' },
-        { id: 3, nombre: 'C', descripcion: 'Indica que es categoria C', estado: 'Inactivo' }
-    ] */
 
     const pagination = paginationFactory({
         firstPageText: 'Primera página',
@@ -220,7 +214,8 @@ const CambioCategoriaContainer = props => {
     }
 
     const refreshPage = () => {
-        window.location.reload();
+        //window.location.reload();
+        getAllCambioCat();
     }
 
     return (

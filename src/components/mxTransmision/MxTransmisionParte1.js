@@ -51,14 +51,12 @@ const MxTransmisionParte1 = props => {
         <>
             <div className="input-group row" style={{ marginTop: 5 }}>
                 <div className="col-sm">
-                    {/* <label>Código</label> */}
                     <TextField
                         id="codeTransmision"
                         autoFocus
                         autoComplete="off"
                         type="number"
                         maxLength={10}
-                        //className="form-control"
                         style={{ width: 150 }}
                         name="code"
                         value={props.code}
@@ -74,7 +72,6 @@ const MxTransmisionParte1 = props => {
                         label="Código"
                         className={classes.textField}
                         helperText={props.errorCode}/>
-                    {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorCode}</label> */}
                 </div>
                 <div className="checkbox col-sm">
                     <label>
@@ -118,7 +115,6 @@ const MxTransmisionParte1 = props => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    {/* <label>Cod-lab scan</label> */}
                     <TextField
                         id="codLabScan"
                         autoComplete="off"
@@ -132,7 +128,6 @@ const MxTransmisionParte1 = props => {
                             style: { fontWeight: 'bold' }
                         }}
                         readOnly={true}
-                        /* onChange={props.handleChangeCodeLabScan} */
                         label="Cod-lab scan" />
                 </div>
             </div>
@@ -158,7 +153,6 @@ const MxTransmisionParte1 = props => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    {/* <label>Código de lab</label> */}
                     <TextField
                         id="houseCode"
                         autoComplete="off"
@@ -172,7 +166,6 @@ const MxTransmisionParte1 = props => {
                         inputProps={{
                             style: { fontWeight: 'bold' }
                         }}
-                        /* onChange={props.handleChangeHousCode} */
                         label="Casa CHF" />
                 </div>
             </div>
@@ -198,7 +191,6 @@ const MxTransmisionParte1 = props => {
                     </FormControl>
                 </div>
                 <div className="col-sm">
-                    {/* <label>Código de lab</label> */}
                     <TextField
                         id="codLab"
                         autoComplete="off"
@@ -212,7 +204,6 @@ const MxTransmisionParte1 = props => {
                         inputProps={{
                             style: { fontWeight: 'bold' }
                         }}
-                        /* onChange={props.handleChangeCodeLab} */
                         label="Código de lab" />
                 </div>
             </div>
@@ -234,21 +225,6 @@ const MxTransmisionParte1 = props => {
                         />
                         <label className="messageError row">{props.errorFif}</label>
                     </div>
-                    {/* <div>
-                        <KeyboardDatePicker
-                            margin="normal"
-                            id="date-picker-dialog-fis-u01"
-                            label="FIS"
-                            format="dd/MM/yyyy"
-                            autoOk={true}
-                            value={props.fis !== null ? props.fis : null}
-                            onChange={props.handleChangeFis}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
-                        <label className="messageError row">{props.errorFis}</label>
-                    </div> */}
                     <div className="col-sm">
                         <KeyboardDatePicker
                             margin="normal"
@@ -270,7 +246,6 @@ const MxTransmisionParte1 = props => {
 
             <div className="input-group row" style={{ marginTop: 10 }}>
                 <div className="col-5">
-                    {/* <label>Nombre del participante</label> */}
                     <TextField
                         id="name"
                         autoComplete="off"
@@ -287,7 +262,6 @@ const MxTransmisionParte1 = props => {
                         label="Nombre del participante" />
                 </div>
                 <div className="col-sm">
-                    {/* <label>Estudio</label> */}
                     <TextField
                         id="study"
                         autoComplete="off"
@@ -304,7 +278,6 @@ const MxTransmisionParte1 = props => {
                         label="Estudio" />
                 </div>
                 <div className="col-sm">
-                    {/* <label>Edad</label> */}
                     <TextField
                         id="age"
                         autoComplete="off"

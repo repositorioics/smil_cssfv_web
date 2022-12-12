@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import MxDengue from '../../components/mxDengue/MxDengue';
 import DataServices from '../../service/Api';
+import DataServiceCatalogos from '../../service/ApiCatalogos';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import Utils from '../../utils/Utils';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
@@ -80,7 +82,6 @@ const MxDengueCandidatosContainer = props => {
     let [orina, setOrina] = useState(false);
     let [saliva, setSaliva] = useState(false);
     let [positvoZika, setPositvoZika] = useState(false);
-
     const [disabledMotivoNoMx, setDisabledMotivoNoMx] = useState(true);
     const [disableFif, setDisableFif] = useState(false);
     const [disableCode, setDisableCode] = useState(false);
@@ -400,7 +401,7 @@ const MxDengueCandidatosContainer = props => {
     const getTypeOfTest = async (mxDengueId) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTipoPruebasByMuestraIdAndNivel(mxDengueId, Constants.NIVEL_TIPO_PRUEBA);
+            const response = await DataServiceCatalogos.getAllTipoPruebasByMuestraIdAndNivel(mxDengueId, Constants.NIVEL_TIPO_PRUEBA);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setDataTypeOfTest(response.data);
@@ -415,7 +416,7 @@ const MxDengueCandidatosContainer = props => {
     const getListTubosActivos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTubosActivos();
+            const response = await DataServiceCatalogos.getAllTubosActivos();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setTipoTubo(response.data);
@@ -430,7 +431,7 @@ const MxDengueCandidatosContainer = props => {
     const getListCategoriasActivas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllCategoriasActivas();
+            const response = await DataServiceCatalogos.getAllCategoriasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setCategoria(response.data);
@@ -445,7 +446,7 @@ const MxDengueCandidatosContainer = props => {
     const getListConsultasActivos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllConsultasActivas();
+            const response = await DataServiceCatalogos.getAllConsultasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setConsultas(response.data);
@@ -460,7 +461,7 @@ const MxDengueCandidatosContainer = props => {
     const getMedicos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Medico');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -485,7 +486,7 @@ const MxDengueCandidatosContainer = props => {
     const getListCambCategoriasActivas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllCambiosCategoriasActivas();
+            const response = await DataServiceCatalogos.getAllCambiosCategoriasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setCambiosCategorias(response.data);
@@ -500,7 +501,7 @@ const MxDengueCandidatosContainer = props => {
     const getBionalistas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -1270,6 +1271,7 @@ const MxDengueCandidatosContainer = props => {
     }
 
     const generarCodLabScan = async () => {
+        debugger
         const result =  MxDengueUtils.generarCodigoLabScanDengue(selectedConsulta, fif, fechaToma, selectedCategoria, 
             code, positvoZika, mxParam, lastAnioEstudio, lastCodeLab,
             orina, saliva, lastRecordMxDengue);
@@ -1401,6 +1403,7 @@ const MxDengueCandidatosContainer = props => {
                 motivoNoMx: motivoNoMx,
                 mxCompartida: false,
                 mxEnviada: false,
+                retoma: false,
                 mxId: {
                     id: mxDengueId
                 },
@@ -1421,7 +1424,7 @@ const MxDengueCandidatosContainer = props => {
             numeroPruebas: numPrueba,
             pruebaRapida: true,
             resultado: selectedResult !== null ? selectedResult : '',
-            retoma: false,
+            //retoma: false,
             procInmediato: procInmediato,
             volumenSuero: volumenSuero,
             observacionMxSeparada: observationsMxSeparada,

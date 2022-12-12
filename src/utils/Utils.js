@@ -110,38 +110,38 @@ const obtenerConsecutivo = (valor) => {
     return resultado;
 }
 
-const obtenerMuestraByCodLabScan = async (valor, codLabScab) => {
+const obtenerMuestraByCodLabScan = async (valor, codLabScan) => {
     let resultado = '';
     if (valor === 'Dengue') {
-        const response = await DataServices.muestraDengueByCodLabScan(codLabScab);
+        const response = await DataServices.muestraDengueByCodLabScan(codLabScan);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;
             }
         }
     } else if (valor === 'Bhc') {
-        const response = await DataServices.muestraBHCByCodLabScan(codLabScab);
+        const response = await DataServices.muestraBHCByCodLabScan(codLabScan);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;
             }
         }
     } else if (valor === 'Influenza') {
-        const response = await DataServices.muestraInfluenzaByCodLabScan(codLabScab);
+        const response = await DataServices.muestraInfluenzaByCodLabScan(codLabScan);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;
             }
         }
     } else if (valor === 'UO1') {
-        const response = await DataServices.muestraUO1ByCodLabScan(codLabScab);
+        const response = await DataServices.muestraUO1ByCodLabScan(codLabScan);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;
             }
         }
     } else if (valor === 'Transmision') {
-        const response = await DataServices.muestraTransmisionByCodLabScan(codLabScab);
+        const response = await DataServices.muestraTransmisionByCodLabScan(codLabScan);
         if (response.status === 200) {
             if (response.data !== '') {
                 resultado = response.data;
@@ -153,6 +153,65 @@ const obtenerMuestraByCodLabScan = async (valor, codLabScab) => {
     return resultado;
 }
 
+const viewTextToSaveData = (codLabScan) => {
+    let result = '';
+    const isMxBHC = codLabScan.includes('BHC');
+    const isTransLN = codLabScan.includes('TL1') || codLabScan.includes('TL2');
+
+    const isTransResp = codLabScan.includes('TR1') || codLabScan.includes('TR2') ||
+        codLabScan.includes('TR3') || codLabScan.includes('TR4') || codLabScan.includes('TR5')
+        || codLabScan.includes('TR6');
+
+    const isTransSerologia = codLabScan.includes('TRI') || codLabScan.includes('TRF') ||
+        codLabScan.includes('TPI') || codLabScan.includes('TPF');
+
+    const isCVInfluenza = codLabScan.includes('IPI') || codLabScan.includes('IPF') ||
+        codLabScan.includes('IRI') || codLabScan.includes('IRF');
+
+    const isCVUO1 = codLabScan.includes('CPI') || codLabScan.includes('CPF') ||
+        codLabScan.includes('CRI') || codLabScan.includes('CRF');
+
+    const isCHFMxResp = codLabScan.includes('SR1') || codLabScan.includes('SR2') ||
+        codLabScan.includes('SR3') || codLabScan.includes('SR4') || codLabScan.includes('SR5')
+        || codLabScan.includes('SR6');
+
+    const isCHFMxSerologia = codLabScan.includes('SPI') || codLabScan.includes('SPF') ||
+        codLabScan.includes('SRI') || codLabScan.includes('SRF');
+
+    const isPostivoInfluenzaUO1 = codLabScan.includes('UPI') || codLabScan.includes('UPF') ||
+        codLabScan.includes('URI') || codLabScan.includes('URF');
+
+    const isPostInfluenzaUO1PrePostVacuna = codLabScan.includes('VPI') || codLabScan.includes('VPF') ||
+        codLabScan.includes('VRI') || codLabScan.includes('VRF');
+
+    if (isMxBHC) {
+        result =  'BHC';
+    }
+
+    if (isTransLN) {
+        result = 'TransmisionLN'
+    }
+
+    if (isTransResp || isCHFMxResp) {
+        result = 'TransmisionResp';
+    }
+
+    if (isTransSerologia || isCHFMxSerologia || isCVInfluenza) {
+        result = 'TransmisionSero';
+    }
+
+    if (isCVUO1 || isPostivoInfluenzaUO1 || isPostInfluenzaUO1PrePostVacuna) {
+        result = 'U01';
+    }
+
+    if (!isMxBHC && !isTransLN && !isTransResp && !isCHFMxResp &&
+        !isTransSerologia && !isCHFMxSerologia && !isCVInfluenza &&
+        !isCVUO1 && !isPostivoInfluenzaUO1 && !isPostInfluenzaUO1PrePostVacuna) {
+        result = 'Influenza';
+    }
+    return result;
+}
+
 const utils = {
     obtenerEdad,
     validateDate,
@@ -161,7 +220,8 @@ const utils = {
     createCodLabScan,
     nextString,
     obtenerConsecutivo,
-    obtenerMuestraByCodLabScan
+    obtenerMuestraByCodLabScan,
+    viewTextToSaveData
 }
 
 export default utils;

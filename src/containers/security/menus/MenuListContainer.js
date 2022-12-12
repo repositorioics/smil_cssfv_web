@@ -4,7 +4,7 @@ import Edit from '@material-ui/icons/Edit';
 //import Header from '../../../components/header/Header';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 import MenuList from '../../../components/security/menus/MenuList';
 
 

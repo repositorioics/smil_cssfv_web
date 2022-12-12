@@ -75,20 +75,12 @@ const MxBhc = props => {
                             aria-controls="panel1bh-content"
                             id="panel1bh-header"
                         >
-                            {/* <FormControlLabel
-                                className={classes.heading}
-                                aria-label="Acknowledge"
-                                control={<Description style={{color: "#aba7a7"}}/>}
-                                label="Datos Generales"
-                            /> */}
-                            <Typography className={classes.heading}>Datos Generales</Typography>
+                        <Typography className={classes.heading}>Datos Generales</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className={classes.secondaryHeading} style={{ width: '90%', marginLeft: '5%' }}>
                                 <MxBhcParte1
                                     code={props.code}
-                                    //selectedConsulta={props.selectedConsulta}
-                                    //consultas={props.consultas}
                                     selectedMedico={props.selectedMedico}
                                     medicos={props.medicos}
                                     name={props.name}
@@ -96,19 +88,14 @@ const MxBhc = props => {
                                     age={props.age}
                                     codLab={props.codLab}
                                     fif={props.fif}
-                                    //fis={props.fis}
                                     fechaToma={props.fechaToma}
                                     handleChangeCode={props.handleChangeCode}
                                     onKeyPressCode={props.onKeyPressCode}
-                                    //handleChangeConsulta={props.handleChangeConsulta}
                                     handleChangeMedico={props.handleChangeMedico}
                                     handleChangeFif={props.handleChangeFif}
-                                    //handleChangeFis={props.handleChangeFis}
                                     handleChangeFtoma={props.handleChangeFtoma}
                                     disableCode={props.disableCode}
-
                                     errorCode={props.errorCode}
-                                    //errorConsulta={props.errorConsulta}
                                     errorMedico={props.errorMedico}
                                     errorFechaToma={props.errorFechaToma}
                                 />
@@ -131,7 +118,7 @@ const MxBhc = props => {
                             aria-controls="panel2bh-content"
                             id="panel2bh-header"
                         >
-                            <Typography className={classes.heading}>Información - Muestra Tomada</Typography>
+                        <Typography className={classes.heading}>Información - Muestra Tomada</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className={classes.secondaryHeading} style={{ width: '90%', marginLeft: '5%' }}>
@@ -176,36 +163,6 @@ const MxBhc = props => {
                         </div>
                     </Accordion>
                 </div>
-                {/* <div className={classes.root} style={{ boxShadow: "none" }}>
-                    <div className="hdr, row, m-top">
-                        <div className="title">
-                            <h4>{props.title}</h4>
-                        </div>
-                    </div>
-                    <Stepper alternativeLabel activeStep={props.activeStep} connector={<ColorlibConnector />}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    <div>
-                        <main className={classes.instructions}>{getStepContent(props.activeStep)}</main>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                        <Button disabled={props.activeStep === 0} onClick={props.handleBack} className={classes.button}>
-                            Regresar
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={props.handleNext}
-                            className={classes.button}
-                        >
-                            {props.activeStep === steps.length - 1 ? 'Fin' : 'Siguiente'}
-                        </Button>
-                    </div>
-                </div> */}
                 <Fab size="small" className={clsx(classes.fab, classes.fabColor)} aria-label="add"
                     onClick={() => props.goBackListMxTransmision()}>
                     <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">Salir</Tooltip>}>

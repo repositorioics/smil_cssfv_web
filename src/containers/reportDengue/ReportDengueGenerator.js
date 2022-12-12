@@ -42,28 +42,28 @@ const GeneratePDF = (data, medicos, dataResult, startDate, endDate) => {
 
   // Definiendo las colummnas del pdf
   const tableColumn = ["Código", "Cat", "Consulta", "FIF", "Hora Toma", "Vol Sangre", "Hora ref Mx",
-    "Fecha Separación", "Hora Separación", "No Viales", "Vol Suero", "Hora Ref Vial", "Ordena Mx", "Toma Mx",
+    "Fecha Separación", "Hora Separación", "No Viales", "Hora Ref Vial", "Ordena Mx", "Toma Mx",
     "Separa Mx", "Tubo", "Resultado PR"];
 
   const tableRows = [];
 
   doc.setFont("Times New Roman", "Bold");
 
-  doc.setFontSize(12);
-  doc.setTextColor('#6B041A');
+  doc.setFontSize(22);
+  doc.setTextColor('#000000');
   doc.text("Estudio Cohorte Pediátrica", 14, 15);
-  doc.line(14, 15, 60, 15); // horizontal line
-  doc.setLineWidth(0.5);
+  //doc.line(14, 15, 60, 15); // horizontal line
+  //doc.setLineWidth(0.5);
 
-  doc.setTextColor('#040377');
-  doc.text("Muestra de Dengue tomadas", 14, 20);
+  doc.setTextColor('#000000');
+  doc.text("Muestra de Dengue tomadas", 14, 23);
 
   doc.setFontSize(10);
-  doc.text("Fecha de toma: " + startDate + '  al  ' + endDate, 220, 15);
+  doc.text("Fecha de toma: " + startDate + " al " + endDate, 220, 15);
 
   for (let i = 0; i < data.length; i++) {
     const ticketData = [
-      data[i].codLab,
+      data[i].muestraId.codLab,
       data[i].categoriaId.nombre,
       data[i].consultaId.descripcion,
       data[i].muestraId.fif,
@@ -76,34 +76,13 @@ const GeneratePDF = (data, medicos, dataResult, startDate, endDate) => {
       //data[i].volumenSuero,
       data[i].horaRefrigeracionVial,
       findMedicalName(data[i].muestraId.quienOrdena),
-      data[i].muestraId.bioanalistaId.nombres + ' ' + data[i].muestraId.bioanalistaId.apellidos,
+      data[i].muestraId.bioanalistaId != null ? data[i].muestraId.bioanalistaId.nombres + ' ' + data[i].muestraId.bioanalistaId.apellidos : "",
       data[i].bioanalistaVialId !== null ? data[i].bioanalistaVialId.nombres + ' ' + data[i].bioanalistaVialId.apellidos : null,
       findTubo(data[i].tuboId),
       findResult(data[i].resultado)
-      // called date-fns to format the date on the ticket
-      //format(new Date(ticket.updated_at), "yyyy-MM-dd")
     ];
-    // push each tickcet's info into a row
     tableRows.push(ticketData);
   };
-  /* data.forEach(item => {
-    const ticketData = [
-      item.codLab,
-      item.categoriaId.nombre,
-      item.consultaId.descripcion,
-      item.muestraId.fif,
-      item.muestraId.horaToma,
-      item.muestraId.volumen,
-      findMedicalName(item.muestraId.quienOrdena),
-      item.muestraId.bioanalistaId.nombres + ' ' + item.muestraId.bioanalistaId.apellidos,
-      item.tuboId.descripcion
-      // called date-fns to format the date on the ticket
-      //format(new Date(ticket.updated_at), "yyyy-MM-dd")
-    ];
-    // push each tickcet's info into a row
-    tableRows.push(ticketData);
-  }); */
-
 
   // startY es el margin-top de inicio
   doc.autoTable(tableColumn, tableRows, {
@@ -111,13 +90,16 @@ const GeneratePDF = (data, medicos, dataResult, startDate, endDate) => {
     styles: { fontSize: 7 }, rowPageBreak: 'avoid'
   });
 
-  const date = new Date().toDateString().split(" ");
+  //const date = new Date().toDateString().split(" ");
 
-  const dateStr = date[0] +"_"+ date[1] +"_"+ date[2] +"_"+ date[3];
+  //const dateStr = date[0] +"_"+ date[1] +"_"+ date[2] +"_"+ date[3];
+
+  /* let now = moment().locale('es');
+  const fecha = now.format('dddd, D MMMM YYYY, h:mm a'); */
 
   let now = moment().locale('es');
-  const fecha = now.format('dddd, D MMMM YYYY, h:mm a');
-
+  const rptFecha = now.format('YYYYMMDD');
+  
   const pageCount = doc.internal.getNumberOfPages(); //Total Page Number
   for (let i = 0; i < pageCount; i++) {
     doc.setPage(i);
@@ -139,11 +121,11 @@ const GeneratePDF = (data, medicos, dataResult, startDate, endDate) => {
     doc.text('pagina: ' + pageCurrent + '/' + pageCount, 270, 205);
 
     doc.setFontSize(7);
-    doc.text(fecha, 14, 205);
+    //doc.text(rptFecha, 14, 205);
   }
 
   // Definimos el nombre del archivo pdf
-  doc.save(`reporteDengue_${dateStr}.pdf`);
+  doc.save(`reporteDengue_${rptFecha}.pdf`);
 };
 
 export default GeneratePDF;

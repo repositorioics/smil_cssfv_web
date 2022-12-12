@@ -1,11 +1,6 @@
 import 'date-fns';
 import React from 'react';
-//import { Multiselect } from 'multiselect-react-dropdown';
 import TextField from '@material-ui/core/TextField';
-//import PrintIcon from '@material-ui/icons/Print';
-//import { OverlayTrigger, Tooltip } from 'react-bootstrap';
-//import { blue } from '@material-ui/core/colors';
-//import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -17,7 +12,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import '../mxInfluenza/MxInfluenza.css';
-//import { es } from 'date-fns/locale';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -77,15 +71,7 @@ const MxU01Parte2 = props => {
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
                 <div className="col-sm">
-                    {/* <div>
-                        <label>Hora toma</label>
-                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        {/* <TimePicker
-                            id="horaTomaMxUO1"
-                            value={props.selectedHoraToma}
-                            onChange={date => props.handleChangeHoraToma(date)}
-                        /> */}
                         <KeyboardTimePicker
                             id="horaToma"
                             label="Hora toma"
@@ -101,34 +87,23 @@ const MxU01Parte2 = props => {
                 </div>
 
                 <div className="col-sm">
-                    {/* <label>Vol. del medio(ml)</label> */}
                     <TextField
                         id="volSangreMl"
                         autoComplete="off"
                         type="text"
                         style={{ marginTop: 13, width: '100%' }}
                         maxLength={50}
-                        //className="form-control"
                         name="volSangreMl"
                         value={props.volSangre}
                         onChange={props.handleChangeVolSangre}
                         label="Volumen sangre(ml)" 
                         className={classes.textField}
                         helperText={props.errorVolSangre}/>
-                    {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorVolSangre}</label> */}
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
                 <div className="col-sm">
-                   {/*  <div>
-                        <label>Hora refrigeración</label>
-                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        {/* <TimePicker
-                            id="horaRefriMxUO1"
-                            value={props.selectedHoraRefrigeracion}
-                            onChange={date => props.handleChangeHoraRefrigeracion(date)}
-                        /> */}
                         <KeyboardTimePicker
                             id="horaRefriMxUO1"
                             label="Hora refrigeración"
@@ -166,7 +141,6 @@ const MxU01Parte2 = props => {
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-lg">
-                    {/* <label>Observaciones</label> */}
                     <TextField
                         id="motivoNoMxUO1"
                         autoComplete="off"
@@ -183,7 +157,6 @@ const MxU01Parte2 = props => {
                         className={classes.textField}
                         helperText={props.errorMotivoNoMx}
                         />
-                    {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorMotivoNoMx}</label> */}
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
@@ -193,7 +166,6 @@ const MxU01Parte2 = props => {
                         autoComplete="off"
                         type="text"
                         style={{ marginTop: 15, width: '100%' }}
-                        //className="form-control"
                         name="motivoNoFif"
                         value={props.motivoNoFif}
                         onChange={props.handleChangeMotivoNoFif}
@@ -201,13 +173,11 @@ const MxU01Parte2 = props => {
                         className={classes.textField}
                         helperText={props.errorMotivoSinFif}
                         disabled={props.disabledMotivoNoFif} />
-                    {/* <label style={{ marginTop: 10 }} className="messageError">{props.errorMotivoSinFif}</label> */}
                 </div>
             </div>
 
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-lg">
-                    {/* <label>Observaciones</label> */}
                     <TextField
                         id="observationsUO1"
                         autoComplete="off"

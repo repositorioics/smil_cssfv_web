@@ -37,18 +37,18 @@ const RptEnvioMuestras = props => {
                 <div className="input-group row">
                     <div className="col-sm">
                         <FormControl className={classes.formControl}>
-                            <InputLabel id="perfil-input-label">Seleccione el tipo de muestra a enviar</InputLabel>
+                            <InputLabel id="perfil-input-label">Seleccione el tipo de muestra</InputLabel>
                             <Select
                                 labelId="perfil-por-label"
                                 id="perfil-por-select"
-                                value={props.selectedEnvioMuestra}
-                                onChange={props.handleChangeEnvioMuestra}
+                                value={props.selectedTipoMuestra}
+                                onChange={props.handleChangeTipoMuestra}
                             >
                                 <MenuItem value="0">
                                     <em>Seleccione</em>
                                 </MenuItem>
                                 {props.envioMuestraData.map((e, keyIndex) => {
-                                    return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                    return (<MenuItem key={keyIndex} value={e.id}>{e.descripcion}</MenuItem>)
                                 })
                                 }
                             </Select>
@@ -138,15 +138,15 @@ const RptEnvioMuestras = props => {
                             </thead>
                             <tbody>
                                 {props.data.map(item => (
-                                    <tr key={item.id}>
-                                        <td>{item.muestraId.codLab}</td>
-                                        <td>{item.muestraId.codigoParticipante}</td>
-                                        <td>{item.muestraId.estudiosParticipante}</td>
-                                        <td>{item.muestraId.fif}</td>
-                                        <td>{item.muestraId.fechaToma}</td>
-                                        <td>{(item.tuboId !== null && item.tuboId !== undefined) ? item.tuboId.descripcion : ""}</td>
-                                        <td>{item.muestraId.volumen}</td>
-                                        <td>{item.muestraId.observacion}</td>
+                                    <tr key={item.muestraId}>
+                                        <td>{item.codigoLab}</td>
+                                        <td>{item.codigo}</td>
+                                        <td>{item.estudios}</td>
+                                        <td>{item.fif}</td>
+                                        <td>{item.fechaToma}</td>
+                                        <td>{item.tipo}</td>
+                                        <td>{item.volumen}</td>
+                                        <td>{item.observacion}</td>
                                     </tr>
                                 ))}
                             </tbody>

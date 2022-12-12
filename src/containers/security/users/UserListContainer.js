@@ -6,7 +6,7 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 import Edit from '@material-ui/icons/Edit';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import UserList from '../../../components/security/users/UserList';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 
 const UserListContainer = props => {
 

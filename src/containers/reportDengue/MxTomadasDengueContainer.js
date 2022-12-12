@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import GeneratePDF from "./ReportDengueGenerator";
 import DataServices from "../../service/Api"
+import DataServiceCatalogos from "../../service/ApiCatalogos"
+import DataServiceSeguridad from "../../service/ApiSeguridad"
 import MxTomadasDengue from "../../components/reportDengue/MxTomadasDengue";
 import Utils from '../../utils/Utils';
 import ToastContainer from '../../components/toast/Toast';
@@ -45,7 +47,7 @@ const MxTomadasDengueContainer = props => {
   const getMedicos = async () => {
     setExecuteLoading(true);
     try {
-        const response = await DataServices.getAllUserProfileByNombre('Medico');
+        const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
         if (response.status === 200) {
             setExecuteLoading(false);
             const multiSelectData = [];
@@ -70,7 +72,7 @@ const MxTomadasDengueContainer = props => {
 const getAllResultPRD = async () => {
   setExecuteLoading(true);
   try {
-      const response = await DataServices.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID_DENGUE);
+      const response = await DataServiceCatalogos.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID_DENGUE);
       if (response.status === 200) {
           setExecuteLoading(false);
           setDataResult(response.data);

@@ -25,8 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AlertDialogMismoEF = (props) => {
     const classes = useStyles();
-    //let dateVar = moment(props.fif);
-    //let newDateVar = dateVar.utc().format();
     let newFif = '';
     if (props.fif !== '' && props.fif !== null && props.fif !== undefined) {
         newFif = moment(props.fif).format('YYYY-MM-DD');

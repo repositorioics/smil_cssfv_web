@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import ProfileOptionsMenu from '../../../components/security/roles/ProfileOptionsMenu';
 import { textFilter } from 'react-bootstrap-table2-filter';
 //import paginationFactory from 'react-bootstrap-table2-paginator';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 import ToastContainer from '../../../components/toast/Toast';
 
 const ProfileOptionsMenuContainer = props => {

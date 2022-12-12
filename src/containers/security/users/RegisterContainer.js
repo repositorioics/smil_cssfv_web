@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import Header from '../../../components/header/Header';
 import Register from '../../../components/security/users/Register';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 import ToastContainer from '../../../components/toast/Toast';
 
 const RegisterContainer = props => {

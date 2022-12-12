@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import AnioEstudio from '../../../components/catalogo/anio-estudio/AnioEstudio';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiCatalogos';
 import ToastContainer from '../../../components/toast/Toast';
 //import { useAuth } from '../../../context/Auth';
 
@@ -211,7 +211,8 @@ const AnioEstudioContainer = props => {
     }
 
     const refreshPage = () => {
-        window.location.reload();
+        //window.location.reload();
+        getAll();
     }
 
     return (

@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import MxTransmision from '../../components/mxTransmision/MxTransmision';
 import DataServices from '../../service/Api';
+import DataServiceCatalogos from '../../service/ApiCatalogos';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
 import AlertDialogText from '../../components/alertDialog/AlertDialogText';
@@ -238,7 +240,7 @@ const MxTransmisionContainer = props => {
     const getListVisitasActivas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllVisitasActivas();
+            const response = await DataServiceCatalogos.getAllVisitasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setVisitas(response.data);
@@ -253,7 +255,7 @@ const MxTransmisionContainer = props => {
     const getMedicos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Medico');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -278,7 +280,7 @@ const MxTransmisionContainer = props => {
     const getBionalistas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -392,7 +394,7 @@ const MxTransmisionContainer = props => {
     const medicoById = async (id) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getUserById(id);
+            const response = await DataServiceSeguridad.getUserById(id);
             if (response.status === 200) {
                 setSelectedMedico(response.data.id);
             }
@@ -921,8 +923,8 @@ const MxTransmisionContainer = props => {
 
         const muestra = {
             codLabM: '',
-            fechaEnvio: '',
-            horaEnvio: '',
+            //fechaEnvio: '',
+            //horaEnvio: '',
             horaRefrigeracion: timeRefrigeracion,
             plasma: plasma,
             //"id": 0,
@@ -964,8 +966,8 @@ const MxTransmisionContainer = props => {
                 volumen: volSangre
             },
             mxFinalInicial: false,
-            mxNoTomada: mxNoTomada,
-            viaje: ''
+            //mxNoTomada: mxNoTomada,
+            //viaje: ''
         }
 
         if (idMx > 0 && idMx !== undefined) {

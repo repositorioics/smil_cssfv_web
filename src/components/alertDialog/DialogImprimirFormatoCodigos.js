@@ -14,7 +14,6 @@ import * as Constants from '../../Constants';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
-        //margin: theme.spacing(1),
         minWidth: 300,
     },
     selectEmpty: {
@@ -56,7 +55,6 @@ const DialogImprimirFormatoCodigos = (props) => {
                         </FormControl>
                     </div>
                     <div className="col-sm">
-                        {/* <label>Cod-lab scan</label> */}
                         <TextField
                             id="idCantCopias"
                             autoComplete="off"

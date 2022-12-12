@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
 import MxBhc from '../../components/mxBhc/MxBhc';
 import DataServices from '../../service/Api';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
 import AlertDialogText from '../../components/alertDialog/AlertDialogText';
@@ -173,7 +174,7 @@ const MxBhcContainer = props => {
     const getMedicos = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Medico');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -198,7 +199,7 @@ const MxBhcContainer = props => {
     const getBionalistas = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -297,7 +298,7 @@ const MxBhcContainer = props => {
     const medicoById = async (id) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getUserById(id);
+            const response = await DataServiceSeguridad.getUserById(id);
             if (response.status === 200) {
                 setSelectedMedico(response.data.id);
             }

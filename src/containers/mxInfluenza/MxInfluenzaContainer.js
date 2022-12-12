@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import MxInfluenza from '../../components/mxInfluenza/MxInfluenza';
 import DataServices from '../../service/Api';
+import DataServiceCatalogo from '../../service/ApiCatalogos';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import Utils from '../../utils/Utils';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
@@ -298,7 +300,7 @@ const MxInfluenzaContainer = props => {
     const medicoById = async (id) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getUserById(id);
+            const response = await DataServiceSeguridad.getUserById(id);
             if (response.status === 200) {
                 /* const result = [{
                     id: response.data.id,
@@ -318,8 +320,11 @@ const MxInfluenzaContainer = props => {
     }
 
     const onKeyPressCode = (e) => {
-        if (e.charCode === 13) {
+        if (e.keyCode === 13 || e.key === 'Enter') {
             if (validateCode()) {
+                const form = e.target.form;
+                const index = [...form].indexOf(e.target);
+                form.elements[index + 4].focus();
                 e.preventDefault();
                 getParticipante(code);
                 getLastRecordFlu(code);
@@ -331,6 +336,24 @@ const MxInfluenzaContainer = props => {
             }
         }
     }
+
+    const onKeyPressFif = (e) => {
+        if (e.keyCode === 13 || e.key === 'Enter') {
+            const form = e.target.form;
+            const index = [...form].indexOf(e.target);
+            form.elements[index + 2].focus();
+            e.preventDefault();
+        }
+    }
+
+    /*const onKeyPressFis = (e) => {
+        if (e.charCode === 13) {
+            const form = e.target.form;
+            const index = [...form].indexOf(e.target);
+            form.elements[index + 4].focus();
+            e.preventDefault();
+        }
+    }*/
 
     const handleChangePanel1 = (panel) => (event, isExpanded) => {
         setExpanded1(isExpanded ? panel : false);
@@ -830,7 +853,7 @@ const MxInfluenzaContainer = props => {
         setExecuteLoading(true);
         try {
             //const response = await DataServices.getAllTiposPruebasByMuestraId(mxFluId);
-            const response = await DataServices.getAllTipoPruebasByMuestraIdAndNivel(mxFluId, Constants.NIVEL_TIPO_PRUEBA);
+            const response = await DataServiceCatalogo.getAllTipoPruebasByMuestraIdAndNivel(mxFluId, Constants.NIVEL_TIPO_PRUEBA);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setDataTypeOfTest(response.data);
@@ -845,7 +868,7 @@ const MxInfluenzaContainer = props => {
     const getMedicos = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Medico');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -870,7 +893,7 @@ const MxInfluenzaContainer = props => {
     const getBionalistas = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -895,7 +918,7 @@ const MxInfluenzaContainer = props => {
     const getTypeOfMx = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTipoMuestrasActivas();
+            const response = await DataServiceCatalogo.getAllTipoMuestrasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -920,7 +943,7 @@ const MxInfluenzaContainer = props => {
     const getMismoEpFif = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllEpFebriles();
+            const response = await DataServiceCatalogo.getAllEpFebriles();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -945,7 +968,7 @@ const MxInfluenzaContainer = props => {
     const getAllResultPRI = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID);
+            const response = await DataServiceCatalogo.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setDataResult(response.data);
@@ -960,7 +983,7 @@ const MxInfluenzaContainer = props => {
     const getAllResultPRVSR = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID_VSR);
+            const response = await DataServiceCatalogo.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID_VSR);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setDataResultVsr(response.data);
@@ -1430,8 +1453,6 @@ const MxInfluenzaContainer = props => {
             }
         }
 
-        
-
         let tipoMuestraId = {};
         let usuarioId = {};
         let bioanalistaId = {};
@@ -1445,11 +1466,27 @@ const MxInfluenzaContainer = props => {
         }
 
         const muestra = {
-            casoIndiceEstTransm: 0,
-            
-            covidPositivo: false, //Pendiente
-            motivoMismoEf: selectedMismoEpFif !== null ? selectedMismoEpFif : null,
-            motivoSinFif: motivoNoFif,
+            casoIndiceEstTransm: null,
+            covidPositivo: false,
+            mxCovid: mxCv,
+            mxNoTomada: mxNoTomada,
+            numeroPruebas: '', //
+            numeroPruebasPr: testNumberFlu,
+            numeroPruebasPrVsr: testNumberVsr,
+            observationsPr: observationsPr,
+            observacionesPrVsr: observationsPrVsr,
+            perteneceEstTransm: null, //
+            positivoMi: positivoMi,
+            procPri: null, //
+            pruebaRapida: prFlu,
+            pruebaRapidaVsr: prVsr,
+            resultado: null, //
+            resultadoPr: (selectedResult <= 0 || selectedResult === "") ? null : selectedResult,
+            resultadoPrVsr: (testResultVsr <= 0 || testResultVsr === "") ? null : testResultVsr,
+            retEstTransm: null, //
+            tipoPruebaId: {
+                id: selectedTypeOfTest
+            },
             muestraId: {
                 codLab: codeLab,
                 codLabScan: codLabScan, 
@@ -1469,6 +1506,7 @@ const MxInfluenzaContainer = props => {
                 motivoNoMx: motivoNoMx,
                 mxCompartida: false, //Pendiente
                 mxEnviada: false, //Pendiente
+                retoma: esRetoma,
                 mxId: {
                     id: mxFluId,
                 },
@@ -1484,27 +1522,6 @@ const MxInfluenzaContainer = props => {
                 catRecepcionId: {
                     id: catRecepcionId
                 },
-            },
-            mxCovid: mxCv,
-            mxNoTomada: mxNoTomada,
-            numeroPruebas: '',
-            numeroPruebasPr: testNumberFlu,
-            numeroPruebasPrVsr: testNumberVsr,
-            observacionesPr: observationsPr,
-            observacionesPrVsr: observationsPrVsr,
-
-            resultadoPr: (selectedResult <= 0 || selectedResult === "") ? "" : selectedResult,
-            resultadoPrVsr: (testResultVsr <= 0 || testResultVsr === "") ? "" : testResultVsr,
-            ///perteneceEstTransm: null, //Pendiente
-            positivoMi: positivoMi,
-            //procPri: '', //Pendiente
-            pruebaRapida: prFlu,
-            pruebaRapidaVsr: prVsr,
-            //resultado: '', //Pendiente
-            //retEstTransm: '', //Pendiente
-            retoma: esRetoma,
-            tipoPruebaId: {
-                id: selectedTypeOfTest,
             }
         }
 
@@ -1517,8 +1534,7 @@ const MxInfluenzaContainer = props => {
 
         usuarioId.id = loggedInUser <= 0 ? accountData.usuarioId : loggedInUser
         muestra.muestraId.usuarioId = usuarioId;
-
-        if (selectedTypeOfMx > 0) {
+        if (selectedTypeOfMx < 0) {
             tipoMuestraId.id = selectedTypeOfMx;
             muestra.tipoMuestraId = tipoMuestraId;
         }
@@ -1531,14 +1547,14 @@ const MxInfluenzaContainer = props => {
             muestra.id = idMxFlu;
         }
 
-        if (selectedResult !== '' || selectedResult !== null || selectedResult !== undefined) {
+       /*  if (selectedResult !== '' || selectedResult !== null || selectedResult !== undefined) {
             if (selectedResult > 0) {
                 muestra.resultadoPrId = {
                     id: selectedResult,
                 }
             }
         }
-
+ */
         //console.log('muestra', muestra);
         if (idMx > 0) {
             /**Actualizar muestra influenza*/
@@ -1681,6 +1697,8 @@ const MxInfluenzaContainer = props => {
                 observationsPrVsr={observationsPrVsr}
                 mismoEpFif={mismoEpFif}
                 onKeyPressCode={onKeyPressCode}
+                onKeyPressFif={onKeyPressFif}
+                //onKeyPressFis={onKeyPressFis}
                 executeLoading={executeLoading}
                 onSelectRequestBy={onSelectRequestBy}
                 selectedMedico={selectedMedico}

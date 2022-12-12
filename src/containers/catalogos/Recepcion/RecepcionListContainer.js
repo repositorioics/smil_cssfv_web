@@ -5,7 +5,7 @@ import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import Edit from '@material-ui/icons/Edit';
 import RecepcionList from '../../../components/catalogo/recepcion/RecepcionList';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiCatalogos';
 
 const RecepcionListContainer = props => {
 

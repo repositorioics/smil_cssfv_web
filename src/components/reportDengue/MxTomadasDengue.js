@@ -17,21 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-//const MxTomadasDengue = ({ tickets }) => {
 const MxTomadasDengue = props => {
   const classes = useStyles();
   
-  // a function that assigns bootstrap styling classes based on 
-  // the status of the ticket
-  /*const assignColorToTicketStatus = ticket => {
-    if (ticket.status === "completed") {
-      return "p-3 mb-2 bg-success text-white";
-    } else if (ticket.status === "in_progress") {
-      return "p-3 mb-2 bg-warning text-dark";
-    } else if (ticket.status === "opened") {
-      return "p-3 mb-2 bg-light text-dark";
-    }
-  };*/
   const findMedicalName = (id) => {
     //console.log('data', props.data);
     if (props.medicos.length > 0) {
@@ -125,7 +113,7 @@ const MxTomadasDengue = props => {
               <tbody>
                 {props.data.map(item => (
                   <tr key={item.id}>
-                    <td>{item.codLab}</td>
+                    <td>{item.muestraId.codLab}</td>
                     <td>{item.categoriaId.nombre}</td>
                     <td>{item.consultaId.descripcion}</td>
                     <td>{item.muestraId.fif}</td>
@@ -134,12 +122,6 @@ const MxTomadasDengue = props => {
                     <td>{findMedicalName(item.muestraId.quienOrdena)}</td>
                     <td>{item.muestraId.bioanalistaId !== null ? item.muestraId.bioanalistaId.nombres + ' ' + item.muestraId.bioanalistaId.apellidos : null}</td>
                     <td>{item.tuboId !== null ? item.tuboId.descripcion : null}</td>
-                    {/* <td className={assignColorToTicketStatus(item)}>
-                      {item.estado}
-                    </td> */}
-                    {/* <td>
-                      <Link to={`/ticket/${item.id}`}>See comments</Link>
-                    </td> */}
                   </tr>
                 ))}
               </tbody>

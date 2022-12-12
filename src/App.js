@@ -22,7 +22,7 @@ import ResultadosMuestrasContainer from './containers/catalogos/ResultadosMuestr
 import RecepcionListContainer from './containers/catalogos/Recepcion/RecepcionListContainer';
 import RegisterRecepcionContainer from './containers/catalogos/Recepcion/RegisterRecepcionContainer';
 import AnioEstudioContainer from './containers/catalogos/AnioEstudio/AnioEstudioContainer';
-
+import ClasificacionMuestra from './containers/catalogos/ClasificacionMuestra/ClasificacionMuestraContainer';
 
 import AddUser from './containers/security/users/RegisterContainer';
 import Users from './containers/security/users/UserListContainer';
@@ -42,6 +42,7 @@ import MenuOptionContainer from './containers/security/menus/MenuOptionContainer
 
 import MxInfluenzaListContainer from './containers/mxInfluenza/MxInfluenzaListContainer';
 import MxInfluenzaContainer from './containers/mxInfluenza/MxInfluenzaContainer';
+import MxInfluenzaRetomaListContainer from './containers/mxInfluenza/MxInfluenzaRetomaListContainer';
 
 import MxU01ListContainer from './containers/mxU01/MxU01ListContainer';
 import MxU01Container from './containers/mxU01/MxU01Container';
@@ -68,6 +69,7 @@ import MxDenguePmbcCandidatosListContainer from "./containers/mxDengue/MxDengueP
 import MxDenguePaxGeneContainer from "./containers/mxDengue/MxDenguePaxGeneListContainer";
 import MxDenguePaxGeneCandidatosListContainer from "./containers/mxDengue/MxDenguePaxGeneCandidatosListContainer";
 import MxDengueBhcCandidatosListContainer from "./containers/mxDengue/MxDengueBhcCandidatosListContainer";
+import MxDengueRetomaListContainer from "./containers/mxDengue/MxDengueRetomaListContainer";
 
 import EnvioMxContainer from "./containers/envioMx/EnvioMxContainer";
 
@@ -76,8 +78,6 @@ import RptEnvioMuestrasContainer from "./containers/reportes/RptEnvioMuestrasCon
 
 const App = () => {
   const [isTimeout, setIsTimeout] = useState(false);
-
-  //let location = useLocation();
 
   useEffect(() => {
     const timer = new IdleTimer({
@@ -100,34 +100,9 @@ const App = () => {
       localStorage.removeItem("_expiredTime");
       localStorage.removeItem('token');
       localStorage.removeItem('accountData');
-      //setAuthToken();
       return <Redirect to='/login' />
-      //history.push('/');
     }
   }
-
-  /**Funcion para deshabilitar f12 y el click derecho en el sistema */
-  /* const disableDeveloperToolBar = () => {
-    document.onkeydown = (event) => {
-      event = (event || window.event);
-      if (event.keyCode === 123 || event.keyCode === 18) {
-        alert("Esta funcion esta deshabilitada");
-        return false;
-      }
-    }
-
-    document.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    });
-  } */
-
-  //const existingToken = localStorage.getItem('token');
-
-  /* const [authToken, setAuthToken] = useState(localStorage.getItem('token'));
-
-  const setToken = () => {
-    setAuthToken(localStorage.getItem('token'));
-  } */
 
   return (
     <>
@@ -135,11 +110,9 @@ const App = () => {
         <div className="App">
           {LogoutTimeExpired()}
           <Switch>
-            {/* <Route exact path='/' component={Login} /> */}
             <Redirect exact from="/" to="/login" />
             <Route path="/login" component={Login} />
             <>
-              {/* <Header /> */}
               <Route path="/home"
                 exact
                 render={props =>
@@ -261,6 +234,15 @@ const App = () => {
                 render={props => (
                   <Header {...props}>
                     <ResultadosMuestrasContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/catalogo/clasificacion-muestra"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <ClasificacionMuestra {...props} />
                   </Header>
                 )}
               />
@@ -423,6 +405,15 @@ const App = () => {
                 (
                   <Header {...props}>
                     <MxInfluenzaListContainer {...props} />
+                  </Header>
+                )}
+              />
+              <Route path="/muestras/influenza/retoma"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxInfluenzaRetomaListContainer {...props} />
                   </Header>
                 )}
               />
@@ -700,7 +691,6 @@ const App = () => {
 
                 )}
               />
-              
               <Route path="/muestras/dengue/paxgene"
                 exact
                 render={props =>
@@ -711,7 +701,6 @@ const App = () => {
 
                 )}
               />
-
               <Route path="/muestras/dengue/candidatos-toma/paxgene"
                 exact
                 render={props =>
@@ -722,7 +711,16 @@ const App = () => {
 
                 )}
               />
+              <Route path="/muestras/dengue/retoma/completar-volumen"
+                exact
+                render={props =>
+                (
+                  <Header {...props}>
+                    <MxDengueRetomaListContainer {...props} />
+                  </Header>
 
+                )}
+              />
               <Route path="/envio/muestras"
                 exact
                 render={props =>

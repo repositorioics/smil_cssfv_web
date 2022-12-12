@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import * as Icons from '@material-ui/icons';
-//import * as Icons from '@mui/icons-material';
+import * as Icons from '@mui/icons-material';
 import classNames from 'classnames';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -27,7 +26,7 @@ import Home from '@material-ui/icons/Home';
 import Image from 'react-bootstrap/Image';
 import Logo from '../../images/logo.png';
 
-const drawerWidth = 250;
+const drawerWidth = 260;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: "flex"
@@ -111,13 +110,12 @@ const Header = ({ children }) => {
     let menuOption = [];
     if (accountData) {
         const menu = accountData.menus;
-        //console.log('menu', menu);
         menuOption = menu.filter((item) => Object.keys(item.opciones).length > 0);
     }
 
     const history = useHistory();
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(true)
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleDrawerOpen = () => {
@@ -247,15 +245,6 @@ const Header = ({ children }) => {
                     {menuOption.map(({ id, nombre, icono, opciones }) => {
                         const open = state[id] || false;
                         let IconMenu = Icons[icono];
-                        /* let IconoSubMenu = undefined;
-
-                        const test = (opciones, id) => {
-                            for (let i = 0; i < opciones.length; i++) {
-                                if (opciones[i].iconoSubMenu !== null && opciones[i].id === id) {
-                                    IconoSubMenu = Icons[opciones[i].iconoSubMenu];
-                                }
-                            }
-                        } */
                         return (
                             <div key={id}>
                                 <ListItem button onClick={handleClick(id)}>
@@ -270,7 +259,6 @@ const Header = ({ children }) => {
                                         {opciones.map(({ id, nombre, url, iconoSubMenu }) => (
                                             <ListItem key={id} button className={classes.nested} component={Link} to={url}>
                                                 <ListItemIcon>
-                                                    {/* <i className={iconoSubMenu} aria-hidden="true" style={{fontSize: '23px'}}></i> */}
                                                 </ListItemIcon>
                                                 <ListItemText primary={nombre} />
                                             </ListItem>

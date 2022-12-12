@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Login from '../../components/login/Login';
-import DataServices from '../../service/Api';
+import DataServices from '../../service/ApiSeguridad';
 import ToastContainer from '../../components/toast/Toast';
 //import { useAuth } from '../../context/Auth';
 
@@ -65,13 +65,8 @@ const LoginContainer = props => {
                 if (mountedRef) {
                     const response = await DataServices.login(data);
                     if (response.status === 200) {
-                        //setExecuteLoading(false);
                         localStorage.setItem('token', response.data.token);
                         getOpcienesMenu();
-                        //setAuthToken(response.data.token);
-                        //setUserName('');
-                        //setPassword('');
-                        //props.history.push('/home');
                     }
                 }
             }

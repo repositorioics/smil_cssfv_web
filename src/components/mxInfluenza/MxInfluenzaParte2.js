@@ -92,19 +92,6 @@ const MxInfluenzaParte2 = (props) => {
                         </Select>
                         <label className="messageError">{props.errorBioanlista}</label>
                     </FormControl>
-                    {/* <label>Tomada por</label>
-                    <Multiselect
-                        id="bioanalistas"
-                        showArrow={true}
-                        placeholder="Seleccione..."
-                        singleSelect={true}
-                        options={props.bioanalistas} // Options to display in the dropdown
-                        selectedValues={props.selectedBioanalista} // Preselected value to persist in dropdown
-                        onSelect={props.onSelectBioanalista} // Function will trigger on select event
-                        onRemove={props.onRemoveBioanalistas} // Function will trigger on remove event
-                        displayValue="name" // Property name to display in the dropdown options
-                    />
-                    <label style={{marginTop: 3}} className="messageError">{props.errorBioanlista}</label> */}
                 </div>
                 <div className="col-sm">
                     <FormControl className={classes.formControl}>
@@ -125,33 +112,11 @@ const MxInfluenzaParte2 = (props) => {
                         </Select>
                         <label className="messageError">{props.errorTypeOfMx}</label>
                     </FormControl>
-                    {/* <label>Tipo de muestra</label>
-                    <Multiselect
-                        id="typeOfMx"
-                        showArrow={true}
-                        placeholder="Seleccione..."
-                        singleSelect={true}
-                        options={props.typeMx} // Options to display in the dropdown
-                        selectedValues={props.selectedTypeOfMx} // Preselected value to persist in dropdown
-                        onSelect={props.onSelectTypeOfMx} // Function will trigger on select event
-                        onRemove={props.onRemoveTypeOfMx} // Function will trigger on remove event
-                        displayValue="name" // Property name to display in the dropdown options
-                    />
-                    <label style={{marginTop: 3}} className="messageError">{props.errorTypeOfMx}</label> */}
                 </div>
-
             </div>
             <div className="input-group row" style={{ marginTop: 20 }}>
                 <div className="col-sm">
-                    {/* <div>
-                        <label>Hora toma</label>
-                    </div> */}
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        {/* <TimePicker
-                            id="horaToma"
-                            value={props.selectedHoraToma}
-                            onChange={date => props.handleChangeHoraToma(date)}
-                        /> */}
                         <KeyboardTimePicker
                             id="horaToma"
                             label="Hora toma"
@@ -167,7 +132,6 @@ const MxInfluenzaParte2 = (props) => {
                 </div>
 
                 <div className="col-sm">
-                    {/* <label>Vol. del medio(ml)</label> */}
                     <TextField
                         id="volMedioMl"
                         autoComplete="off"
@@ -215,23 +179,10 @@ const MxInfluenzaParte2 = (props) => {
                             }
                         </Select>
                     </FormControl>
-                    {/* <label>Motivo mismo episodio FIF</label>
-                    <Multiselect
-                        id="mismoEpFif"
-                        showArrow={true}
-                        placeholder="Seleccione..."
-                        singleSelect={true}
-                        options={props.mismoEpFif} // Options to display in the dropdown
-                        selectedValues={props.selectedMismoEpFif} // Preselected value to persist in dropdown
-                        onSelect={props.onSelectMismoEpFif} // Function will trigger on select event
-                        onRemove={props.onRemoveMismoEpFif} // Function will trigger on remove event
-                        displayValue="name" // Property name to display in the dropdown options
-                    /> */}
                 </div>
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-lg">
-                    {/* <label>Observaciones</label> */}
                     <TextField
                         id="motivoNoMx"
                         autoComplete="off"
@@ -251,7 +202,6 @@ const MxInfluenzaParte2 = (props) => {
             </div>
             <div className="input-group row" style={{ marginTop: 15 }}>
                 <div className="col-lg">
-                    {/* <label>Observaciones</label> */}
                     <TextField
                         id="observations"
                         autoComplete="off"

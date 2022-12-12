@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import MxDengue from '../../components/mxDengue/MxDengue';
 import DataServices from '../../service/Api';
+import DataServiceCatalogos from '../../service/ApiCatalogos';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import Utils from '../../utils/Utils';
 import moment from 'moment';
 import ToastContainer from '../../components/toast/Toast';
@@ -476,7 +478,7 @@ const MxDengueContainer = props => {
     const getTypeOfTest = async (mxDengueId) => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTipoPruebasByMuestraIdAndNivel(mxDengueId, Constants.NIVEL_TIPO_PRUEBA);
+            const response = await DataServiceCatalogos.getAllTipoPruebasByMuestraIdAndNivel(mxDengueId, Constants.NIVEL_TIPO_PRUEBA);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setDataTypeOfTest(response.data);
@@ -491,10 +493,14 @@ const MxDengueContainer = props => {
     const getListTubosActivos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllTubosActivos();
+            const response = await DataServiceCatalogos.getAllTubosActivos();
             if (response.status === 200) {
-                setExecuteLoading(false);
-                setTipoTubo(response.data);
+                if (response.data.length > 0) {
+                    setExecuteLoading(false);
+                    const result = response.data.filter(item => item.descripcion !== 'MEDIO')
+                    setTipoTubo(result);
+                }
+                
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -506,7 +512,7 @@ const MxDengueContainer = props => {
     const getListCategoriasActivas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllCategoriasActivas();
+            const response = await DataServiceCatalogos.getAllCategoriasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setCategoria(response.data);
@@ -521,7 +527,7 @@ const MxDengueContainer = props => {
     const getListConsultasActivos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllConsultasActivas();
+            const response = await DataServiceCatalogos.getAllConsultasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setConsultas(response.data);
@@ -536,7 +542,7 @@ const MxDengueContainer = props => {
     const getMedicos = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Medico');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Medico');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -561,7 +567,7 @@ const MxDengueContainer = props => {
     const getListCambCategoriasActivas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllCambiosCategoriasActivas();
+            const response = await DataServiceCatalogos.getAllCambiosCategoriasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setCambiosCategorias(response.data);
@@ -576,7 +582,7 @@ const MxDengueContainer = props => {
     const getBionalistas = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -641,7 +647,7 @@ const MxDengueContainer = props => {
     const medicoById = async (id) => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getUserById(id);
+            const response = await DataServiceSeguridad.getUserById(id);
             if (response.status === 200) {
                 setSelectedMedico(response.data.id);
             }
@@ -655,7 +661,7 @@ const MxDengueContainer = props => {
     const getAllResultPRD = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID_DENGUE);
+            const response = await DataServiceCatalogos.getAllResultMxByTipoPrueba(Constants.RESULT_BY_TIPO_PRUEBA_ID_DENGUE);
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setDataResult(response.data);
@@ -670,7 +676,7 @@ const MxDengueContainer = props => {
     const getMismoEpFif = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllEpFebriles();
+            const response = await DataServiceCatalogos.getAllEpFebriles();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -695,7 +701,7 @@ const MxDengueContainer = props => {
     const getUltimoAnioEstudio = async () => {
         //setExecuteLoading(true);
         try {
-            const response = await DataServices.getLastAnioEstudio();
+            const response = await DataServiceCatalogos.getLastAnioEstudio();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setLastAnioEstudio(response.data);
@@ -815,6 +821,15 @@ const MxDengueContainer = props => {
         if (isValidDate) {
             setFif(selectedDate);
             setErrorFif('');
+        }
+    }
+
+    const onKeyPressFif = (e) => {
+        if (e.keyCode === 13 || e.key === 'Enter') {
+            const form = e.target.form;
+            const index = [...form].indexOf(e.target);
+            form.elements[index + 2].focus();
+            e.preventDefault();
         }
     }
 
@@ -1569,6 +1584,7 @@ const MxDengueContainer = props => {
                 motivoNoMx: motivoNoMx,
                 mxCompartida: false,
                 mxEnviada: false,
+                retoma: false,
                 mxId: {
                     id: mxDengueId
                 },
@@ -1589,7 +1605,7 @@ const MxDengueContainer = props => {
             numeroPruebas: numPrueba,
             pruebaRapida: true,
             resultado: selectedResult !== null ? selectedResult : '',
-            retoma: false,
+            //retoma: false,
             procInmediato: procInmediato,
             volumenSuero: volumenSuero,
             observacionMxSeparada: observationsMxSeparada,
@@ -1791,6 +1807,7 @@ const MxDengueContainer = props => {
                 accordionPanel4={accordionPanel4}
                 handleChangeCode={handleChangeCode}
                 onKeyPressCode={onKeyPressCode}
+                onKeyPressFif={onKeyPressFif}
                 onSelectRequestBy={onSelectRequestBy}
                 handleChangeTypeOfTest={handleChangeTypeOfTest}
                 handleChangeTipoTubo={handleChangeTipoTubo}

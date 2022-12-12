@@ -92,7 +92,6 @@ const StyledTreeItem = styled((props) => (
   [`& .${treeItemClasses.group}`]: {
     marginLeft: 15,
     paddingLeft: 18,
-    //width:'100%',
     borderLeft: `1px dashed ${alpha(theme.palette.text.primary, 0.4)}`,
   },
 }));
@@ -139,11 +138,6 @@ const AlertDialogMxDuplicada = (props) => {
                       <StyledTreeItem nodeId="6" label="Fecha Toma">
                         <StyledTreeItem nodeId="7" label={props.valorDetalle.fechaTomaMx} />
                       </StyledTreeItem>
-
-                      {/* <StyledTreeItem nodeId="8" label="Usuario Recepciona">
-                        <StyledTreeItem nodeId="9" label={props.valorDetalle.muestraId.usuarioRecepciona.usuario} />
-                      </StyledTreeItem> */}
-
                     </StyledTreeItem>
                   </TreeView>
                 </Grid>

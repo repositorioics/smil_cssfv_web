@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 const MxBhcParte1 = props => {
     const classes = useStyles();
     return (
-        <>
+        <form>
             <div className="input-group row" style={{ marginTop: 5 }}>
                 <div className="col-sm">
                     {/* <label>Código</label> */}
@@ -214,7 +214,7 @@ const MxBhcParte1 = props => {
                         label="Edad" />
                 </div>
             </div>
-        </>
+        </form>
     );
 }
 export default MxBhcParte1;

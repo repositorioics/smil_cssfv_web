@@ -4,7 +4,7 @@ import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { textFilter } from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import Edit from '@material-ui/icons/Edit';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 import MenuOptionsList from '../../../components/security/menus/MenuOptionsList';
 
 

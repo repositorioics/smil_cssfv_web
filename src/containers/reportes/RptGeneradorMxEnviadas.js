@@ -1,9 +1,10 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import moment from "moment";
+//import moment from "moment";
 import 'moment/locale/es';
 
-const GeneratePDFMxEnviadas = (rptTitle, data, viaje) => {
+//const GeneratePDFMxEnviadas = (arrayPBMC, arrayTRojo, arrayHisopados, data, viaje) => {
+const GeneratePDFMxEnviadas = (arrayPBMC, data, viaje) => {
     // initialize jsPDF
     const doc = new jsPDF({
         orientation: 'l',
@@ -12,11 +13,12 @@ const GeneratePDFMxEnviadas = (rptTitle, data, viaje) => {
     });
     let tableColumn = [];
     // Definiendo las colummnas del pdf
-    if (rptTitle.trim() === 'BHC') {
+    /*if (rptTitle.trim() === 'BHC') {
         tableColumn = ["Código Lab", "Código", "Estudio", "FIF", "Fecha Toma", "Vol.", "Observaciones"];
     } else {
         tableColumn = ["Código Lab", "Código", "Estudio", "FIF", "Fecha Toma", "Tubo", "Vol.", "Observaciones"];
-    }
+    }*/
+    tableColumn = ["Código Lab", "Código", "Estudio", "FIF", "Fecha Toma", "Tubo", "Vol.", "Observaciones"];
 
 
     const tableRows = [];
@@ -30,46 +32,81 @@ const GeneratePDFMxEnviadas = (rptTitle, data, viaje) => {
     doc.setLineWidth(0.5);
 
     doc.setTextColor('#000000');
-    doc.text("Envio de Muestras " + rptTitle, 14, 26, { align: 'left' });
+    //doc.text("Envio de Muestras " + rptTitle, 14, 26, { align: 'left' });
+    doc.text("Envio de Muestras PBMC", 14, 26, { align: 'left' });
 
     doc.setFontSize(10);
-    if (rptTitle.trim() === 'BHC') {
-        for (let i = 0; i < data.length; i++) {
+    debugger
+    /**Verificando si el reporte lleva PBMC */
+    if (arrayPBMC.length > 0) {
+        /*  const tRojo = [
+            'PBMC', '', '', '', '', '', '', '',
+        ]
+
+        tableRows.push(tRojo);*/
+        for (let i = 0; i < arrayPBMC.length; i++) {
             const ticketData = [
-                data[i].muestraId.codLab,
-                data[i].muestraId.codigoParticipante,
-                data[i].muestraId.estudiosParticipante.trim(),
-                data[i].muestraId.fif,
-                data[i].muestraId.fechaToma,
-                data[i].muestraId.volumen,
-                data[i].muestraId.observacion
-            ];
-            tableRows.push(ticketData);
-        }
-    } else {
-        for (let i = 0; i < data.length; i++) {
-            const ticketData = [
-                data[i].muestraId.codLab,
-                data[i].muestraId.codigoParticipante,
-                data[i].muestraId.estudiosParticipante,
-                data[i].muestraId.fif,
-                data[i].muestraId.fechaToma,
-                data[i].tuboId.tubo,
-                data[i].muestraId.volumen,
-                data[i].muestraId.observacion
+                arrayPBMC[i].codigoLab,
+                arrayPBMC[i].codigo,
+                arrayPBMC[i].estudios.trim(),
+                arrayPBMC[i].fif,
+                arrayPBMC[i].fechaToma,
+                arrayPBMC[i].tipoTuboTransm !== null ? arrayPBMC[i].tipoTuboTransm : arrayPBMC[i].tipoTuboUO1,
+                arrayPBMC[i].volumen,
+                arrayPBMC[i].observacion
             ];
             tableRows.push(ticketData);
         }
     }
+    /* if (arrayTRojo.length > 0) {
+        const tRojo = [
+            'ROJO', '', '', '', '', '', '', '',
+        ]
 
+        tableRows.push(tRojo);
+        for (let i = 0; i < arrayTRojo.length; i++) {
+            const ticketData = [
+                arrayTRojo[i].codigoLab,
+                arrayTRojo[i].codigo,
+                arrayTRojo[i].estudios.trim(),
+                arrayTRojo[i].fif,
+                arrayTRojo[i].fechaToma,
+                arrayTRojo[i].tipoTuboTransm !== null ? arrayTRojo[i].tipoTuboTransm : arrayTRojo[i].tipoTuboUO1,
+                arrayTRojo[i].volumen,
+                arrayTRojo[i].observacion
+            ];
+            tableRows.push(ticketData);
+        }
+    }
+    if (arrayHisopados.length > 0) {
+        const tRojo = [
+            'HISOPADOS', '', '', '', '', '', '', '',
+        ]
+
+        tableRows.push(tRojo);
+        for (let i = 0; i < arrayHisopados.length; i++) {
+            const ticketData = [
+                arrayHisopados[i].codigoLab,
+                arrayHisopados[i].codigo,
+                arrayHisopados[i].estudios.trim(),
+                arrayHisopados[i].fif,
+                arrayHisopados[i].fechaToma,
+                arrayHisopados[i].tipoTuboTransm !== null ? arrayTRojo[i].tipoTuboTransm : arrayTRojo[i].tipoTuboUO1,
+                arrayHisopados[i].volumen,
+                arrayHisopados[i].observacion
+            ];
+            tableRows.push(ticketData);
+        }
+    }
+ */
     // startY es el margin-top de inicio
     doc.autoTable(tableColumn, tableRows, {
         startY: 30, pageBreak: 'auto',
         styles: { fontSize: 8, halign: 'left' }, rowPageBreak: 'avoid'
     });
 
-    let now = moment().locale('es');
-    const rptFecha = now.format('YYYYMMDD');
+    //let now = moment().locale('es');
+    // const rptFecha = now.format('YYYYMMDD');
 
     const pageCount = doc.internal.getNumberOfPages(); //Total Page Number
     for (let i = 0; i < pageCount; i++) {
@@ -83,7 +120,7 @@ const GeneratePDFMxEnviadas = (rptTitle, data, viaje) => {
         doc.text('Recibe(CNDR): __________________________ Fecha / Hora: __________________________ temp: ________', 140, 200);
 
         doc.setFontSize(7);
-        doc.text('Total Mx: ' + data.length, 210, 205);
+        doc.text('Total Mx: ' + arrayPBMC.length, 210, 205);
 
         doc.setFontSize(7);
         doc.text('Viaje: ' + viaje, 230, 205);
@@ -96,7 +133,8 @@ const GeneratePDFMxEnviadas = (rptTitle, data, viaje) => {
     }
 
     // Definimos el nombre del archivo pdf
-    doc.save(`reporte${rptTitle}${'-'}${rptFecha}.pdf`);
+    //doc.save(`reporte${'muestras'}${'-'}${rptFecha}.pdf`);
+    window.open(URL.createObjectURL(doc.output("blob")))
 }
 
 export default GeneratePDFMxEnviadas;

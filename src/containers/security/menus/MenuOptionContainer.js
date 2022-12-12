@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 //import Header from '../../../components/header/Header';
 import MenuOptions from '../../../components/security/menus/MenuOptions';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiSeguridad';
 import ToastContainer from '../../../components/toast/Toast';
 
 const MenuOptionContainer = props => {

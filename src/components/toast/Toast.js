@@ -13,19 +13,15 @@ const Toast = (props) => {
         if (props.messageAlert !== null && props.messageAlert !== undefined && props.messageAlert !== '') {
             switch (props.type) {
                 case "info":
-                    //toast.info(props.messageAlert);
                     toast.info(<div><InfoIcon/>{props.messageAlert}</div>) // look this line
                     break;
                 case "success":
-                    //toast.success(props.messageAlert);
                     toast.success(<div><CheckCircleIcon />{props.messageAlert}</div>) // look this line
                     break;
                 case "warning":
-                    //toast.warning(props.messageAlert);
                     toast.warning(<div><WarningIcon/>{props.messageAlert}</div>) // look this line
                     break;
                 case "error":
-                    //toast.error(props.messageAlert);
                     toast.error(<div><ErrorIcon/>{props.messageAlert}</div>) // look this line
                     break;
                 default:

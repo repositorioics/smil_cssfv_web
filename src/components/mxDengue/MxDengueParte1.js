@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
 const MxDengueParte1 = props => {
     const classes = useStyles();
     return (
-        <>
+        <form>
             <div className="input-group row" style={{ marginTop: 5 }}>
                 <div className="col-sm">
                     {/* <label>Código</label> */}
@@ -249,6 +249,7 @@ const MxDengueParte1 = props => {
                             value={props.fif !== null ? props.fif : null}
                             onChange={props.handleChangeFif}
                             disabled={props.disableFif}
+                            onKeyDown={props.onKeyPressFif}
                             inputProps={{ autoComplete: 'off' }}
                             KeyboardButtonProps={{
                                 'aria-label': 'change date',
@@ -359,7 +360,7 @@ const MxDengueParte1 = props => {
                         label="Código de lab" />
                 </div>
             </div>
-        </>
+        </form>
     );
 }
 

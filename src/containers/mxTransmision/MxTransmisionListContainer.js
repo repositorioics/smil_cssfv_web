@@ -9,6 +9,7 @@ import AnularMx from '../../components/AnularMx';
 import Edit from '@material-ui/icons/Edit';
 import CancelIcon from '@material-ui/icons/Cancel';
 import DataServices from '../../service/Api';
+import DataServiceCatalogos from '../../service/ApiCatalogos';
 import ToastContainer from '../../components/toast/Toast';
 import Utils from '../../utils/Utils';
 import * as Constants from '../../Constants';
@@ -265,7 +266,7 @@ const MxTransmisionListContainer = props => {
     const getMotivosAnulacion = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getMotivosAnulaciones();
+            const response = await DataServiceCatalogos.getMotivosAnulaciones();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];

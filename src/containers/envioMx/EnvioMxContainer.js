@@ -1,20 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import DataServices from '../../service/Api';
+//import DataServiceCatalogos from '../../service/ApiCatalogos';
+import DataServiceSeguridad from '../../service/ApiSeguridad';
 import ToastContainer from '../../components/toast/Toast';
 import GeneratePDFMxEnviadas from "../reportes/RptGeneradorMxEnviadas";
+import GeneratePDFMxEnviadasRojo from "../reportes/RptGeneradorMxEnviadasRojo";
+import GeneratePDFMxEnviadasHisopados from "../reportes/RptGeneradorMxEnviadasHisopados";
 import EnvioMuestras from '../../components/envioMuestras/EnvioMuestras';
 import '../../components/envioMuestras/EnvioMuestras.css';
 
 const EnvioMxContainer = props => {
-    const [titleForm] = useState('Envio de muestras');
-    let [rptTitle, setRptTitle] = useState('');
+    const [titleForm] = useState('Muestras pendientes de envio');
     const [envioMuestra, setEnvioMuestra] = useState('');
     let [bioanalistas, setBioanalistas] = useState([]);
-    const [data, setData] = useState([]);
+    let [dataPbmc, setDataPbmc] = useState([]);
+    const [dataRojo, setDataRojo] = useState([]);
+    const [dataHisopados, setDataHisopados] = useState([]);
     let [listToSave, setListToSave] = useState([]);
-    const [muestrasData, setMuestrasData] = useState([]);
-    const [envioMuestraData, setEnvioMuestraData] = useState([]);
+    //const [muestrasData, setMuestrasData] = useState([]);
+    //const [envioMuestraData, setEnvioMuestraData] = useState([]);
     const [selectedEnvioMuestra, setSelectedEnvioMuestra] = useState('');
     const [selectedMuestra, setSelectedMuestra] = useState('');
     const [selectedBioanalista, setSelectedBioanalista] = useState('');
@@ -32,60 +37,106 @@ const EnvioMxContainer = props => {
     const [type, setType] = useState(null);
     const [messageAlert, setMessageAlert] = useState(null);
 
-    let [list, setList] = useState([]);
-    const [masterChecked, setMasterChecked] = useState(false);
-
-    //let [temperatureValue, setTemperatureValue] = useState(0);
+    let [chkAllPbmc, setChkAllPbmc] = useState(false);
+    let [chkAllTRojo, setChkAllTRojo] = useState(false);
+    let [chkAllHisopados, setChkAllHisopados] = useState(false);
+    let [checkAddMxEnvio, setCheckAddMxEnvio] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
-            getAllMuestras();
             getBionalistas();
-            getAllEnvioMuestras();
+            getMuestrasPBMCPendientesEnvio();
+            getMuestrasTuboRojoPendientesEnvio();
+            getHisopadosPendientesEnvio();
+            //getAllMuestras();
+            //getAllEnvioMuestras();
         } else {
             props.history.push('/');
         }
-        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
 
-    const getMuestrasPendientesByIdMuestra = async (id) => {
-        setExecuteLoading(true);
+    /**Metodo para obtener todas las muestras pbmc pendientes de envio */
+    const getMuestrasPBMCPendientesEnvio = async () => {
         try {
-            let response = null;
-            /**DENGUE */
-            /**BHC */
-            if (id === 7) {
-                response = await DataServices.muestrasPendientesBHC(id);
-            }
-            /**UO1 */
-            if (id === 1 || id === 2) {
-                response = await DataServices.muestrasPendientesUO1(id);
-            }
-            /**TRANSMISION */
-            if (id === 3 || id === 4 || id === 5 || id === 6 || id === 8 || id === 9) {
-                response = await DataServices.muestrasPendientesTransmision(id);
-            }
-
+            const response = await DataServices.getAllMxPBMCPendientesEnvio();
             if (response !== null) {
                 if (response.status === 200) {
                     setExecuteLoading(false);
                     const getData = [];
-                    console.log(response.data);
                     for (var i = 0; i < response.data.length; i++) {
                         getData.push({
-                            //"id": response.data[i].id,
-                            "muestraId": response.data[i].muestraId.id,
-                            "codigo": response.data[i].muestraId.codigoParticipante,
-                            "estudio": response.data[i].muestraId.estudiosParticipante,
-                            "codLab": response.data[i].muestraId.codLab,
-                            "fechaToma": response.data[i].muestraId.fechaToma,
+                            "muestraId": response.data[i].id,
+                            "tipo": "PBMC",
+                            "codigo": response.data[i].codigo,
+                            "estudio": response.data[i].estudios,
+                            "codLab": response.data[i].codigoLab,
+                            "fechaToma": response.data[i].fechaToma,
                             "estado": false
                         });
                     }
-                    setData([...getData]);
-                    setMasterChecked(false);
+                    setDataPbmc([...getData]);
+                }
+            } else {
+                setExecuteLoading(false);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error)
+        }
+    }
+
+    /**Metodo para obtener todas las muestras de tubo rojo pendientes de envio */
+    const getMuestrasTuboRojoPendientesEnvio = async () => {
+        try {
+            const response = await DataServices.getAllMxRojoPendientesEnvio();
+            if (response !== null) {
+                if (response.status === 200) {
+                    setExecuteLoading(false);
+                    const getDataRojo = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        getDataRojo.push({
+                            "muestraId": response.data[i].id,
+                            "tipo": "ROJO",
+                            "codigo": response.data[i].codigo,
+                            "estudio": response.data[i].estudios,
+                            "codLab": response.data[i].codigoLab,
+                            "fechaToma": response.data[i].fechaToma,
+                            "estado": false
+                        });
+                    }
+                    setDataRojo([...getDataRojo]);
+                }
+            } else {
+                setExecuteLoading(false);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error)
+        }
+    }
+
+    /**Metodo para obtener todos los hisopados pendientes de envio */
+    const getHisopadosPendientesEnvio = async () => {
+        try {
+            const response = await DataServices.getAllHisopadosPendientesEnvio();
+            if (response !== null) {
+                if (response.status === 200) {
+                    setExecuteLoading(false);
+                    const getDataHisopados = [];
+                    for (var i = 0; i < response.data.length; i++) {
+                        getDataHisopados.push({
+                            "muestraId": response.data[i].id,
+                            "tipo": "HISOPADO",
+                            "codigo": response.data[i].codigo,
+                            "estudio": response.data[i].estudios,
+                            "codLab": response.data[i].codigoLab,
+                            "fechaToma": response.data[i].fechaToma,
+                            "estado": false
+                        });
+                    }
+                    setDataHisopados([...getDataHisopados]);
                 }
             } else {
                 setExecuteLoading(false);
@@ -97,10 +148,10 @@ const EnvioMxContainer = props => {
     }
 
     /**Metodo para obtener todas las muestras activas*/
-    const getAllMuestras = async () => {
+    /* const getAllMuestras = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllCatMuestasActivas();
+            const response = await DataServiceCatalogos.getAllCatMuestasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setMuestrasData(response.data);
@@ -109,12 +160,12 @@ const EnvioMxContainer = props => {
             setExecuteLoading(false);
             console.log('error', error)
         }
-    }
+    } */
 
-    const getAllEnvioMuestras = async() => {
+    /* const getAllEnvioMuestras = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllCatEnvioMuestras();
+            const response = await DataServiceCatalogos.getAllCatEnvioMuestras();
             if (response.status === 200) {
                 setEnvioMuestraData(response.data);
             }
@@ -122,80 +173,13 @@ const EnvioMxContainer = props => {
             setExecuteLoading(false);
             console.log('error', error);
         }
-    }
-
-    /**Metodo para obtener todas las muestras pendientes de Dengue 
-    const getAllMxDenguePendientesEnvio = async(id) => {
-        try {
-            const response = await DataServices.muestrasPendientesDengue(id);
-            if (response.status === 200) {
-                console.log('Dengue', response.data);
-            }
-        } catch (error) {
-            console.log('error', error);
-        }
-    }*/
-    /**Metodo para obtener todas las muestras pendientes de BHC 
-    const getAllMxBHCPendientesEnvio = async(id) => {
-        try {
-            const response = await DataServices.muestrasPendientesBHC(id);
-            if (response.status === 200) {
-                console.log('BHC', response.data);
-            }
-        } catch (error) {
-            console.log('error', error);
-        }
-    }*/
-    /**Metodo para obtener todas las muestras pendientes de UO1 
-    const getAllMxUO1PendientesEnvio = async(id) => {
-        try {
-            const response = await DataServices.muestrasPendientesUO1(id);
-            if (response.status === 200) {
-                console.log('UO1', response.data);
-            }
-        } catch (error) {
-            console.log('error', error);
-        }
-    }*/
-    /**Metodo para obtener todas las muestras pendientes de Vacunas
-    const getAllMxUO1VacunasPendientesEnvio = async() =>{
-        try {
-            const response = await DataServices.muestrasVacunasPendientesUO1();
-            if (response.status === 200) {
-                console.log('UO1 Vacunas', response.data);
-            }
-        } catch (error) {
-            console.log('error', error);
-        }
     } */
-    /**Metodo para obtener todas las muestras pendientes de Monitoreo Intensivo PBMC 
-    const getAllMxMonitoreoIntensivoPBMC = async() => {
-        try {
-            const response = await DataServices.muestrasPendientesTransmisionMonitoreoIntensivoPbmc();
-            if (response.status === 200) {
-                console.log('Monitoreo Intensivo PBMC', response.data);
-            }
-        } catch (error) {
-            console.log('error', error);
-        }
-    }*/
-    /**Metodo para obtener todas las muestras transmision pendientes de envio filtrado por id 
-    const getAllMxTransmisionByIdMxEnvio = async(id) => {
-        try {
-            const response = await DataServices.muestrasPendientesTransmision(id);
-            if (response.status === 200) {
-                console.log('Transmision', response.data);
-            }
-        } catch (error) {
-            console.log('error', error);
-        }
-    }*/
 
     /**Funcion para obtener los bioanalistas */
     const getBionalistas = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getAllUserProfileByNombre('Bioanalista');
+            const response = await DataServiceSeguridad.getAllUserProfileByNombre('Bioanalista');
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];
@@ -229,13 +213,6 @@ const EnvioMxContainer = props => {
         setMessageAlert(null);
     }
 
-    /* const onSelect = (e) => {
-        setSelectedMuestra(e.target.value);
-        const id = e.target.value;
-        getMuestrasPendientesByIdMuestra(id);
-        initialStateToast();
-    } */
-
     const handleChangeBionalista = (e) => {
         setSelectedBioanalista(e.target.value);
         setErrorBioanlista('');
@@ -244,10 +221,7 @@ const EnvioMxContainer = props => {
     const handleChangeEnvioMuestra = (e) => {
         setSelectedEnvioMuestra(e.target.value);
         setDisabledPrintDocument(true);
-        const id = e.target.value;
-        getMuestrasPendientesByIdMuestra(id);
         initialStateToast();
-        //console.log(e.target.value)
     }
 
     const handleChangeDate = (e) => {
@@ -267,94 +241,233 @@ const EnvioMxContainer = props => {
         setViaje(e.target.value);
     }
 
-    // Select/ UnSelect Table rows
-    const onMasterCheck = (e) => {
-        let tempList = data;
-        // Check / UnCheck All Items
+    /**Seleccionar todos los pbmc a enviar */
+    const onCheckAllPbmc = (e) => {
+        let tempListDataPbmc = dataPbmc;
+        setChkAllPbmc(e.target.checked);
         if (e.target.checked) {
-            tempList.map((a) => (a.estado = e.target.checked));
-            //Update State
-            setMasterChecked(e.target.checked);
-            setList(tempList);
-            setData(tempList);
-
-            //Update List
+            tempListDataPbmc.map((a) => (a.estado = e.target.checked));
             if (listToSave.length <= 0) {
-                setListToSave(tempList);
+                for (let i = 0; i < tempListDataPbmc.length; i++) {
+                    listToSave.push(tempListDataPbmc[i]);
+                }
             } else {
-                const list = [];
-                list.push(listToSave);
-                for (let i = 0; i < tempList.length; i++) {
-                    //Buscamos si ya existe el item
-                    const filtro = listToSave.filter((a) => a.muestraId === tempList[i].muestraId);
+                for (let i = 0; i < tempListDataPbmc.length; i++) {
+                    //Verificamos si ya existe la muestra en la lista a enviar
+                    const filtro = listToSave.filter((a) => a.muestraId === tempListDataPbmc[i].muestraId);
                     if (filtro.length <= 0) {
-                        list[0].push(tempList[i]);
+                        listToSave.push(tempListDataPbmc[i]);
                     }
                 }
             }
         } else {
-            setMasterChecked(e.target.checked);
-            tempList.map((a) => (a.estado = e.target.checked));
+            tempListDataPbmc.map((a) => (a.estado = e.target.checked));
+            listToSave = listToSave.filter(a => !dataPbmc.find(b => (b.muestraId === a.muestraId) ));
         }
+        setListToSave(listToSave);
+        setDataPbmc(tempListDataPbmc);
     }
 
-    // Update List Item's state and Master Checkbox State
-    const onItemCheck = (e, item) => {
-        list = data;
-        let tempList = list;
-        for (let i = 0; i < tempList.length; i++) {
-            if (tempList[i].muestraId === item.muestraId) {
-                tempList[i].estado = e.target.checked;
-            }
-        }
-
-        //To Control Master Checkbox State
-        const totalItems = list.length;
-        const totalCheckedItems = tempList.filter((e) => e.estado).length;
-
-        if (item.estado === true) { //Verificamos que el estado sea verdadero
-            if (listToSave.length <= 0) { // Si la lista esta vacia se ingresa el item
-                listToSave.push(item);
+    /**Seleccionar todos los tubos rojo a enviar */
+    const onCheckAllTRojo = (e) => {
+        let tempListDataRojo = dataRojo;
+        setChkAllTRojo(e.target.checked);
+        if (e.target.checked) {
+            tempListDataRojo.map((a) => (a.estado = e.target.checked));
+            if (listToSave.length <= 0) {
+                for (let i = 0; i < tempListDataRojo.length; i++) {
+                    listToSave.push(tempListDataRojo[i]);
+                }
             } else {
-                const filtro = listToSave.filter((a) => a.muestraId === item.muestraId); //Buscamos si ya existe el item
-                if (filtro.length > 0) {
-                    setType("warning");
-                    setMessageAlert("La muestra seleccionada ya fue agregada ");
-                    setTimeout(function () {
-                        initialStateToast();
-                    }, 100);
-                    return;
-                } else {
-                    listToSave.push(item);
+                for (let i = 0; i < tempListDataRojo.length; i++) {
+                    //Verificamos si ya existe la muestra en la lista a enviar
+                    const filtro = listToSave.filter((a) => a.muestraId === tempListDataRojo[i].muestraId);
+                    if (filtro.length <= 0) {
+                        listToSave.push(tempListDataRojo[i]);
+                    }
                 }
             }
+        } else {
+            tempListDataRojo.map((a) => (a.estado = e.target.checked));
+            listToSave = listToSave.filter(a => !dataRojo.find(b => (b.muestraId === a.muestraId) ));
         }
-        // Update State
         setListToSave(listToSave);
-        setMasterChecked(totalItems === totalCheckedItems);
-        setList([...list, tempList]);
-        setData(list);
+        setDataRojo(tempListDataRojo);
     }
 
-    const onItemCheckRemove = (e, item) => {
-        let filteredArray = listToSave.filter(a => a.muestraId !== item.muestraId);
-        const arrayData = data;
-        for (let i = 0; i < arrayData.length; i++) {
-            if (arrayData[i].muestraId === item.muestraId) {
-                arrayData[i].estado = false;
+    /**Seleccionar todos los hisopados */
+    const onCheckAllHisopados = (e) => {
+        let tempListDataHisopados = dataHisopados;
+        setChkAllHisopados(e.target.checked);
+        if (e.target.checked) {
+            tempListDataHisopados.map((a) => (a.estado = e.target.checked));
+            if (listToSave.length <= 0) {
+                for (let i = 0; i < tempListDataHisopados.length; i++) {
+                    listToSave.push(tempListDataHisopados[i]);
+                }
+            } else {
+                for (let i = 0; i < tempListDataHisopados.length; i++) {
+                    //Verificamos si ya existe la muestra en la lista a enviar
+                    const filtro = listToSave.filter((a) => a.muestraId === tempListDataHisopados[i].muestraId);
+                    if (filtro.length <= 0) {
+                        listToSave.push(tempListDataHisopados[i]);
+                    }
+                }
             }
+        } else {
+            tempListDataHisopados.map((a) => (a.estado = e.target.checked));
+            listToSave = listToSave.filter(a => !dataHisopados.find(b => (b.muestraId === a.muestraId) ));
         }
-        setMasterChecked(false);
-        setListToSave(filteredArray);
-        setData(arrayData);
+        setListToSave(listToSave);
+        setDataHisopados(tempListDataHisopados);
     }
 
-    const saveData = ()=> {
-        if (validateData()) {
-            /* if (validateTemp() === null) {
+    const handleChangeAddMxEnvio = (e) => {
+        checkAddMxEnvio = e.target.checked;
+        console.log(checkAddMxEnvio);
+        setCheckAddMxEnvio(checkAddMxEnvio);
+    }
+
+    // actualizar la lista listToSave(agregar y remover el registro)
+    const onItemCheck = (e, item) => {
+        if (e.target.checked) {
+            addListToSave(e, item);
+        } else {
+            removeListToSave(item);
+        }
+    }
+
+    /**Agregar el registro a la lista a enviar */
+    const addListToSave = (e, item) => {
+        if (item.tipo !== null && item.tipo !== '' && item.tipo !== undefined) {
+            if (item.tipo === 'PBMC') {
+                let tempList = [];
+                tempList = dataPbmc;
+                for (let i = 0; i < tempList.length; i++) {
+                    if (tempList[i].muestraId === item.muestraId) {
+                        tempList[i].estado = e.target.checked;
+                    }
+                }
+                if (item.estado === true) { //Verificamos que el estado sea verdadero
+                    if (listToSave.length <= 0) { // Si la lista esta vacia se ingresa el item
+                        listToSave.push(item);
+                    } else {
+                        const filtro = listToSave.filter((a) => a.muestraId === item.muestraId); //Buscamos si ya existe el item
+                        if (filtro.length > 0) {
+                            setType("warning");
+                            setMessageAlert("La muestra seleccionada ya fue agregada ");
+                            setTimeout(function () {
+                                initialStateToast();
+                            }, 100);
+                            return;
+                        } else {
+                            listToSave.push(item);
+                        }
+                    }
+                }
+                let newArr = [...tempList];
+                setDataPbmc(newArr);
+            } else if (item.tipo === 'ROJO') {
+                let tempList = [];
+                tempList = dataRojo;
+                for (let i = 0; i < tempList.length; i++) {
+                    if (tempList[i].muestraId === item.muestraId) {
+                        tempList[i].estado = e.target.checked;
+                    }
+                }
+                if (item.estado === true) { //Verificamos que el estado sea verdadero
+                    if (listToSave.length <= 0) { // Si la lista esta vacia se ingresa el item
+                        listToSave.push(item);
+                    } else {
+                        const filtro = listToSave.filter((a) => a.muestraId === item.muestraId); //Buscamos si ya existe el item
+                        if (filtro.length > 0) {
+                            setType("warning");
+                            setMessageAlert("La muestra seleccionada ya fue agregada ");
+                            setTimeout(function () {
+                                initialStateToast();
+                            }, 100);
+                            return;
+                        } else {
+                            listToSave.push(item);
+                        }
+                    }
+                }
+                let newArr = [...tempList];
+                setDataRojo(newArr);
+            } else {
+                let tempList = [];
+                tempList = dataHisopados;
+                for (let i = 0; i < tempList.length; i++) {
+                    if (tempList[i].muestraId === item.muestraId) {
+                        tempList[i].estado = e.target.checked;
+                    }
+                }
+                if (item.estado === true) { //Verificamos que el estado sea verdadero
+                    if (listToSave.length <= 0) { // Si la lista esta vacia se ingresa el item
+                        listToSave.push(item);
+                    } else {
+                        const filtro = listToSave.filter((a) => a.muestraId === item.muestraId); //Buscamos si ya existe el item
+                        if (filtro.length > 0) {
+                            setType("warning");
+                            setMessageAlert("La muestra seleccionada ya fue agregada ");
+                            setTimeout(function () {
+                                initialStateToast();
+                            }, 100);
+                            return;
+                        } else {
+                            listToSave.push(item);
+                        }
+                    }
+                }
+                let newArr = [...tempList];
+                setDataHisopados(newArr);
+            }
+            setListToSave(listToSave);
+        }
+    }
+
+    /**Remover el registro de la lista a enviar */
+    const removeListToSave = (item) => {
+        let filteredArray = listToSave.filter(a => a.muestraId !== item.muestraId);
+        if (item.tipo === 'PBMC') {
+            const arrayData = dataPbmc;
+            for (let i = 0; i < arrayData.length; i++) {
+                if (arrayData[i].muestraId === item.muestraId) {
+                    arrayData[i].estado = false;
+                }
+            }
+            setDataPbmc(arrayData);
+            setChkAllPbmc(false);
+        } else if (item.tipo === 'ROJO') {
+            const arrayData = dataRojo;
+            for (let i = 0; i < arrayData.length; i++) {
+                if (arrayData[i].muestraId === item.muestraId) {
+                    arrayData[i].estado = false;
+                }
+            }
+            setDataRojo(arrayData);
+            setChkAllTRojo(false);
+        } else {
+            const arrayData = dataHisopados;
+            for (let i = 0; i < arrayData.length; i++) {
+                if (arrayData[i].muestraId === item.muestraId) {
+                    arrayData[i].estado = false;
+                }
+            }
+            setDataHisopados(arrayData);
+            setChkAllHisopados(false);
+        }
+        listToSave = filteredArray;
+        setListToSave(listToSave);
+    }
+
+    const saveData = () => {
+        console.log(listToSave);
+         if (validateData()) {
+            /*if (validateTemp() === null) {
                 setErrorTemp('Formato invalido');
                 return;
-            } */
+            }*/
             if (listToSave.length <= 0) {
                 setType("info");
                 setMessageAlert("No existen datos seleccionados para guardar");
@@ -384,105 +497,83 @@ const EnvioMxContainer = props => {
         }
     }
 
-    const printDocument = async() => {
+    /**Metodo para imprimir el documento una ves se realiza el envio */
+    const printDocument = async () => {
         setExecuteLoading(true);
         try {
-            let response = null;
-            /**BHC */
-            if (selectedEnvioMuestra === 7) {
-                rptTitle = "BHC";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasBHC(selectedEnvioMuestra, viaje, "", "");
-            }
-            /**UO1 */
-            else if (selectedEnvioMuestra === 1) {
-                rptTitle = "Influenza UO1";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasUO1(selectedEnvioMuestra, viaje,  "", "");
-            }
-            else if (selectedEnvioMuestra === 2) {
-                rptTitle = "Influenza UO1 Vacunas";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasUO1(selectedEnvioMuestra, viaje, "", "");
-            }
-            /**TRANSMISION */
-            else if (selectedEnvioMuestra === 3) {
-                rptTitle = "Monitoreo Intensivo PBMC";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
-            }
-            else if (selectedEnvioMuestra === 4) {
-                rptTitle = "Monitoreo Intensivo ROJO";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
-            }
-            else if (selectedEnvioMuestra === 5) {
-                rptTitle = "Covid-19 PBMC";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
-            }
-            else if (selectedEnvioMuestra === 6) {
-                rptTitle = "Covid-19 ROJO";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
-            }
-            else if (selectedEnvioMuestra === 8) {
-                rptTitle = "Hisopados Covid-19";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
-            }
-            else if (selectedEnvioMuestra === 9) {
-                rptTitle = "Hisopados Monitoreo Intensivo";
-                setRptTitle(rptTitle);
-                response = await DataServices.muestrasEnviadasTransmision(selectedEnvioMuestra, viaje, "", "");
-            } else {
-                return;
-            }
-            if (response !== null) {
-                if (response.status === 200) {
-                    setExecuteLoading(false);
-                    if (response.data !== null && response.data.length > 0 ) {
-                        GeneratePDFMxEnviadas(rptTitle, response.data, viaje);
-                    }
-                }
-            } else {
+            const response = await DataServices.getMuestrasEnviadasDelDiaYEnvio(viaje);
+            if (response.status === 200) {
                 setExecuteLoading(false);
+                if (response.data !== null && response.data.length > 0) {
+                    const arrayPBMC = [];
+                    const arrayTRojo = [];
+                    const arrayHisopados = [];
+                    for (let i = 0; i < response.data.length; i++) {
+                        if (response.data[i].tipoTuboTransm === null && response.data[i].tipoTuboUO1 === null) {
+                            arrayHisopados.push(response.data[i]);
+                        }
+                        if (response.data[i].tipoTuboTransm !== null) {
+                            if (response.data[i].tipoTuboTransm === 'ROJO') {
+                                arrayTRojo.push(response.data[i]);
+                            }
+                            if (response.data[i].tipoTuboTransm === 'LEUCOSEP') {
+                                arrayPBMC.push(response.data[i]);
+                            }
+                        }
+                        if (response.data[i].tipoTuboUO1 !== null) {
+                            if (response.data[i].tipoTuboUO1 === 'ROJO') {
+                                arrayTRojo.push(response.data[i]);
+                            }
+                            if (response.data[i].tipoTuboUO1 === 'LEUCOSEP') {
+                                arrayPBMC.push(response.data[i]);
+                            }
+                        }
+                    }
+                    if (arrayPBMC.length > 0) {
+                        GeneratePDFMxEnviadas(arrayPBMC, response.data, viaje);
+                    }
+                    if (arrayTRojo.length > 0) {
+                        GeneratePDFMxEnviadasRojo(arrayTRojo, response.data, viaje);
+                    }
+                    if (arrayHisopados.length > 0) {
+                        GeneratePDFMxEnviadasHisopados(arrayHisopados, response.data, viaje);
+                    }
+
+                }
             }
         } catch (error) {
             setExecuteLoading(false);
             console.log('error', error);
         }
-        
     }
 
     const putMuestras = async (muestra) => {
         setExecuteLoading(true);
         try {
-            let result = await DataServices.verificarEnvioSeleccionado(viaje);
-            if (result.status === 200) {
-                if (result.data > 0) {
-                    setExecuteLoading(false);
-                    setType("info");
-                    setMessageAlert("Ya se realizo el viaje " + viaje + " para dia de hoy");
-                    setTimeout(function () {
-                        initialStateToast();
-                    }, 100);
-                    return;
-                } 
+            if (!checkAddMxEnvio) {
+                let result = await DataServices.verificarEnvioSeleccionado(viaje);
+                if (result.status === 200) {
+                    if (result.data > 0) {
+                        setExecuteLoading(false);
+                        setType("info");
+                        setMessageAlert("Ya se realizo el viaje " + viaje + " para dia de hoy");
+                        setTimeout(function () {
+                            initialStateToast();
+                        }, 100);
+                        return;
+                    }
+                }
             }
+            
             const response = await DataServices.enviarMuestras(muestra);
             if (response.status === 200) {
-                printDocument();
                 setExecuteLoading(false);
-                setEnvioMuestra('');
-                setData([]);
-                setListToSave([]);
-                setSelectedMuestra('');
-                //setSelectedEnvioMuestra('');
-                setSelectedBioanalista('');
-                setTemp('');
-                //setViaje('');
-                setDisabledPrintDocument(false);
+                await printDocument();
+                clearData();
+                await getMuestrasPBMCPendientesEnvio();
+                await getMuestrasTuboRojoPendientesEnvio();
+                await getHisopadosPendientesEnvio();
+                //setDisabledPrintDocument(false);
                 setType("success");
                 setMessageAlert("Se guardarón los datos");
                 setTimeout(function () {
@@ -493,6 +584,17 @@ const EnvioMxContainer = props => {
             setExecuteLoading(false);
             console.log('error', error);
         }
+    }
+
+    const clearData = () => {
+        setEnvioMuestra('');
+        //setData([]);
+        setListToSave([]);
+        setSelectedMuestra('');
+        //setSelectedEnvioMuestra('');
+        setViaje('');
+        //setSelectedBioanalista('');
+        setTemp('');
     }
 
     /**Metodo para validar la temperatura que debe de ser 
@@ -508,16 +610,6 @@ const EnvioMxContainer = props => {
     } */
 
     const validateData = () => {
-        if (selectedEnvioMuestra === '' || selectedEnvioMuestra === null || selectedEnvioMuestra === undefined
-            || selectedEnvioMuestra === '0') {
-            setType('error');
-            setMessageAlert('Debe seleccionar el tipo de muestra a enviar');
-            setTimeout(function () {
-                initialStateToast();
-            }, 100);
-            return false;
-
-        }
         if (selectedBioanalista === '' || selectedBioanalista === null || selectedBioanalista === undefined
             || selectedBioanalista === '0') {
             setType('error');
@@ -527,7 +619,6 @@ const EnvioMxContainer = props => {
             }, 100);
             return false;
         }
-
         if (date === '' || date === null || date === undefined) {
             setType('error');
             setMessageAlert('Debe ingresar la fecha');
@@ -536,7 +627,6 @@ const EnvioMxContainer = props => {
             }, 100);
             return false;
         }
-
         if (selectedHora === '' || selectedHora === null || selectedHora === undefined) {
             setType('error');
             setMessageAlert('Debe ingresar la hora');
@@ -545,7 +635,6 @@ const EnvioMxContainer = props => {
             }, 100);
             return false;
         }
-
         if (temp === '' || temp === null || temp === undefined) {
             setType('error');
             setMessageAlert('Debe ingresar la temperatura');
@@ -554,7 +643,6 @@ const EnvioMxContainer = props => {
             }, 100);
             return false;
         }
-
         if (viaje === '' || viaje === null || viaje === undefined) {
             setType('error');
             setMessageAlert('Debe ingresar el viaje');
@@ -574,49 +662,42 @@ const EnvioMxContainer = props => {
         return true;
     }
 
-    /*const more = (e) => {
-        temperatureValue = temperatureValue + 1;
-        setTemperatureValue(temperatureValue);
-    }
-    const minos = () => {
-        temperatureValue = temperatureValue - 1;
-        setTemperatureValue(temperatureValue);
-    }*/
-
     return (
         <>
             <EnvioMuestras
                 titleForm={titleForm}
                 envioMuestra={envioMuestra}
-                muestrasData={muestrasData}
-                envioMuestraData={envioMuestraData}
+                //muestrasData={muestrasData}
+                //envioMuestraData={envioMuestraData}
                 bioanalistas={bioanalistas}
-                //onSelect={onSelect}
                 selectedMuestra={selectedMuestra}
                 selectedBioanalista={selectedBioanalista}
                 selectedEnvioMuestra={selectedEnvioMuestra}
-                data={data}
+                dataPbmc={dataPbmc}
+                dataRojo={dataRojo}
+                dataHisopados={dataHisopados}
                 listToSave={listToSave}
                 executeLoading={executeLoading}
                 date={date}
                 selectedHora={selectedHora}
                 temp={temp}
                 viaje={viaje}
-                /*temperatureValue={temperatureValue}
-                more={more}
-                minos={minos}*/
+                chkAllPbmc={chkAllPbmc}
+                chkAllTRojo={chkAllTRojo}
+                chkAllHisopados={chkAllHisopados}
+                checkAddMxEnvio={checkAddMxEnvio}
                 saveData={saveData}
-                printDocument={printDocument}
                 handleChangeBionalista={handleChangeBionalista}
                 handleChangeEnvioMuestra={handleChangeEnvioMuestra}
                 handleChangeDate={handleChangeDate}
                 handleChangeHora={handleChangeHora}
                 handleChangeTemp={handleChangeTemp}
                 handleChangeViaje={handleChangeViaje}
-                onMasterCheck={onMasterCheck}
-                masterChecked={masterChecked}
+                onCheckAllPbmc={onCheckAllPbmc}
+                onCheckAllTRojo={onCheckAllTRojo}
+                onCheckAllHisopados={onCheckAllHisopados}
+                handleChangeAddMxEnvio={handleChangeAddMxEnvio}
                 onItemCheck={onItemCheck}
-                onItemCheckRemove={onItemCheckRemove}
                 disabledPrintDocument={disabledPrintDocument}
                 errorBioanlista={errorBioanlista}
                 errorTemp={errorTemp}

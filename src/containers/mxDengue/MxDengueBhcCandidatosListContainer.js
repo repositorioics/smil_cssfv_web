@@ -9,6 +9,7 @@ import AnularMx from '../../components/AnularMx';
 import AddCircle from '@material-ui/icons/AddCircle';
 //import CancelIcon from '@material-ui/icons/Cancel';
 import DataServices from '../../service/Api';
+import DataServiceCatalogos from '../../service/ApiCatalogos';
 //import ToastContainer from '../../components/toast/Toast';
 import Utils from '../../utils/Utils';
 
@@ -192,7 +193,7 @@ const MxDenguePaxGeneCandidatosListContainer = props => {
     const getMxDengueList = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.muestraDengueCandidatosPbmc();
+            const response = await DataServices.muestraDengueCandidatos();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];
@@ -223,7 +224,7 @@ const MxDenguePaxGeneCandidatosListContainer = props => {
     const getMotivosAnulacion = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.getMotivosAnulaciones();
+            const response = await DataServiceCatalogos.getMotivosAnulaciones();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const multiSelectData = [];

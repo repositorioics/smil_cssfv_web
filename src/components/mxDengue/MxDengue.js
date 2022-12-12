@@ -108,6 +108,7 @@ const MxDengue = props => {
                                     saliva={props.saliva}
                                     titleChkZkDen={props.titleChkZkDen}
                                     positvoZika={props.positvoZika}
+                                    onKeyPressFif={props.onKeyPressFif}
                                     disableFif={props.disableFif}
                                     disableCode={props.disableCode}
                                     disableTypeOfTest={props.disableTypeOfTest}

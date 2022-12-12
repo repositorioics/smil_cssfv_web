@@ -192,7 +192,7 @@ const MxDengueMetabolomicaCandidatosListContainer = props => {
     const getMxDengueList = async () => {
         setExecuteLoading(true);
         try {
-            const response = await DataServices.muestraDengueCandidatosPbmc();
+            const response = await DataServices.muestraDengueCandidatos();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 const newData = [];

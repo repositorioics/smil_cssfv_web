@@ -10,6 +10,9 @@ import Loading from '../loading/Loading';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import Box from '@mui/material/Box';
+import Tooltip2 from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import DateFnsUtils from '@date-io/date-fns';
 import {
     MuiPickersUtilsProvider,
@@ -17,6 +20,7 @@ import {
     KeyboardTimePicker
 } from '@material-ui/pickers';
 import SaveIcon from '@material-ui/icons/Save';
+import Checkbox from '@mui/material/Checkbox';
 import "./EnvioMuestras.css";
 import { es } from 'date-fns/locale';
 
@@ -33,7 +37,19 @@ const useStyles = makeStyles((theme) => ({
     },
     listItemText: {
         fontWeight: 'bold',
-    }
+    },
+    textField2: {
+        fontWeight: 'bold',
+        color: '#2E3B55'
+    },
+}));
+
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
 }));
 
 const EnvioMuestras = props => {
@@ -43,48 +59,10 @@ const EnvioMuestras = props => {
             <Loading
                 executeLoading={props.executeLoading}
             />
-            <Paper className="container" elevation={3} >
-                <div className="title">{props.titleForm}</div>
+            <Paper elevation={3} style={{ height: 'auto', paddingBottom: 50 }}>
+                <div style={{ marginLeft: 10 }} className="title">{props.titleForm}</div>
                 <div className="input-group row">
-                    {/* <div className="col-sm">
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="perfil-input-label">Seleccione la muestra</InputLabel>
-                            <Select
-                                labelId="perfil-por-label"
-                                id="perfil-por-select"
-                                value={props.selectedMuestra}
-                                onChange={props.onSelect}
-                            >
-                                <MenuItem value="0">
-                                    <em>Seleccione</em>
-                                </MenuItem>
-                                {props.muestrasData.map((e, keyIndex) => {
-                                    return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
-                                })
-                                }
-                            </Select>
-                        </FormControl>
-                    </div> */}
-                    <div className="col-sm">
-                        <FormControl className={classes.formControl}>
-                            <InputLabel id="perfil-input-label">Seleccione el tipo de muestra a enviar</InputLabel>
-                            <Select
-                                labelId="perfil-por-label"
-                                id="perfil-por-select"
-                                value={props.selectedEnvioMuestra}
-                                onChange={props.handleChangeEnvioMuestra}
-                            >
-                                <MenuItem value="0">
-                                    <em>Seleccione</em>
-                                </MenuItem>
-                                {props.envioMuestraData.map((e, keyIndex) => {
-                                    return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
-                                })
-                                }
-                            </Select>
-                        </FormControl>
-                    </div>
-                    <div className="col-sm">
+                    <div style={{ marginLeft: 10 }} className="col-sm">
                         <FormControl className={classes.formControl}>
                             <InputLabel id="tomada-por-input-label">Bioanalista</InputLabel>
                             <Select
@@ -106,7 +84,7 @@ const EnvioMuestras = props => {
                     </div>
                 </div>
                 <div className="input-group row">
-                    <div className="col-sm">
+                    <div className="col-sm" style={{ marginLeft: 10 }}>
                         <MuiPickersUtilsProvider locale={es} utils={DateFnsUtils}>
                             <Grid container justify="space-between">
                                 <div>
@@ -129,16 +107,7 @@ const EnvioMuestras = props => {
                         </MuiPickersUtilsProvider>
                     </div>
                     <div className="col-sm" style={{ marginTop: 15 }}>
-                        {/* <div>
-                            <label>Hora</label>
-                        </div> */}
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            {/* <TimePicker
-                                id="hora"
-                                label="Hora"
-                                value={props.selectedHora}
-                                onChange={date => props.handleChangeHora(date)}
-                            /> */}
                             <KeyboardTimePicker
                                 id="hora"
                                 label="Hora"
@@ -158,7 +127,6 @@ const EnvioMuestras = props => {
                             autoComplete="off"
                             style={{ marginTop: 13, width: '100%' }}
                             maxLength={50}
-                            //className="form-control"
                             name="temp"
                             type="number"
                             value={props.temp}
@@ -178,7 +146,6 @@ const EnvioMuestras = props => {
                             pattern="^\d*(\.\d{0,2})?$"
                             style={{ marginTop: 13, width: '100%' }}
                             maxLength={50}
-                            //className="form-control"
                             name="viaje"
                             value={props.viaje}
                             onChange={props.handleChangeViaje}
@@ -187,44 +154,35 @@ const EnvioMuestras = props => {
                             helperText={props.errorViaje} />
                     </div>
                 </div>
-                {/* <div className='app-container'>
-                    <div className='temperature-display-container'>
-                        <div className='temperature-display'>{props.temperatureValue}°C</div>
-                    </div>
-                    <div className='button-container'>
-                        <button onClick={props.more}>+</button>
-                        <button onClick={props.minos}>-</button>
-                    </div>
-                </div> */}
-                <div className='envioMuestra'>
-                    <div></div>
-                    <div className='envioMuestra2'>
-                        <div></div>
-                        <div>
-                            <h4>Muestras</h4>
-                            <div className="container" style={{ boxShadow: 'none' }}>
-                                <div className="row">
-                                    <div className="col-md-12">
+                <div>
+                    <Box sx={{ width: '100%' }}>
+                        <Grid container spacing={1}>
+                            <Grid item xs={4}>
+                                <Item>
+                                    <h6 className={classes.textField2}>PBMC</h6>
+                                    <div className="col-md-16">
                                         <table className="table">
                                             <thead className='theadTbody'>
                                                 <tr>
                                                     <th scope="col">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="custom-checkbox"
-                                                            checked={props.masterChecked}
-                                                            onChange={(e) => props.onMasterCheck(e)}
-                                                            id="mastercheck"
-                                                        />
+                                                        <Tooltip2 title="Seleccionar todos los pbmc">
+                                                            <input
+                                                                id="chkAllPbmc"
+                                                                type="checkbox"
+                                                                className="custom-checkboxAll"
+                                                                checked={props.chkAllPbmc}
+                                                                onChange={(e) => props.onCheckAllPbmc(e)}
+                                                            />
+                                                        </Tooltip2>
                                                     </th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Código</th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Estudio</th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">Cod Lab</th>
-                                                    <th style={{ width: 140, paddingLeft: 25 }} scope="col">F. Toma</th>
+                                                    <th style={{ width: 140 }} scope="col">Código</th>
+                                                    <th style={{ width: 140 }} scope="col">Estudio</th>
+                                                    <th style={{ width: 140 }} scope="col">CodLab</th>
+                                                    <th style={{ width: 140 }} scope="col">F.Toma</th>
                                                 </tr>
                                             </thead>
                                             <tbody className='theadTbody cTbody'>
-                                                {props.data.map((mx) => (
+                                                {props.dataPbmc.map((mx) => (
                                                     <tr key={mx.muestraId}>
                                                         <th scope="row">
                                                             <input
@@ -244,36 +202,48 @@ const EnvioMuestras = props => {
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <h4>Muestras a enviar</h4>
-                            <div className="container" style={{ boxShadow: 'none' }}>
-                                <div className="row">
-                                    <div className="col-md-12">
+                                </Item>
+                                {props.dataPbmc.length > 0 ?
+                                    <span className='messageError'><span>PBMC seleccionados </span>{props.dataPbmc.filter(x => x.estado === true).length}/{props.dataPbmc.length}</span>
+                                    : null}
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Item>
+                                    <h6 className={classes.textField2}>ROJO</h6>
+                                    <div className="col-md-16">
                                         <table className="table">
                                             <thead className='theadTbody'>
                                                 <tr>
-                                                    <th style={{ width: 140, paddingLeft: 35 }} scope="col">Codigo</th>
-                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Estudio</th>
-                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">Cod Lab</th>
-                                                    <th style={{ width: 140, paddingLeft: 45 }} scope="col">F. Toma</th>
+                                                    <th scope="col">
+                                                        <Tooltip2 title="Seleccionar todos los tubo rojo">
+                                                            <input
+                                                                id="chkAllPbmc"
+                                                                type="checkbox"
+                                                                className="custom-checkboxAll"
+                                                                checked={props.chkAllTRojo}
+                                                                onChange={(e) => props.onCheckAllTRojo(e)}
+                                                            />
+                                                        </Tooltip2>
+                                                    </th>
+                                                    <th style={{ width: 140 }} scope="col">Código</th>
+                                                    <th style={{ width: 140 }} scope="col">Estudio</th>
+                                                    <th style={{ width: 140 }} scope="col">CodLab</th>
+                                                    <th style={{ width: 140 }} scope="col">F.Toma</th>
                                                 </tr>
                                             </thead>
                                             <tbody className='theadTbody cTbody'>
-                                                {props.listToSave.map((mx) => (
+                                                {props.dataRojo.map((mx) => (
                                                     <tr key={mx.muestraId}>
                                                         <th scope="row">
                                                             <input
                                                                 type="checkbox"
-                                                                checked={mx.removeFromList}
+                                                                checked={mx.estado}
                                                                 className="custom-checkbox"
                                                                 id="rowcheck{mx.muestraId}"
-                                                                onChange={(e) => props.onItemCheckRemove(e, mx)}
+                                                                onChange={(e) => props.onItemCheck(e, mx)}
                                                             />
                                                         </th>
-                                                        <td style={{ width: 140, paddingLeft: 0 }}>{mx.codigo}</td>
+                                                        <td style={{ width: 140 }}>{mx.codigo}</td>
                                                         <td style={{ width: 140 }}>{mx.estudio}</td>
                                                         <td style={{ width: 140 }}>{mx.codLab}</td>
                                                         <td style={{ width: 140 }}>{mx.fechaToma}</td>
@@ -282,30 +252,83 @@ const EnvioMuestras = props => {
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
-
+                                </Item>
+                                {props.dataRojo.length > 0 ?
+                                    <span className='messageError'><span>ROJOS seleccionados </span>{props.dataRojo.filter(x => x.estado === true).length}/{props.dataRojo.length}</span>
+                                    : null}
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Item>
+                                    <h6 className={classes.textField2}>HISOPADOS</h6>
+                                    <div className="col-md-16">
+                                        <table className="table">
+                                            <thead className='theadTbody'>
+                                                <tr>
+                                                    <th scope="col">
+                                                        <Tooltip2 title="Seleccionar todos los hisopados">
+                                                            <input
+                                                                id="chkAllPbmc"
+                                                                type="checkbox"
+                                                                className="custom-checkboxAll"
+                                                                checked={props.chkAllHisopados}
+                                                                onChange={(e) => props.onCheckAllHisopados(e)}
+                                                            />
+                                                        </Tooltip2>
+                                                    </th>
+                                                    <th style={{ width: 140 }} scope="col">Código</th>
+                                                    <th style={{ width: 140 }} scope="col">Estudio</th>
+                                                    <th style={{ width: 140 }} scope="col">CodLab</th>
+                                                    <th style={{ width: 140 }} scope="col">F.Toma</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className='theadTbody cTbody'>
+                                                {props.dataHisopados.map((mx) => (
+                                                    <tr key={mx.muestraId}>
+                                                        <th scope="row">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={mx.estado}
+                                                                className="custom-checkbox"
+                                                                id="rowcheck{mx.muestraId}"
+                                                                onChange={(e) => props.onItemCheck(e, mx)}
+                                                            />
+                                                        </th>
+                                                        <td style={{ width: 140 }}>{mx.codigo}</td>
+                                                        <td style={{ width: 140 }}>{mx.estudio}</td>
+                                                        <td style={{ width: 140 }}>{mx.codLab}</td>
+                                                        <td style={{ width: 140 }}>{mx.fechaToma}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </Item>
+                                {props.dataHisopados.length > 0 ?
+                                    <span className='messageError'><span>HISOPADOS seleccionados </span>{props.dataHisopados.filter(x => x.estado === true).length}/{props.dataHisopados.length}</span>
+                                    : null}
+                            </Grid>
+                            <div>
+                                <label style={{marginLeft: 10, fontWeight: 'bold', fontFamily: 'Roboto, Helvetica, Arial, sans-serif !important', fontSize: 12}}>
+                                    <Checkbox
+                                        checked={props.checkAddMxEnvio}
+                                        onChange={props.handleChangeAddMxEnvio}
+                                        label="Top"
+                                        inputProps={{ 'aria-label': 'controlled' }}
+                                    />Desea agregar mx a envio realizado?
+                                </label>
                             </div>
+                        </Grid>
+                    </Box>
+                </div>
+                <div className="row">
+                    <div className="col-sm" style={{ marginTop: 2 }}>
+                        <div hidden={false}>
+                            <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Realizar envio</Tooltip>}>
+                                <button className="btn-cricle" onClick={props.saveData}>
+                                    <SaveIcon />
+                                </button>
+                            </OverlayTrigger>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-sm" style={{ marginTop: 2 }}>
-                            <div hidden={false}>
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Guardar</Tooltip>}>
-                                    <button className="btn-cricle" onClick={props.saveData}>
-                                        <SaveIcon />
-                                    </button>
-                                </OverlayTrigger>
-                            </div>
-                        </div>
-                        {/* <div className="col-sm" style={{ marginTop: 2 }}>
-                            <div hidden={false}>
-                                <OverlayTrigger placement="bottom" overlay={<Tooltip id="tooltip">Imprimir</Tooltip>}>
-                                    <button className="btn-criclePdf" onClick={props.printDocument} disabled={props.disabledPrintDocument}>
-                                        <PrintIcon />
-                                    </button>
-                                </OverlayTrigger>
-                            </div>
-                        </div> */}
                     </div>
                 </div>
             </Paper>

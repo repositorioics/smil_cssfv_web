@@ -50,9 +50,6 @@ const AddRecepcion = props => {
             <div>
                 <div className="form-block">
                     <div className="panel panel-info">
-                        {/* <div className="panel-heading">
-                            <div className="panel-title">{props.title}</div>
-                        </div> */}
                         <div className="hdr, row, m-top">
                             <div className="title">
                                 {props.title}
@@ -62,7 +59,7 @@ const AddRecepcion = props => {
                             <div style={{ display: "none" }} id="login-alert" className="alert alert-danger col-sm-12"></div>
                             <form onSubmit={e => { e.preventDefault(); }}>
                                 <Grid container spacing={2} style={{ paddingTop: 20 }}>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
                                         <Item>
                                             <div className="col-sm">
                                                 <FormControl className={classes.formControl}>
@@ -83,20 +80,10 @@ const AddRecepcion = props => {
                                                     </Select>
                                                     <label className="messageError">{props.errorMessageStudy}</label>
                                                 </FormControl>
-                                                {/* <TextField
-                                                    id="study"
-                                                    autoComplete="off"
-                                                    type="text"
-                                                    className="form-control c-height"
-                                                    name="study"
-                                                    pattern="[A-Za-z\s]+"
-                                                    value={props.study}
-                                                    onChange={props.handleChangeStudy}
-                                                    label="Estudio" /> */}
                                             </div>
                                         </Item>
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
                                         <Item>
                                             <div className="col-sm">
                                                 <FormControl className={classes.formControl}>
@@ -117,21 +104,34 @@ const AddRecepcion = props => {
                                                     </Select>
                                                     <label className="messageError">{props.errorMessageTypeMx}</label>
                                                 </FormControl>
-                                                {/* <TextField
-                                                    id="type"
-                                                    autoComplete="off"
-                                                    type="text"
-                                                    className="form-control c-height"
-                                                    name="type"
-                                                    pattern="[A-Za-z\s]+"
-                                                    value={props.type}
-                                                    onChange={props.handleChangeTypeMx}
-                                                    label="Tipo muestra" />
-                                                <label className="messageError">{props.errorMessageTypeMx}</label> */}
                                             </div>
                                         </Item>
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item xs={3}>
+                                        <Item>
+                                            <div className="col-sm">
+                                                <FormControl className={classes.formControl}>
+                                                    <InputLabel id="test-input-label-type-study">Clasificación muestra</InputLabel>
+                                                    <Select
+                                                        labelId="request-label-type-study"
+                                                        id="request-select-type-study"
+                                                        value={props.selectedClasificacionMx}
+                                                        onChange={props.handleChangeClasificacionMx}
+                                                    >
+                                                        <MenuItem value="0">
+                                                            <em>Seleccione</em>
+                                                        </MenuItem>
+                                                        {props.clasificacionMx.map((e, keyIndex) => {
+                                                            return (<MenuItem key={keyIndex} value={e.id}>{e.nombre}</MenuItem>)
+                                                        })
+                                                        }
+                                                    </Select>
+                                                    <label className="messageError">{props.errorMessageClasificacionMx}</label>
+                                                </FormControl>
+                                            </div>
+                                        </Item>
+                                    </Grid>
+                                    <Grid item xs={3}>
                                         <Item>
                                             <div className="col-sm">
                                                 <TextField

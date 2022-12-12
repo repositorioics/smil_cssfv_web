@@ -1,3 +1,4 @@
+export const URL = 'http://localhost:9191/';
 export const ID_MUESTRA_INFLUENZA = 1
 export const ID_MUESTRA_DENGUE = 2
 export const ID_MUESTRA_U01 = 3

@@ -103,22 +103,6 @@ const MxU01List = props => {
                                 </span>
                             </OverlayTrigger>
                         </div>
-                        {/* <div style={{ width: 150 }}>
-                            <label>Código</label>
-                            <input
-                                id="code"
-                                style={{height: 23}}
-                                autoComplete="off"
-                                type="number"
-                                maxLength={10}
-                                className="form-control"
-                                name="code"
-                                value={props.code}
-                                onChange={props.handleChangeCode}
-                                onKeyPress={props.onKeyPressCode}
-                                placeholder="Código" />
-                            
-                        </div> */}
                     </div>
                     <Divider />
                     <div style={{ marginTop: 25, boxShadow: "none" }}>

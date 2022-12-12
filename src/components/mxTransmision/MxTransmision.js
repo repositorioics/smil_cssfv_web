@@ -75,13 +75,7 @@ const MxTransmision = props => {
                             aria-controls="panel1bh-content"
                             id="panel1bh-header"
                         >
-                            {/* <FormControlLabel
-                                className={classes.heading}
-                                aria-label="Acknowledge"
-                                control={<Description style={{color: "#aba7a7"}}/>}
-                                label="Datos Generales"
-                            /> */}
-                            <Typography className={classes.heading}>Datos Generales</Typography>
+                        <Typography className={classes.heading}>Datos Generales</Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <div className={classes.secondaryHeading} style={{ width: '90%', marginLeft: '5%' }}>
@@ -90,8 +84,6 @@ const MxTransmision = props => {
                                     selectedTubo={props.selectedTubo}
                                     tipoTubo={props.tipoTubo}
                                     codLabScan={props.codLabScan}
-                                    //selectedConsulta={props.selectedConsulta}
-                                    //consultas={props.consultas}
                                     selectedVisita={props.selectedVisita}
                                     visitas={props.visitas}
                                     selectedMedico={props.selectedMedico}
@@ -101,25 +93,20 @@ const MxTransmision = props => {
                                     age={props.age}
                                     codLab={props.codLab}
                                     fif={props.fif}
-                                    //fis={props.fis}
                                     fechaToma={props.fechaToma}
                                     plasma={props.plasma}
                                     houseCode={props.houseCode}
                                     handleChangeCode={props.handleChangeCode}
                                     onKeyPressCode={props.onKeyPressCode}
                                     handleChangeTipoTubo={props.handleChangeTipoTubo}
-                                    //handleChangeConsulta={props.handleChangeConsulta}
                                     handleChangeVisita={props.handleChangeVisita}
                                     handleChangeMedico={props.handleChangeMedico}
                                     handleChangeFif={props.handleChangeFif}
-                                    //handleChangeFis={props.handleChangeFis}
                                     handleChangeFtoma={props.handleChangeFtoma}
                                     handleChangePlasma={props.handleChangePlasma}
                                     disableCode={props.disableCode}
-
                                     errorCode={props.errorCode}
                                     errorTubo={props.errorTubo}
-                                    //errorConsulta={props.errorConsulta}
                                     errorVisita={props.errorVisita}
                                     errorMedico={props.errorMedico}
                                     errorFechaToma={props.errorFechaToma}
@@ -169,7 +156,6 @@ const MxTransmision = props => {
                                     handleChangeHoraToma={props.handleChangeHoraToma}
                                     handleChangeHoraRefrigeracion={props.handleChangeHoraRefrigeracion}
                                     handleChangeVolSangre={props.handleChangeVolSangre}
-
                                     errorFis={props.errorFis}
                                     errorFif={props.errorFif}
                                     errorMotivoNoMx={props.errorMotivoNoMx}
@@ -191,36 +177,6 @@ const MxTransmision = props => {
                         </div>
                     </Accordion>
                 </div>
-                {/* <div className={classes.root} style={{ boxShadow: "none" }}>
-                    <div className="hdr, row, m-top">
-                        <div className="title">
-                            <h4>{props.title}</h4>
-                        </div>
-                    </div>
-                    <Stepper alternativeLabel activeStep={props.activeStep} connector={<ColorlibConnector />}>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    <div>
-                        <main className={classes.instructions}>{getStepContent(props.activeStep)}</main>
-                    </div>
-                    <div style={{ marginTop: 10 }}>
-                        <Button disabled={props.activeStep === 0} onClick={props.handleBack} className={classes.button}>
-                            Regresar
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={props.handleNext}
-                            className={classes.button}
-                        >
-                            {props.activeStep === steps.length - 1 ? 'Fin' : 'Siguiente'}
-                        </Button>
-                    </div>
-                </div> */}
                 <Fab size="small" className={clsx(classes.fab, classes.fabColor)} aria-label="add"
                     onClick={() => props.goBackListMxTransmision()}>
                     <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip">Salir</Tooltip>}>

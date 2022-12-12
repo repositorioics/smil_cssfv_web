@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AddRecepcion from '../../../components/catalogo/recepcion/AddRecepcion';
-import DataServices from '../../../service/Api';
+import DataServices from '../../../service/ApiCatalogos';
+import DataServicesApi from '../../../service/Api';
 import ToastContainer from '../../../components/toast/Toast';
 
 const RegisterRecepcionContainer = props => {
@@ -8,7 +9,9 @@ const RegisterRecepcionContainer = props => {
     const [study, setStudy] = useState([]);
     let [selectedStudy, setSelectedStudy] = useState('');
     const [typeMx, setTypeMx] = useState([]);
+    const [clasificacionMx, setClasificacionMx] = useState([]);
     let [selectedTypeMx, setSelectedTypeMx] = useState('');
+    let [selectedClasificacionMx, setSelectedClasificacionMx] = useState('');
     const [description, setDescription] = useState('');
     const [criteriosEvaluar, setCriteriosEvaluar] = useState('');
     const [charactersString, setCharactersString] = useState('');
@@ -26,34 +29,43 @@ const RegisterRecepcionContainer = props => {
     const [errorMessageCharactersString, setErrorMessageCharactersString] = useState('');
     const [errorMessageRegex, setErrorMessageRegex] = useState('');
     const [errorMessageDescriptionString, setErrorMessageDescriptionString] = useState('');
+    const [errorMessageClasificacionMx, setErrorMessageClasificacionMx] = useState('');
 
     /**Variables de los mensajes de alerta */
     const [type, setType] = useState(null);
     const [messageAlert, setMessageAlert] = useState(null);
 
     useEffect(() => {
-        getAllEstudios();
-        getTypeOfMx();
+        getAll();
         const token = localStorage.getItem('token');
         if (token !== null && token !== undefined && token !== "") {
             if (props.match.params && Object.keys(props.match.params).length > 0) {
                 setTitle('Editar formato para la recepción');
                 setDisableBtnLimpiar(true);
                 setId(props.match.params.id);
-                getById(props.match.params.id);
             } else {
                 setTitle('Registrar formato para la recepción');
             }
         } else {
             props.history.push('/');
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props]);
+
+    const getAll = async() => {
+        await getAllEstudios();
+        await getTypeOfMx();
+        await getClasificacionMx();
+        if (props.match.params && Object.keys(props.match.params).length > 0) {
+            await getById(props.match.params.id);
+        }
+    }
 
     /**Metodo para obtener todos los estudios */
     const getAllEstudios = async() => {
         setExecuteLoading(false);
         try {
-            const response = await DataServices.getEstudios();
+            const response = await DataServicesApi.getEstudios();
             if (response.status === 200) {
                 setExecuteLoading(false);
                 setStudy(response.data);
@@ -73,18 +85,22 @@ const RegisterRecepcionContainer = props => {
             const response = await DataServices.getAllTipoMuestrasActivas();
             if (response.status === 200) {
                 setExecuteLoading(false);
-                /* const multiSelectData = [];
-                if (response.data.length > 0) {
-                    for (let i = 0; i < response.data.length; i++) {
-                        const newObject = {}
-                        newObject.id = response.data[i].id;
-                        newObject.nombre = response.data[i].descripcion
-
-                        multiSelectData.push(newObject);
-                    }
-                } */
-                //console.log(response);
+                //console.log(response.data);
                 setTypeMx(response.data);
+            }
+        } catch (error) {
+            setExecuteLoading(false);
+            console.log('error', error);
+        }
+    }
+
+    const getClasificacionMx = async () => {
+        setExecuteLoading(true);
+        try {
+            const response = await DataServices.getAllClasificacionesMuestraActivas();
+            if (response.status === 200) {
+                setExecuteLoading(false);
+                setClasificacionMx(response.data);
             }
         } catch (error) {
             setExecuteLoading(false);
@@ -95,17 +111,20 @@ const RegisterRecepcionContainer = props => {
     const handleChangeStudy = (e) => {
         setErrorMessageStudy('');
         setSelectedStudy(e.target.value)
-        //console.log(e.target.value);
     }
 
     const handleChangeTypeMx = (e) => {
         setErrorMessageTypeMx('');
-        //console.log(e.target.value);
         setSelectedTypeMx(e.target.value);
     }
 
     const handleChangeDescripcion = (e) => {
         setDescription(e.target.value);
+    }
+
+    const handleChangeClasificacionMx = (e) => {
+        setErrorMessageClasificacionMx('');
+        setSelectedClasificacionMx(e.target.value);
     }
 
     const handleChangeCriteriosEvaluar = (e) => {
@@ -162,7 +181,8 @@ const RegisterRecepcionContainer = props => {
                 setCharactersString(response.data.cadenaCaracteresCodigo);
                 setRegex(response.data.expresionRegular);
                 setDescriptionString(response.data.descripcionCadena);
-                setSelectedTypeMx(response.data.catTipoMuestraId.id);
+                selectedTypeMx = response.data.catTipoMuestraId.id;
+                setSelectedTypeMx(selectedTypeMx);
                 setIsActive(response.data.activo);
             }
         } catch (error) {
@@ -179,7 +199,6 @@ const RegisterRecepcionContainer = props => {
             const filtro = study.filter(a => a.codigo === selectedStudy)
             const catRecepcion = {
                 estudio: selectedStudy,
-                //tipo: typeMx.toUpperCase(),
                 catTipoMuestraId: {
                     id: selectedTypeMx
                 },
@@ -220,6 +239,9 @@ const RegisterRecepcionContainer = props => {
                 catTipoMuestraId: {
                     id: selectedTypeMx
                 },
+                catClasificacionMuestraId: {
+                    id: selectedClasificacionMx
+                },
                 descripcion: description,
                 cadenaCaracteresCodigo: charactersString,
                 criteriosEvaluar: criteriosEvaluar,
@@ -252,6 +274,10 @@ const RegisterRecepcionContainer = props => {
             setErrorMessageTypeMx('Debe ingresar el tipo de muestra');
             return false;
         }
+        if (selectedClasificacionMx === '' || selectedClasificacionMx === null || selectedClasificacionMx === undefined) {
+            setErrorMessageClasificacionMx('Debe ingresar la clasificación de la muestra');
+            return false;
+        }
         if (criteriosEvaluar === '' || criteriosEvaluar === null || criteriosEvaluar === undefined) {
             setErrorMessageCriteriosEvaluar('Debe ingresar los criterios a evaluar');
             return false;
@@ -264,16 +290,13 @@ const RegisterRecepcionContainer = props => {
             setErrorMessageRegex('Debe ingresar la expresión regular')
             return false;
         }
-        /*if (descriptionString === '' || descriptionString === null || descriptionString === undefined) {
-            setErrorMessageDescriptionString('La descripción de la cadena del código es requerida');
-            return false;
-        }*/
         return true;
     }
 
     const clearData = (e) => {
         e.preventDefault();
         setSelectedStudy('');
+        setSelectedClasificacionMx('');
         setSelectedTypeMx('');
         setCriteriosEvaluar('');
         setCharactersString('');
@@ -286,6 +309,7 @@ const RegisterRecepcionContainer = props => {
         setErrorMessageCharactersString('');
         setErrorMessageRegex('');
         setErrorMessageDescriptionString('');
+        setErrorMessageClasificacionMx('');
         setDisableBtnSave(false);
         setIsActive(false);
     }
@@ -301,7 +325,9 @@ const RegisterRecepcionContainer = props => {
                 study={study}
                 selectedStudy={selectedStudy}
                 typeMx={typeMx}
+                clasificacionMx={clasificacionMx}
                 selectedTypeMx={selectedTypeMx}
+                selectedClasificacionMx={selectedClasificacionMx}
                 description={description}
                 criteriosEvaluar={criteriosEvaluar}
                 charactersString={charactersString}
@@ -317,6 +343,7 @@ const RegisterRecepcionContainer = props => {
                 handleChangeStudy={handleChangeStudy}
                 handleChangeTypeMx={handleChangeTypeMx}
                 handleChangeDescripcion={handleChangeDescripcion}
+                handleChangeClasificacionMx={handleChangeClasificacionMx}
                 handleChangeCriteriosEvaluar={handleChangeCriteriosEvaluar}
                 handleChangeCharactersString={handleChangeCharactersString}
                 handleChangeRegex={handleChangeRegex}
@@ -328,6 +355,7 @@ const RegisterRecepcionContainer = props => {
                 errorMessageCharactersString={errorMessageCharactersString}
                 errorMessageRegex={errorMessageRegex}
                 errorMessageDescriptionString={errorMessageDescriptionString}
+                errorMessageClasificacionMx={errorMessageClasificacionMx}
             />
             <ToastContainer
                 type={type}
